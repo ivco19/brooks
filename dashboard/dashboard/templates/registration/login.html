@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login{% endblock %}
+{% block page_title %}Login{% endblock %}
+
+
+{% block content %}
+    {% crispy form %}
+    <input type="submit" class="btn btn-primary" value="Login" id="submit-login">
+{% endblock %}
+
+{% block page_js %}
+<script>
+$(document).ready(function(){
+    $("#submit-login").click(function(){
+        $("form").submit();
+    });
+});
+</script>
+{% endblock %}
+

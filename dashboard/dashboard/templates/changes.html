@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Cambios{% endblock %}
+{% block title %}Cambios{% endblock %}
+
+{% block page_css %}
+<style>
+    .markdown  h1{
+        display: none;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="markdown">
+    {{changelog|safe}}
+
+</div>
+{% endblock %}
+
+
+{% block page_js %}
+<script>
+$(document).ready(function(){
+
+});
+</script>
+{% endblock %}

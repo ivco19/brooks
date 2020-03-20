@@ -1,0 +1,80 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {# base css #}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}" />
+
+    {% block page_css %}{% endblock %}
+    <title>Covid-19 - {% block page_title %}{% endblock page_title %}</title>
+  </head>
+  <body>
+    <div class="container-fluid h-100">
+
+          <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+            <!-- Brand -->
+            <a class="navbar-brand" href="#">Brooks</a>
+
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    {% block nav %}{% endblock %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Changes</a>
+                    </li>
+                </ul>
+            </div>
+          </nav>
+
+            <!--MAIN-->
+            <main class="col bg-faded py-3">
+                <div><h2>{% block title %}{% endblock title %}</h2></div>
+                <hr>
+                {% include "messages.html" %}
+                {% block content %}
+                {% endblock %}
+            </main>
+            <!--SCRIPTS-->
+            <div id="scripts">
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
+
+                <script>
+                $(document).ready(function(){
+                    $('.datetimeinput').datetimepicker({
+                        format: "yyyy-mm-dd hh:ii"});
+                    $('.datetimeinput').prop(readonly=true);
+                    $('.datetimeinput').parent().addClass("input-group");
+                    $('.datetimeinput').parent().append(`
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fas fa-calendar"></i></span>
+                            </span>
+                        </div>`);
+                });
+                </script>
+                {% block page_js %}{% endblock %}
+            </div>
+
+        </div>
+    </div>
+    <div id="modals">
+        {% block modals %}{% endblock %}
+    </div>
+  </body>
+</html>
+

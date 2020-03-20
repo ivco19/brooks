@@ -15,6 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+CHANGELOG_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "CHANGELOG.md"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -38,6 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # third parties
+    'django_extensions',
+
+    # locals
+    'ingest.apps.IngestConfig'
 ]
 
 MIDDLEWARE = [
@@ -55,7 +62,9 @@ ROOT_URLCONF = 'dashboard.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, "dashboard", "templates")
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,6 +129,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "dashboard", "static")
+]
+coso=os.path.join(BASE_DIR, "dashboard", "static")
+
 try:
     from local_settings import *  # noqa
 except ImportError:
@@ -131,7 +145,7 @@ except ImportError:
     print("[ALERT] Creating an empty one")
 
     org = os.path.join(BASE_DIR, "dashboard", "local_settings.template")
-    dest = os.path.join(BASE_DIR, "dashboard", "local_settings.py")
+    dest = os.path.join(BASE_DIR, "local_settings.py")
     shutil.copy(org, dest)
 
     print("[ALERT] Please edit 'dashboard/local_settings.py'")

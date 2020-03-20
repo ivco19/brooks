@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # dashboard
-dashboard/local_settings.py
+local_settings.py
