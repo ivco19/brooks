@@ -2,24 +2,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.validators import FileExtensionValidator
 
 from django_extensions.db.models import TimeStampedModel
 
-
-# =============================================================================
-# USER PROFILE
-# =============================================================================
-
-class UserProfile(models.Model):
-    # This model is automatically create when a user is created
-    # check ingest.signals.py
-
-    user = models.OneToOneField(
-        User, related_name="profile",
-        on_delete=models.CASCADE, primary_key=True)
-
-    def __str__(self):
-        return str(self.user)
+import pandas as pd
 
 
 # =============================================================================
@@ -27,14 +14,21 @@ class UserProfile(models.Model):
 # =============================================================================
 
 def _raw_file_upload_to(instance, filename):
-    full_name = f"raw_{instance.id}_{filename}"
-    import ipdb; ipdb.set_trace()
-    return '/'.join([settings.ATTACHMENTS, "raw_files", folder, full_name])
+    folder = instance.created.strftime("%Y_%m")
+    return '/'.join([settings.ATTACHMENTS, "raw_files", folder, filename])
 
 
 class RawFile(TimeStampedModel):
+    PARSERS = {
+        "csv": pd.read_csv,
+        "xlsx": pd.read_excel,
+    }
+    EXTENSIONS = list(PARSERS)
 
-    file = models.FileField(upload_to=_raw_file_upload_to)
+    file = models.FileField(
+        upload_to=_raw_file_upload_to,
+        validators=[FileExtensionValidator(allowed_extensions=EXTENSIONS)])
+    notes = models.TextField(blank=True)
     confirmed = models.BooleanField(default=False)
 
     created_by = models.ForeignKey(

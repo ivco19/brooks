@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Acerca de Brooks{% endblock %}
+{% block title %}Acerca de Brooks{% endblock %}
+
+{% block page_css %}
+<style>
+    .markdown  h1{
+        display: none;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="markdown">
+    {{about|safe}}
+</div>
+<img width="30%" src="{% static 'logos.png' %}"></img>
+
+{% endblock %}
+
+
+{% block page_js %}
+<script>
+$(document).ready(function(){
+
+});
+</script>
+{% endblock %}

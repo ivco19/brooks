@@ -17,6 +17,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 CHANGELOG_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "CHANGELOG.md"))
 
+ABOUT_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "README.md"))
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -42,8 +44,10 @@ INSTALLED_APPS = [
 
     # third parties
     'django_extensions',
+    'crispy_forms',
 
     # locals
+    'dashboard',
     'ingest.apps.IngestConfig'
 ]
 
@@ -63,7 +67,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, "dashboard", "templates")
+            #os.path.join(BASE_DIR, "dashboard", "templates")
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -123,7 +127,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -132,7 +135,18 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "dashboard", "static")
 ]
-coso=os.path.join(BASE_DIR, "dashboard", "static")
+
+
+# AUTH
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/logout'
+LOGOUT_REDIRECT_URL = '/'
+
+
+# CRISPY FORMS
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 try:
     from local_settings import *  # noqa
