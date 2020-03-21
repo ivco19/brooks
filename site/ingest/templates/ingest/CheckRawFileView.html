@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block page_title %}Archivo {{ rawfile.pk }}{% endblock %}
+{% block title %}
+    Archivo {{ rawfile.pk }} - <span class="text-info"><b>Nombre:</b> {{rawfile.filename}}</span> {% if rawfile.confirmed %}
+        <small class="text-success">(Confirmado)</small>
+    {% else %}
+        <small class="text-danger">(Pendiente)</small>
+    {% endif %}
+{%endblock %}
+
+{% block page_css %}
+<style>
+</style>
+{% endblock %}
+
+
+{% block content %}
+{{rawfile.as_df.to_html|safe}}
+{% endblock %}
+
+
+{% block page_js %}
+{% if not case.archived %}
+<script>
+$(document).ready(function(){});
+</script>
+{% endif %}
+{% endblock %}

@@ -7,7 +7,7 @@ urlpatterns = [
     path(
         'upload/',
         views.UploadRawFileView.as_view(),
-        name='upload')]
+        name='upload'),
 
      path(
         'chek_file//<int:pk>/',

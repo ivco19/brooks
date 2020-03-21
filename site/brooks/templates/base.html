@@ -10,7 +10,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'dashboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'brooks.css' %}" />
 
     {% block page_css %}{% endblock %}
     <title>Brooks - {% block page_title %}{% endblock page_title %}</title>
@@ -50,6 +50,13 @@
                     {% endif %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    {% if request.user.is_staff %}
+                    <a class="dropdown-item" href=""><hr/></a>
+                    <a class="dropdown-item text-warning" href="/admin">
+                        <i class="fa fa-wrench fa-fw "></i>
+                        Admin
+                    </a>
+                    {% endif %}
                     <a class="dropdown-item" href=""><hr/></a>
                     <a class="dropdown-item" href="/logout">
                         <i class="fa fa-sign-out-alt fa-fw"></i>

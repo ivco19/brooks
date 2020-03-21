@@ -5,7 +5,7 @@ de la pandemia de COVID-19 en la provincia de
 Córdoba.
 
 Este proyecto esta distribuido con
-licencia [BSD-3](https://github.com/ivco19/dashboard/blob/master/LICENSE), y
+licencia [BSD-3](https://github.com/ivco19/brooks/blob/master/LICENSE), y
 disponible publicamente en: https://github.com/ivco19/brooks
 
 El desarrollo e investigación fue
@@ -48,7 +48,7 @@ $ pip install -r requirements.txt
 - Despues hay que crear la base datos
 
 ```bash
-$ cd dashboard
+$ cd site
 $ python manage.py migrate
 ```
 

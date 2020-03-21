@@ -2,7 +2,7 @@ from django.views.generic import CreateView, DetailView
 
 from django.urls import reverse_lazy
 
-from dashboard.views_mixins import LogginRequired
+from brooks.views_mixins import LogginRequired
 
 from . import models, forms
 
@@ -28,7 +28,7 @@ class UploadRawFileView(LogginRequired, CreateView):
             return super().form_valid(form)
 
 
-class CheckRawFileViewView(LogginRequired, DetailView):
+class CheckRawFileView(LogginRequired, DetailView):
 
     template_name = "ingest/CheckRawFileView.html"
     model = models.RawFile

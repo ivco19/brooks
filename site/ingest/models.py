@@ -1,4 +1,6 @@
 
+import os
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -40,5 +42,10 @@ class RawFile(TimeStampedModel):
         return self.file.url.rsplit("/", 1)[-1]
 
     @property
-    def filext(self):
-        return os.path.splitext(self.filename)
+    def ext(self):
+        return os.path.splitext(self.filename)[-1]
+
+    def as_df(self):
+        parser = self.PARSERS[self.ext[1:]]
+        df = parser(self.file.path)
+        return df
