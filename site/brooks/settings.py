@@ -19,6 +19,9 @@ CHANGELOG_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "CHANGELOG.md"))
 
 ABOUT_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "README.md"))
 
+REQUIRED_BIN_PATH = os.path.abspath(
+    os.path.join(BASE_DIR, "..", "required_bin.txt"))
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -47,7 +50,7 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     # locals
-    'brooks',
+    'brooks.apps.BrooksConfig',
     'ingest.apps.IngestConfig'
 ]
 
