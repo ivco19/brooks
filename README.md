@@ -11,13 +11,31 @@ disponible publicamente en: https://github.com/ivco19/brooks
 El desarrollo e investigación fue
 llevado adelante por
 
-- Vanesa Daza (IATE-FAMaF).
-- Bruno Sanchez (Duke University).
-- Federico Stasyszyn (IATE-FAMaF).
-- Mariano Dominguez (IATE-FAMaF).
-- Nadia Luczywo (LIMI-FCEFyN-UNC, FCE-UNC)
-- Marcelo Lares (IATE-FAMaF).
-- Juan B Cabral (IATE-FAMaF, CIFASIS-UNR).
+- Dr. Juan B Cabral (CIFASIS-UNR, IATE-OAC-UNC).
+- Sr. Mauricio Koraj (Liricus SRL.).
+- Lic. Vanessa Daza (IATE-OAC-UNC, FaMAF-UNC).
+- Dr. Mariano Dominguez (IATE-OAC-UNC, FaMAF-UNC).
+- Dr. Marcelo Lares (IATE-OAC-UNC, FaMAF-UNC).
+- Mgt. Nadia Luczywo (LIMI-FCEFyN-UNC, IED-FCE-UNC, FCA-IUA-UNDEF)
+- Dr. Dante Paz (IATE-OAC-UNC, FaMAF-UNC).
+- Dr. Rodrigo Quiroga (INFIQC-CFQ, FCQ-UNC).
+- Dr. Martín de los Ríos (ICTP-SAIFR).
+- Dr. Bruno Sanchez (Department of Physics, Duke University).
+- Dr. Federico Stasyszyn (IATE-OAC, FaMAF-UNC).
+
+**Afiliaciones:**
+
+- [Centro Franco Argentino de Ciencias de la Información y de Sistemas (CIFASIS-UNR)](https://www.cifasis-conicet.gov.ar/)
+- [Instituto de Astronomía Téorico y Experimental (IATE-OAC-UNC)](http://iate.oac.uncor.edu/)
+- [Facultad de Matemática Física y Computación (FaMAF-UNC)](https://www.famaf.unc.edu.ar/)
+- [Laboratorio de Ingeniería y Mantenimiento Industrial (LIMI-FCEFyN-UNC)](https://fcefyn.unc.edu.ar/facultad/secretarias/investigacion-y-posgrado/-investigacion/laboratorio-de-ingenieria-y-mantenimiento-industrial/)
+- [Instituto De Estadística Y Demografía - Facultad de Ciencias Económicas (IED-FCE-UNC)](http://www.eco.unc.edu.ar/instituto-de-estadistica-y-demografia)
+- [Department of Physics, Duke University](https://phy.duke.edu/)
+- [Facultad de Ciencias de la Administación (FCA-IUA-UNDEF)](https://www.iua.edu.ar/)
+- [Instituto de Investigaciones en Físico-Química de Córdoba (INFIQC-CONICET)](http://infiqc-fcq.psi.unc.edu.ar/)
+- [Liricus SRL](http://www.liricus.com.ar/)
+- [ICTP South American Institute for Fundamental Research (ICTP-SAIFR)](ICTP-SAIFR)
+
 
 ----
 
@@ -49,6 +67,7 @@ $ pip install -r requirements.txt
 
 ```bash
 $ cd site
+$ python manage.py check
 $ python manage.py migrate
 ```
 

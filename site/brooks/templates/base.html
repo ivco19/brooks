@@ -32,11 +32,8 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     {% include "ingest/nav.html" %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'changes' %}">Changes</a>
-                    </li>
+                    {% include "reporter/nav.html" %}
                 </ul>
-
             </div>
 
             <span class="nav-item dropdown">
@@ -58,6 +55,15 @@
                     </a>
                     {% endif %}
                     <a class="dropdown-item" href=""><hr/></a>
+                    <a class="dropdown-item" href="{% url 'changes' %}">
+                        <i class="fa fa-sign-out-alt fa-fw"></i>
+                        Cambios
+                    </a>
+                    <a class="dropdown-item" href="{% url 'about' %}">
+                        <i class="fa fa-sign-out-alt fa-fw"></i>
+                        Acerca de...
+                    </a>
+                    <a class="dropdown-item" href=""><hr/></a>
                     <a class="dropdown-item" href="/logout">
                         <i class="fa fa-sign-out-alt fa-fw"></i>
                         Salir
@@ -68,16 +74,7 @@
 
           </nav>
 
-            <!--MAIN-->
-            <main class="col bg-faded py-3">
-                <div><h2>{% block title %}{% endblock title %}</h2></div>
-                <hr>
-                {% include "messages.html" %}
-                {% block content %}
-                {% endblock %}
-            </main>
-            <!--SCRIPTS-->
-            <div id="scripts">
+            <div id="global-js">
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
                 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
                 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
@@ -97,6 +94,18 @@
                         </div>`);
                 });
                 </script>
+            </div>
+
+            <!--MAIN-->
+            <main class="col bg-faded py-3">
+                <div><h2>{% block title %}{% endblock title %}</h2></div>
+                <hr>
+                {% include "messages.html" %}
+                {% block content %}
+                {% endblock %}
+            </main>
+            <!--SCRIPTS-->
+            <div id="page-scripts">
                 {% block page_js %}{% endblock %}
             </div>
 

@@ -7,9 +7,6 @@ import pathlib
 PROJECT_DIR = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 
 
-SHELL_PLUS = "ipython"
-
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -19,5 +16,3 @@ DATABASES = {
         'NAME': str(PROJECT_DIR / 'db.sqlite3'),
     }
 }
-
-ATTACHMENTS = f"{PROJECT_DIR}/_attachments"

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block page_title %}Configuración de reporte{% endblock %}
+{% block title %}Configuración de reporte{%endblock %}
+
+{% block page_css %}
+<style>
+</style>
+{% endblock %}
+
+
+{% block content %}
+{% crispy form %}
+{% endblock %}
+
+
+{% block page_js %}
+{% if not case.archived %}
+<script>
+$(document).ready(function(){});
+</script>
+{% endif %}
+{% endblock %}

@@ -1,18 +1,6 @@
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
 
 from . import models as mdls
-
-# =============================================================================
-# TITLE
-# =============================================================================
-
-admin.site.site_header = _('Brooks Admin')
-
-admin.site.site_title = _('Brooks Admin')
-
-admin.site.index_title = _('Brooks Admin')
-
 
 # =============================================================================
 # LOCATIONS

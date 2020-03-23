@@ -5,5 +5,5 @@ class BrooksConfig(AppConfig):
     name = 'brooks'
 
     def ready(self):
-        import brooks.checks
+        import brooks.checks  # noqa
 

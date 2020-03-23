@@ -17,7 +17,7 @@ import pandas as pd
 
 def _raw_file_upload_to(instance, filename):
     folder = instance.created.strftime("%Y_%m")
-    return '/'.join([settings.ATTACHMENTS, "raw_files", folder, filename])
+    return '/'.join(["raw_files", folder, filename])
 
 
 class RawFile(TimeStampedModel):

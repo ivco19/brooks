@@ -22,6 +22,10 @@ ABOUT_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "README.md"))
 REQUIRED_BIN_PATH = os.path.abspath(
     os.path.join(BASE_DIR, "..", "required_bin.txt"))
 
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, '_media/')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -48,10 +52,13 @@ INSTALLED_APPS = [
     # third parties
     'django_extensions',
     'crispy_forms',
+    "solo",
+    'django_summernote',
 
     # locals
     'brooks.apps.BrooksConfig',
-    'ingest.apps.IngestConfig'
+    'ingest.apps.IngestConfig',
+    'reporter.apps.ReporterConfig',
 ]
 
 MIDDLEWARE = [
@@ -147,6 +154,21 @@ LOGOUT_REDIRECT_URL = '/'
 
 # CRISPY FORMS
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# EXTENSION
+SHELL_PLUS = "ipython"
+
+# djenago summer note
+SUMMERNOTE_THEME = 'lite'
+
+SUMMERNOTE_CONFIG = {
+
+    # Or, you can set it as False to use SummernoteInplaceWidget by default - no iframe mode
+    # In this case, you have to load Bootstrap/jQuery stuff by manually.
+    # Use this when you're already using Bootstraip/jQuery based themes.
+    'iframe': False,
+
+}
 
 
 try:
