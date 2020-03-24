@@ -12,4 +12,9 @@ urlpatterns = [
     path(
         'chek_file/<int:pk>/',
         views.CheckRawFileView.as_view(),
-        name='check_file')]
+        name='check_file'),
+
+    path(
+        'list_files/',
+        views.ListRawFileView.as_view(),
+        name='list_files')]

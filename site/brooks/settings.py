@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     "solo",
     'django_summernote',
+    "django_tables2",
 
     # locals
     'brooks.apps.BrooksConfig',
@@ -169,6 +170,10 @@ SUMMERNOTE_CONFIG = {
     'iframe': False,
 
 }
+
+# django tables-2
+
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 
 try:

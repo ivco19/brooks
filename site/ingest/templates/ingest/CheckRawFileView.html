@@ -22,8 +22,35 @@
 
 {% block content %}
 <div class="container-fluid">
-    {% crispy form %}
-    {{rawfile.as_df.to_interactive_html|safe}}
+    <div class="row">
+        <div class="col">
+            <p>
+                <strong>Creado por:</strong>
+                {% if rawfile.created_by.last_name and rawfile.created_by.first_name %}
+                {{ rawfile.created_by.last_name }}, {{ rawfile.created_by.first_name }} &ThinSpace;
+                ({{ rawfile.created_by.username }})
+                {% else %}
+                {{ rawfile.created_by.username }}
+                {% endif %}
+                --
+                <a href="mailto:{{rawfile.created_by.email}}">
+                    <i class="far fa-envelope"></i>
+                    {{rawfile.created_by.email}}
+                </a>
+                <p>
+                    <strong>Fecha:</strong>
+                    {{rawfile.created}}
+                </a>
+            </p>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {% crispy form %}
+            {{rawfile.as_df.to_interactive_html|safe}}
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -52,7 +79,10 @@
             </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button id="buttonSubmit" type="button" disabled class="btn btn-primary">Guardar cambios</button>
+          <button id="buttonSubmit" type="button" disabled class="btn btn-primary">
+            <i class="far fa-save"></i>
+            Guardar cambios
+          </button>
         </div>
       </div>
     </div>
@@ -60,7 +90,6 @@
 
 
 {% block page_js %}
-{% if not case.archived %}
 <script>
 $(document).ready(function(){
     var $rawFileForm = $("form#rawFileForm");
@@ -100,5 +129,4 @@ $(document).ready(function(){
 
 });
 </script>
-{% endif %}
 {% endblock %}

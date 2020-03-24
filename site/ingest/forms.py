@@ -12,6 +12,10 @@ class UploadRawFileForm(forms.ModelForm):
     class Meta:
         model = models.RawFile
         fields = ('file', "notes")
+        widgets = {
+            'notes': SummernoteInplaceWidget(
+                attrs={'summernote': {'width': '100%', 'height': '200px'}})}
+
 
     placeholders = {
         "file": "Nuevo archivo con los datos",

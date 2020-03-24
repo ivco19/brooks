@@ -33,13 +33,14 @@ class RawFile(TimeStampedModel):
 
     file = models.FileField(
         upload_to=_raw_file_upload_to,
-        validators=[FileExtensionValidator(allowed_extensions=EXTENSIONS)])
-    notes = models.TextField(blank=True)
-    confirmed = models.BooleanField(default=False)
+        validators=[FileExtensionValidator(allowed_extensions=EXTENSIONS)],
+        verbose_name="archivo")
+    notes = models.TextField(blank=True, verbose_name="notas")
+    confirmed = models.BooleanField(default=False, verbose_name="confirmado")
 
     created_by = models.ForeignKey(
         User, related_name="raw_files",
-        on_delete=models.CASCADE, verbose_name="Created by")
+        on_delete=models.CASCADE, verbose_name="creado por")
 
     @property
     def filename(self):

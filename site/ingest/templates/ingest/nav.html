@@ -1,8 +1,15 @@
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-      Datos
+        <i class="fas fa-folder-open"></i>
+        Datos
     </a>
     <div class="dropdown-menu">
-      <a class="dropdown-item" href="{% url 'ingest:upload' %}">Cargar nuevos datos</a>
+      <a class="dropdown-item" href="{% url 'ingest:upload' %}">
+        <i class="fas fa-file-upload"></i>
+        Cargar nuevos datos</a>
+      <a class="dropdown-item" href=""><hr></a>
+      <a class="dropdown-item" href="{% url 'ingest:list_files' %}">
+        <i class="fas fa-list"></i>
+        Ver todos los archivos</a>
     </div>
   </li>

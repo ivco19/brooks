@@ -2,7 +2,7 @@ from django.views.generic import UpdateView
 
 from brooks.views_mixins import LogginRequired
 
-from . import models, forms
+from reporter import models, forms
 
 
 class ReportConfigurationView(LogginRequired, UpdateView):
