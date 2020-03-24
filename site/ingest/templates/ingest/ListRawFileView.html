@@ -20,6 +20,14 @@
 
 {% block content %}
 <div class="container-fluid">
+    <div class="float-right">
+        <span class="text-success">
+            <input id="confirmadosCheck" type="checkbox" checked> Confirmados
+        </span>
+        <span class="text-danger">
+            <input id="NoConfirmadosCheck" type="checkbox"> No Confirmados
+        </span>
+    </div>
     {% render_table table %}
 </div>
 {% endblock %}
@@ -29,7 +37,23 @@
 {% block page_js %}
 <script>
 $(document).ready(function(){
+    var $noconf = $("#NoConfirmadosCheck");
+    $noconf.click(function(){
+        if($noconf.is(":checked")){
+            $("table.table tr.no-confirmed").removeClass("d-none");
+        } else {
+            $("table.table tr.no-confirmed").addClass("d-none");
+        }
+    });
 
+    var $conf = $("#confirmadosCheck");
+    $conf.click(function(){
+        if($conf.is(":checked")){
+            $("table.table tr.confirmed").removeClass("d-none");
+        } else {
+            $("table.table tr.confirmed").addClass("d-none");
+        }
+    })
 
 });
 </script>

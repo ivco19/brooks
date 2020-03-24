@@ -8,8 +8,8 @@ from django.urls import reverse
 from ingest import models
 
 CONFIRMED_CLASSES = {
-    True: "table-success",
-    False: "table-danger"}
+    True: "table-success confirmed",
+    False: "table-danger no-confirmed d-none"}
 
 
 class RawFileTable(tables.Table):
