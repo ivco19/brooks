@@ -10,6 +10,10 @@ from django_extensions.db.models import TimeStampedModel
 
 import pandas as pd
 
+import pandas_interactive_html
+
+pandas_interactive_html.register()
+
 
 # =============================================================================
 # RAW FILE UPLOAD
