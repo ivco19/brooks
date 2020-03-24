@@ -7,7 +7,11 @@
         <small class="text-success">(Confirmado)</small>
     {% else %}
         <small class="text-danger">(Pendiente)</small>
-    {% endif %}
+    {% endif%}
+    <button type="button" id="saveButton" class="btn btn-primary float-right">
+        <i class="far fa-save"></i>
+        Guardar
+    </button>
 {%endblock %}
 
 {% block page_css %}
@@ -17,14 +21,84 @@
 
 
 {% block content %}
-{{rawfile.as_df.to_interactive_html|safe}}
+<div class="container-fluid">
+    {% crispy form %}
+    {{rawfile.as_df.to_interactive_html|safe}}
+</div>
+{% endblock %}
+
+{% block modals %}
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Guardar archivo #{{rawfile.pk}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div id="modal-confirmed" class="alert alert-success" role="alert">
+                El archivo #{{ rawfile.pk }}
+                <strong>Si</strong> sera integrado a la base de datos
+            </div>
+            <div id="modal-not-confirmed" class="alert alert-danger" role="alert">
+                El archivo #{{ rawfile.pk }}
+                <strong>NO</strong> sera integrado a la base de datos
+            </div>
+            <input type="text" id="superSeguro">
+                <label for="vehicle1">copiar <strong class="text-info">{{conf_code}}</strong></label><br>
+                <small>Respetar mayúsculas y no agregar espacios</small>
+            </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button id="buttonSubmit" type="button" disabled class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </div>
+    </div>
 {% endblock %}
 
 
 {% block page_js %}
 {% if not case.archived %}
 <script>
-$(document).ready(function(){});
+$(document).ready(function(){
+    var $rawFileForm = $("form#rawFileForm");
+    $confirmedInput = $("input#id_confirmed");
+
+    $("button#saveButton").click(function(evt){
+        if($confirmedInput.is(':checked')){
+            $("#modal-not-confirmed").hide();
+            $("#modal-confirmed").show();
+        } else {
+            $("#modal-not-confirmed").show();
+            $("#modal-confirmed").hide();
+        }
+        $("div#confirmModal").modal();
+    })
+
+    $("div#confirmModal").on('hidden.bs.modal', function () {
+        $("input#superSeguro").val("");
+    });
+
+    $("input#superSeguro").keyup(function(){
+        var value = $("input#superSeguro").val();
+        if(value == "{{conf_code}}"){
+            $("button#buttonSubmit").prop("disabled", false);
+        } else {
+            $("button#buttonSubmit").prop("disabled", true)
+        }
+    })
+
+    $("button#buttonSubmit").click(function(evt){
+        $("button#saveButton").prop("disabled", true);
+        $("div#confirmModal").hide();
+        $rawFileForm.submit();
+    })
+
+
+
+});
 </script>
 {% endif %}
 {% endblock %}
