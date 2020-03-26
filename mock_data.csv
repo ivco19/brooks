@@ -1,252 +1,253 @@
 Id_proc,Id_pac,genero,Edad,Nacionalidad,Residencia,sintomatico,sintomas,Domicilio_Aislamiento,Estado,Centro_salud,Origen,Fuente_de_infeccion,Fecha_comienzo_sintomas,Fecha_confirmacion_positivo,Fecha_fallecimiento,Fecha_alta
-1,1,M,59,Argentina,Calle4 Numero1,NO,dolor de garganta,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,1,-99,-99
-2,2,M,60,Argentina,Calle3 Numero1,NO,tos,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,2,-99,-99
-3,3,F,28,Argentina,Calle3 Numero1,NO,dificultad para respirar,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,3,-99,-99
-4,4,F,39,Argentina,Calle3 Numero1,NO,dolor de garganta,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,4,-99,-99
-5,5,F,44,Argentina,Calle3 Numero1,NO,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,5,-99,-99
-6,6,F,12,Argentina,Calle4 Numero1,NO,secreciones nasales,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,6,-99,-99
-7,7,M,22,Chile,Calle6 Numero1,NO,secreciones nasales,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,7,-99,-99
-8,8,M,44,Argentina,Calle1 Numero1,SI,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,8,-99,-99
-9,9,M,66,Argentina,Calle4 Numero1,NO,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,9,-99,-99
-10,9,M,66,Argentina,Calle4 Numero1,NO,secreciones nasales,Calle6 Numero1,Activo,Hospital1,Brasil,Caso importado,87,90,-99,-99
-11,9,M,66,Argentina,Calle4 Numero1,NO,secreciones nasales,Calle6 Numero1,Recuperado,Hospital1,Brasil,Caso importado,87,90,-99,100
-12,10,M,60,Argentina,Calle5 Numero1,SI,dolor de garganta,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,12,-99,-99
-13,11,F,15,Argentina,Calle6 Numero1,SI,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,13,-99,-99
-14,11,F,15,Argentina,Calle6 Numero1,SI,fiebre,Calle1 Numero1,Activo,Hospital3,Argentina,Transmision local,80,85,-99,-99
-15,11,F,15,Argentina,Calle6 Numero1,SI,fiebre,Calle1 Numero1,Recuperado,Hospital3,Argentina,Transmision local,80,85,-99,101
-16,12,M,72,Argentina,Calle6 Numero1,SI,dificultad para respirar,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,16,-99,-99
-17,13,F,63,Argentina,Calle1 Numero1,SI,dificultad para respirar,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,17,-99,-99
-18,14,M,36,Argentina,Calle5 Numero1,NO,dificultad para respirar,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,18,-99,-99
-19,15,M,38,Argentina,Calle6 Numero1,SI,fiebre,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,19,-99,-99
-20,16,M,50,Argentina,Calle5 Numero1,NO,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,20,-99,-99
-21,17,M,46,Argentina,Calle5 Numero1,NO,secreciones nasales,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,21,-99,-99
-22,18,M,64,Argentina,Calle5 Numero1,SI,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,22,-99,-99
-23,19,F,71,Argentina,Calle4 Numero1,SI,dolor de garganta,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,23,-99,-99
-24,20,M,56,Argentina,Calle3 Numero1,NO,tos,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,24,-99,-99
-25,21,M,64,Argentina,Calle4 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,25,-99,-99
-26,22,M,79,Argentina,Calle5 Numero1,NO,dificultad para respirar,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,26,-99,-99
-27,23,M,38,Argentina,Calle2 Numero1,SI,dificultad para respirar,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,27,-99,-99
-28,24,M,31,Argentina,Calle5 Numero1,SI,tos,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,28,-99,-99
-29,24,M,31,Argentina,Calle5 Numero1,SI,tos,Calle6 Numero1,Activo,Hospital2,Paraguay,Indefinido,90,91,-99,-99
-30,24,M,31,Argentina,Calle5 Numero1,SI,tos,Calle6 Numero1,Recuperado,Hospital2,Paraguay,Indefinido,90,91,-99,103
-31,25,F,77,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,31,-99,-99
-32,26,M,41,Argentina,Calle1 Numero1,SI,secreciones nasales,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,32,-99,-99
-33,27,F,79,Argentina,Calle3 Numero1,NO,dolor de garganta,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,33,-99,-99
-34,28,F,71,Argentina,Calle3 Numero1,NO,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,34,-99,-99
-35,28,F,71,Argentina,Calle3 Numero1,NO,secreciones nasales,Calle6 Numero1,Activo,Hospital2,Brasil,Contacto estrecho,52,55,-99,-99
-36,28,F,71,Argentina,Calle3 Numero1,NO,secreciones nasales,Calle6 Numero1,Recuperado,Hospital2,Brasil,Contacto estrecho,52,55,-99,68
-37,29,F,74,Argentina,Calle3 Numero1,NO,dificultad para respirar,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,37,-99,-99
-38,30,F,52,Argentina,Calle3 Numero1,NO,tos,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,38,-99,-99
-39,31,M,79,Argentina,Calle4 Numero1,SI,secreciones nasales,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,39,-99,-99
-40,32,M,9,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,40,-99,-99
-41,33,M,43,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,41,-99,-99
-42,33,M,43,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle6 Numero1,Activo,Hospital5,Uruguay,Caso importado,83,86,-99,-99
-43,33,M,43,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle6 Numero1,Recuperado,Hospital5,Uruguay,Caso importado,83,86,-99,98
-44,34,M,51,Argentina,Calle4 Numero1,NO,dificultad para respirar,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,44,-99,-99
-45,35,M,80,Argentina,Calle2 Numero1,NO,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,45,-99,-99
-46,36,M,64,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,46,-99,-99
-47,37,M,33,Argentina,Calle1 Numero1,SI,tos,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,47,-99,-99
-48,38,F,7,Argentina,Calle2 Numero1,SI,dificultad para respirar,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,48,-99,-99
-49,38,F,7,Argentina,Calle2 Numero1,SI,dificultad para respirar,Calle6 Numero1,Activo,Hospital1,USA,Contacto estrecho,41,45,-99,-99
-50,38,F,7,Argentina,Calle2 Numero1,SI,dificultad para respirar,Calle6 Numero1,Recuperado,Hospital1,USA,Contacto estrecho,41,45,-99,57
-51,39,F,79,Bolivia,Calle2 Numero1,NO,dolor de garganta,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,51,-99,-99
-52,40,M,37,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,52,-99,-99
-53,41,F,65,Argentina,Calle3 Numero1,NO,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,53,-99,-99
-54,41,F,65,Argentina,Calle3 Numero1,NO,dolor de garganta,Calle2 Numero1,Activo,Hospital2,Argentina,Transmision local,52,53,-99,-99
-55,41,F,65,Argentina,Calle3 Numero1,NO,dolor de garganta,Calle2 Numero1,Fallecido,Hospital2,Argentina,Transmision local,52,53,66,-99
-56,42,M,58,Argentina,Calle2 Numero1,SI,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,56,-99,-99
-57,43,M,72,Argentina,Calle3 Numero1,NO,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,57,-99,-99
-58,44,M,39,Argentina,Calle2 Numero1,NO,dificultad para respirar,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,58,-99,-99
-59,45,F,66,Argentina,Calle3 Numero1,NO,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,59,-99,-99
-60,46,F,18,Argentina,Calle4 Numero1,NO,dificultad para respirar,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,60,-99,-99
-61,47,F,3,Argentina,Calle4 Numero1,SI,dolor de garganta,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,61,-99,-99
-62,48,F,12,Argentina,Calle4 Numero1,SI,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,62,-99,-99
-63,49,F,38,Argentina,Calle6 Numero1,SI,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,63,-99,-99
-64,50,M,53,Argentina,Calle5 Numero1,NO,secreciones nasales,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,64,-99,-99
-65,51,F,59,Argentina,Calle2 Numero1,NO,fiebre,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,65,-99,-99
-66,52,F,72,Argentina,Calle3 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,66,-99,-99
-67,53,M,8,Uruguay,Calle2 Numero1,NO,fiebre,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,67,-99,-99
-68,54,F,48,Argentina,Calle1 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,68,-99,-99
-69,54,F,48,Argentina,Calle1 Numero1,SI,tos,Calle3 Numero1,Activo,Hospital2,Chile,Indefinido,31,36,-99,-99
-70,54,F,48,Argentina,Calle1 Numero1,SI,tos,Calle3 Numero1,Fallecido,Hospital2,Chile,Indefinido,31,36,51,-99
-71,55,M,6,Argentina,Calle4 Numero1,SI,dificultad para respirar,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,71,-99,-99
-72,56,F,24,Argentina,Calle6 Numero1,SI,secreciones nasales,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,72,-99,-99
-73,57,M,27,Argentina,Calle5 Numero1,SI,fiebre,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,73,-99,-99
-74,57,M,27,Argentina,Calle5 Numero1,SI,fiebre,Calle5 Numero1,Activo,Hospital3,Paraguay,Indefinido,100,102,-99,-99
-75,57,M,27,Argentina,Calle5 Numero1,SI,fiebre,Calle5 Numero1,Recuperado,Hospital3,Paraguay,Indefinido,100,102,-99,114
-76,58,F,71,Argentina,Calle5 Numero1,SI,dolor de garganta,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,76,-99,-99
-77,58,F,71,Argentina,Calle5 Numero1,SI,dolor de garganta,Calle1 Numero1,Activo,Hospital3,USA,Indefinido,86,92,-99,-99
-78,58,F,71,Argentina,Calle5 Numero1,SI,dolor de garganta,Calle1 Numero1,Recuperado,Hospital3,USA,Indefinido,86,92,-99,108
-79,59,M,4,Argentina,Calle6 Numero1,SI,tos,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,79,-99,-99
-80,59,M,4,Argentina,Calle6 Numero1,SI,tos,Calle4 Numero1,Activo,Hospital3,Uruguay,Caso importado,73,79,-99,-99
-81,59,M,4,Argentina,Calle6 Numero1,SI,tos,Calle4 Numero1,Recuperado,Hospital3,Uruguay,Caso importado,73,79,-99,90
-82,60,M,51,Argentina,Calle4 Numero1,NO,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,82,-99,-99
-83,61,F,23,Argentina,Calle2 Numero1,NO,dificultad para respirar,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,83,-99,-99
-84,62,M,30,Argentina,Calle4 Numero1,NO,tos,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,84,-99,-99
-85,63,M,75,Argentina,Calle6 Numero1,NO,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,85,-99,-99
-86,63,M,75,Argentina,Calle6 Numero1,NO,fiebre,Calle3 Numero1,Activo,Hospital6,Argentina,Transmision local,28,29,-99,-99
-87,63,M,75,Argentina,Calle6 Numero1,NO,fiebre,Calle3 Numero1,Recuperado,Hospital6,Argentina,Transmision local,28,29,-99,49
-88,64,M,45,Argentina,Calle2 Numero1,NO,tos,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,88,-99,-99
-89,65,F,61,Argentina,Calle5 Numero1,SI,tos,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,89,-99,-99
-90,66,F,4,Argentina,Calle2 Numero1,NO,secreciones nasales,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,90,-99,-99
-91,67,F,49,Argentina,Calle4 Numero1,SI,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,91,-99,-99
-92,68,F,11,Argentina,Calle5 Numero1,NO,dolor de garganta,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,92,-99,-99
-93,69,F,29,Argentina,Calle2 Numero1,SI,dolor de garganta,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,93,-99,-99
-94,70,F,3,Argentina,Calle5 Numero1,SI,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,94,-99,-99
-95,71,M,38,Argentina,Calle4 Numero1,NO,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,95,-99,-99
-96,72,M,64,Argentina,Calle4 Numero1,SI,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,96,-99,-99
-97,73,F,57,Argentina,Calle5 Numero1,NO,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,97,-99,-99
-98,74,M,9,Europa,Calle2 Numero1,SI,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,98,-99,-99
-99,75,M,34,Argentina,Calle6 Numero1,NO,tos,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,99,-99,-99
-100,76,M,56,Argentina,Calle6 Numero1,NO,dificultad para respirar,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,100,-99,-99
-101,77,F,43,Argentina,Calle4 Numero1,SI,dificultad para respirar,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,101,-99,-99
-102,77,F,43,Argentina,Calle4 Numero1,SI,dificultad para respirar,Calle1 Numero1,Activo,Hospital1,USA,Caso importado,74,78,-99,-99
-103,77,F,43,Argentina,Calle4 Numero1,SI,dificultad para respirar,Calle1 Numero1,Recuperado,Hospital1,USA,Caso importado,74,78,-99,90
-104,78,M,23,Argentina,Calle2 Numero1,SI,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,104,-99,-99
-105,78,M,23,Argentina,Calle2 Numero1,SI,fiebre,Calle3 Numero1,Activo,Hospital4,Brasil,Indefinido,23,24,-99,-99
-106,78,M,23,Argentina,Calle2 Numero1,SI,fiebre,Calle3 Numero1,Recuperado,Hospital4,Brasil,Indefinido,23,24,-99,43
-107,79,M,55,Argentina,Calle2 Numero1,NO,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,107,-99,-99
-108,80,F,53,Argentina,Calle5 Numero1,SI,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,108,-99,-99
-109,81,M,70,Argentina,Calle3 Numero1,NO,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,109,-99,-99
-110,82,F,61,Argentina,Calle6 Numero1,SI,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,110,-99,-99
-111,83,F,48,Argentina,Calle5 Numero1,NO,fiebre,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,111,-99,-99
-112,84,F,28,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,112,-99,-99
-113,84,F,28,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle6 Numero1,Activo,Hospital6,Chile,Indefinido,63,64,-99,-99
-114,84,F,28,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle6 Numero1,Recuperado,Hospital6,Chile,Indefinido,63,64,-99,75
-115,85,F,59,Argentina,Calle3 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,115,-99,-99
-116,85,F,59,Argentina,Calle3 Numero1,SI,tos,Calle3 Numero1,Activo,Hospital4,Paraguay,Indefinido,35,37,-99,-99
-117,85,F,59,Argentina,Calle3 Numero1,SI,tos,Calle3 Numero1,Recuperado,Hospital4,Paraguay,Indefinido,35,37,-99,48
-118,86,M,26,Argentina,Calle6 Numero1,SI,dolor de garganta,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,118,-99,-99
-119,87,F,60,Argentina,Calle4 Numero1,SI,secreciones nasales,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,119,-99,-99
-120,88,F,32,Argentina,Calle6 Numero1,SI,secreciones nasales,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,120,-99,-99
-121,88,F,32,Argentina,Calle6 Numero1,SI,secreciones nasales,Calle5 Numero1,Activo,Hospital6,Brasil,Contacto estrecho,33,39,-99,-99
-122,88,F,32,Argentina,Calle6 Numero1,SI,secreciones nasales,Calle5 Numero1,Recuperado,Hospital6,Brasil,Contacto estrecho,33,39,-99,55
-123,89,M,75,Argentina,Calle6 Numero1,NO,tos,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,123,-99,-99
-124,90,F,44,Argentina,Calle6 Numero1,SI,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,124,-99,-99
-125,91,M,71,Argentina,Calle4 Numero1,NO,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,125,-99,-99
-126,92,M,17,Argentina,Calle3 Numero1,SI,secreciones nasales,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,126,-99,-99
-127,93,M,57,Argentina,Calle1 Numero1,SI,tos,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,127,-99,-99
-128,94,M,39,Argentina,Calle2 Numero1,SI,secreciones nasales,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,128,-99,-99
-129,95,F,13,Argentina,Calle3 Numero1,NO,dificultad para respirar,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,129,-99,-99
-130,95,F,13,Argentina,Calle3 Numero1,NO,dificultad para respirar,Calle6 Numero1,Activo,Hospital5,Uruguay,Contacto estrecho,4,8,-99,-99
-131,95,F,13,Argentina,Calle3 Numero1,NO,dificultad para respirar,Calle6 Numero1,Recuperado,Hospital5,Uruguay,Contacto estrecho,4,8,-99,21
-132,96,F,80,Europa,Calle5 Numero1,SI,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,132,-99,-99
-133,97,F,44,Argentina,Calle1 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,133,-99,-99
-134,98,F,10,Argentina,Calle1 Numero1,NO,fiebre,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,134,-99,-99
-135,98,F,10,Argentina,Calle1 Numero1,NO,fiebre,Calle2 Numero1,Activo,Hospital3,USA,Contacto estrecho,96,99,-99,-99
-136,98,F,10,Argentina,Calle1 Numero1,NO,fiebre,Calle2 Numero1,Recuperado,Hospital3,USA,Contacto estrecho,96,99,-99,113
-137,99,F,25,Argentina,Calle6 Numero1,SI,secreciones nasales,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,137,-99,-99
-138,100,F,2,Argentina,Calle1 Numero1,NO,secreciones nasales,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,138,-99,-99
-139,101,F,54,Argentina,Calle1 Numero1,SI,tos,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,139,-99,-99
-140,102,M,13,Argentina,Calle3 Numero1,SI,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,140,-99,-99
-141,103,M,79,Argentina,Calle5 Numero1,SI,tos,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,141,-99,-99
-142,103,M,79,Argentina,Calle5 Numero1,SI,tos,Calle2 Numero1,Activo,Hospital5,Argentina,Transmision local,64,68,-99,-99
-143,103,M,79,Argentina,Calle5 Numero1,SI,tos,Calle2 Numero1,Recuperado,Hospital5,Argentina,Transmision local,64,68,-99,78
-144,104,F,80,Europa,Calle2 Numero1,SI,dificultad para respirar,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,144,-99,-99
-145,105,F,64,Argentina,Calle5 Numero1,SI,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,145,-99,-99
-146,106,M,9,Argentina,Calle6 Numero1,SI,tos,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,146,-99,-99
-147,107,M,73,Argentina,Calle4 Numero1,SI,tos,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,147,-99,-99
-148,108,M,45,Europa,Calle6 Numero1,SI,dolor de garganta,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,148,-99,-99
-149,109,F,40,Argentina,Calle1 Numero1,SI,tos,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,149,-99,-99
-150,110,F,79,Argentina,Calle1 Numero1,NO,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,150,-99,-99
-151,111,F,71,Argentina,Calle2 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,151,-99,-99
-152,112,F,67,Argentina,Calle5 Numero1,SI,tos,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,152,-99,-99
-153,113,M,39,Bolivia,Calle2 Numero1,NO,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,153,-99,-99
-154,114,F,80,USA,Calle5 Numero1,SI,dificultad para respirar,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,154,-99,-99
-155,115,F,35,Argentina,Calle3 Numero1,NO,dolor de garganta,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,155,-99,-99
-156,116,M,49,Argentina,Calle5 Numero1,NO,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,156,-99,-99
-157,117,F,79,Argentina,Calle4 Numero1,NO,dificultad para respirar,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,157,-99,-99
-158,118,M,54,Argentina,Calle3 Numero1,NO,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,158,-99,-99
-159,119,M,6,Argentina,Calle6 Numero1,SI,dolor de garganta,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,159,-99,-99
-160,120,F,61,Argentina,Calle2 Numero1,SI,dolor de garganta,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,160,-99,-99
-161,121,F,39,Argentina,Calle5 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,161,-99,-99
-162,122,M,25,Argentina,Calle1 Numero1,SI,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,162,-99,-99
-163,123,F,45,Argentina,Calle6 Numero1,SI,fiebre,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,163,-99,-99
-164,124,M,31,Argentina,Calle1 Numero1,NO,fiebre,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,164,-99,-99
-165,124,M,31,Argentina,Calle1 Numero1,NO,fiebre,Calle2 Numero1,Activo,Hospital1,Europa,Caso importado,30,34,-99,-99
-166,124,M,31,Argentina,Calle1 Numero1,NO,fiebre,Calle2 Numero1,Recuperado,Hospital1,Europa,Caso importado,30,34,-99,48
-167,125,M,60,Argentina,Calle6 Numero1,SI,fiebre,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,167,-99,-99
-168,126,F,4,Argentina,Calle4 Numero1,NO,dificultad para respirar,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,168,-99,-99
-169,127,F,18,Argentina,Calle5 Numero1,SI,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,169,-99,-99
-170,127,F,18,Argentina,Calle5 Numero1,SI,secreciones nasales,Calle6 Numero1,Activo,Hospital5,Brasil,Contacto estrecho,27,28,-99,-99
-171,127,F,18,Argentina,Calle5 Numero1,SI,secreciones nasales,Calle6 Numero1,Recuperado,Hospital5,Brasil,Contacto estrecho,27,28,-99,44
-172,128,M,65,Argentina,Calle1 Numero1,SI,dolor de garganta,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,172,-99,-99
-173,129,M,6,Argentina,Calle1 Numero1,NO,secreciones nasales,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,173,-99,-99
-174,130,M,29,Argentina,Calle4 Numero1,NO,dolor de garganta,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,174,-99,-99
-175,131,M,63,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,175,-99,-99
-176,132,F,17,Argentina,Calle5 Numero1,NO,fiebre,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,176,-99,-99
-177,132,F,17,Argentina,Calle5 Numero1,NO,fiebre,Calle6 Numero1,Activo,Hospital6,Europa,Contacto estrecho,39,43,-99,-99
-178,132,F,17,Argentina,Calle5 Numero1,NO,fiebre,Calle6 Numero1,Recuperado,Hospital6,Europa,Contacto estrecho,39,43,-99,61
-179,133,M,20,Argentina,Calle1 Numero1,SI,secreciones nasales,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,179,-99,-99
-180,134,F,32,Argentina,Calle4 Numero1,SI,tos,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,180,-99,-99
-181,135,M,25,Argentina,Calle5 Numero1,SI,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,181,-99,-99
-182,136,F,64,Argentina,Calle6 Numero1,NO,dificultad para respirar,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,182,-99,-99
-183,137,F,30,Argentina,Calle4 Numero1,SI,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,183,-99,-99
-184,138,M,6,Argentina,Calle5 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,184,-99,-99
-185,139,F,5,Argentina,Calle3 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,185,-99,-99
-186,140,M,77,Argentina,Calle3 Numero1,SI,secreciones nasales,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,186,-99,-99
-187,141,F,51,Bolivia,Calle5 Numero1,SI,fiebre,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,187,-99,-99
-188,142,M,69,Argentina,Calle1 Numero1,SI,secreciones nasales,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,188,-99,-99
-189,143,F,52,Argentina,Calle5 Numero1,NO,dificultad para respirar,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,189,-99,-99
-190,144,M,31,Argentina,Calle1 Numero1,NO,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,190,-99,-99
-191,145,M,44,Argentina,Calle2 Numero1,NO,dificultad para respirar,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,191,-99,-99
-192,146,M,18,Argentina,Calle5 Numero1,SI,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,192,-99,-99
-193,147,F,35,Argentina,Calle2 Numero1,NO,fiebre,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,193,-99,-99
-194,148,F,39,Chile,Calle2 Numero1,NO,dolor de garganta,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,194,-99,-99
-195,148,F,39,Chile,Calle2 Numero1,NO,dolor de garganta,Calle6 Numero1,Activo,Hospital5,Argentina,Transmision local,67,68,-99,-99
-196,148,F,39,Chile,Calle2 Numero1,NO,dolor de garganta,Calle6 Numero1,Recuperado,Hospital5,Argentina,Transmision local,67,68,-99,84
-197,149,F,27,Argentina,Calle1 Numero1,NO,tos,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,197,-99,-99
-198,149,F,27,Argentina,Calle1 Numero1,NO,tos,Calle1 Numero1,Activo,Hospital1,Brasil,Indefinido,12,13,-99,-99
-199,149,F,27,Argentina,Calle1 Numero1,NO,tos,Calle1 Numero1,Recuperado,Hospital1,Brasil,Indefinido,12,13,-99,28
-200,150,M,4,Argentina,Calle1 Numero1,SI,dificultad para respirar,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,200,-99,-99
-201,151,F,12,Argentina,Calle1 Numero1,SI,secreciones nasales,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,201,-99,-99
-202,152,M,9,Argentina,Calle6 Numero1,SI,secreciones nasales,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,202,-99,-99
-203,153,M,71,Argentina,Calle4 Numero1,SI,fiebre,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,203,-99,-99
-204,154,F,12,Argentina,Calle1 Numero1,SI,dolor de garganta,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,204,-99,-99
-205,154,F,12,Argentina,Calle1 Numero1,SI,dolor de garganta,Calle4 Numero1,Activo,Hospital2,Brasil,Contacto estrecho,26,31,-99,-99
-206,154,F,12,Argentina,Calle1 Numero1,SI,dolor de garganta,Calle4 Numero1,Recuperado,Hospital2,Brasil,Contacto estrecho,26,31,-99,50
-207,155,M,47,Argentina,Calle2 Numero1,NO,dolor de garganta,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,207,-99,-99
-208,156,F,64,Europa,Calle6 Numero1,NO,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,208,-99,-99
-209,157,M,5,Argentina,Calle1 Numero1,NO,secreciones nasales,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,209,-99,-99
-210,158,M,6,Uruguay,Calle5 Numero1,NO,dolor de garganta,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,210,-99,-99
-211,159,M,51,Argentina,Calle1 Numero1,SI,dificultad para respirar,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,211,-99,-99
-212,160,F,69,Argentina,Calle2 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,212,-99,-99
-213,161,F,35,Argentina,Calle5 Numero1,NO,tos,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,213,-99,-99
-214,162,M,44,Argentina,Calle2 Numero1,NO,tos,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,214,-99,-99
-215,163,F,41,Argentina,Calle1 Numero1,SI,tos,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,215,-99,-99
-216,164,M,32,Argentina,Calle4 Numero1,NO,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,216,-99,-99
-217,165,M,71,Argentina,Calle1 Numero1,NO,tos,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,217,-99,-99
-218,166,M,76,Argentina,Calle6 Numero1,SI,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,218,-99,-99
-219,167,M,14,USA,Calle3 Numero1,SI,tos,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,219,-99,-99
-220,168,M,19,Argentina,Calle1 Numero1,NO,secreciones nasales,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,220,-99,-99
-221,169,M,5,Bolivia,Calle2 Numero1,NO,dificultad para respirar,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,221,-99,-99
-222,170,F,15,Argentina,Calle1 Numero1,NO,fiebre,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,222,-99,-99
-223,171,M,43,Argentina,Calle6 Numero1,NO,secreciones nasales,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,223,-99,-99
-224,172,M,22,Argentina,Calle5 Numero1,NO,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,224,-99,-99
-225,172,M,22,Argentina,Calle5 Numero1,NO,fiebre,Calle4 Numero1,Activo,Hospital6,Bolivia,Contacto estrecho,26,30,-99,-99
-226,172,M,22,Argentina,Calle5 Numero1,NO,fiebre,Calle4 Numero1,Recuperado,Hospital6,Bolivia,Contacto estrecho,26,30,-99,45
-227,173,M,74,Argentina,Calle5 Numero1,NO,secreciones nasales,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,227,-99,-99
-228,174,M,63,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,228,-99,-99
-229,175,F,69,Argentina,Calle1 Numero1,SI,fiebre,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,229,-99,-99
-230,176,F,16,Argentina,Calle6 Numero1,SI,dolor de garganta,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,230,-99,-99
-231,177,M,50,Argentina,Calle1 Numero1,NO,tos,Calle5 Numero1,Sospechoso,-99,-99,-99,-99,231,-99,-99
-232,177,M,50,Argentina,Calle1 Numero1,NO,tos,Calle5 Numero1,Activo,Hospital6,Uruguay,Indefinido,17,21,-99,-99
-233,177,M,50,Argentina,Calle1 Numero1,NO,tos,Calle5 Numero1,Recuperado,Hospital6,Uruguay,Indefinido,17,21,-99,31
-234,178,M,70,Europa,Calle6 Numero1,NO,dificultad para respirar,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,234,-99,-99
-235,179,F,46,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,235,-99,-99
-236,179,F,46,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle1 Numero1,Activo,Hospital4,Argentina,Transmision local,46,49,-99,-99
-237,179,F,46,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle1 Numero1,Recuperado,Hospital4,Argentina,Transmision local,46,49,-99,61
-238,180,M,38,Europa,Calle1 Numero1,NO,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,238,-99,-99
-239,180,M,38,Europa,Calle1 Numero1,NO,tos,Calle3 Numero1,Activo,Hospital5,Uruguay,Caso importado,29,35,-99,-99
-240,180,M,38,Europa,Calle1 Numero1,NO,tos,Calle3 Numero1,Recuperado,Hospital5,Uruguay,Caso importado,29,35,-99,55
-241,181,M,15,Europa,Calle4 Numero1,NO,secreciones nasales,Calle6 Numero1,Sospechoso,-99,-99,-99,-99,241,-99,-99
-242,182,F,54,Argentina,Calle2 Numero1,SI,fiebre,Calle4 Numero1,Sospechoso,-99,-99,-99,-99,242,-99,-99
-243,182,F,54,Argentina,Calle2 Numero1,SI,fiebre,Calle4 Numero1,Activo,Hospital1,Bolivia,Caso importado,69,72,-99,-99
-244,182,F,54,Argentina,Calle2 Numero1,SI,fiebre,Calle4 Numero1,Fallecido,Hospital1,Bolivia,Caso importado,69,72,89,-99
-245,183,F,19,Brasil,Calle1 Numero1,NO,dificultad para respirar,Calle1 Numero1,Sospechoso,-99,-99,-99,-99,245,-99,-99
-246,184,F,9,Argentina,Calle5 Numero1,NO,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,246,-99,-99
-247,185,M,25,Argentina,Calle5 Numero1,NO,secreciones nasales,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,247,-99,-99
-248,186,M,11,Argentina,Calle5 Numero1,SI,dolor de garganta,Calle2 Numero1,Sospechoso,-99,-99,-99,-99,248,-99,-99
-249,187,F,56,Chile,Calle4 Numero1,NO,tos,Calle3 Numero1,Sospechoso,-99,-99,-99,-99,249,-99,-99
-250,187,F,56,Chile,Calle4 Numero1,NO,tos,Calle3 Numero1,Activo,Hospital2,Paraguay,Indefinido,71,76,-99,-99
-251,187,F,56,Chile,Calle4 Numero1,NO,tos,Calle3 Numero1,Fallecido,Hospital2,Paraguay,Indefinido,71,76,85,-99
+1,1,M,20,Argentina,Calle1 Numero1,SI,fiebre,Calle5 Numero1,Sospechoso,,,,2020-03-02,,2020-03-01,
+2,1,M,20,Argentina,Calle1 Numero1,SI,fiebre,Calle5 Numero1,Activo,Hospital1,Paraguay,Contacto estrecho,2020-03-02,2020-03-04,2020-03-01,
+3,1,M,20,Argentina,Calle1 Numero1,SI,fiebre,Calle5 Numero1,Recuperado,Hospital1,Paraguay,Contacto estrecho,2020-03-02,2020-03-04,2020-03-05,
+4,2,M,74,Argentina,Calle3 Numero1,SI,"secreciones nasales, dificultad para respirar, tos, fiebre, dolor de garganta",Calle3 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+5,3,M,6,Argentina,Calle1 Numero1,SI,"dificultad para respirar, dolor de garganta, tos, fiebre",Calle1 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+6,4,M,3,Chile,Calle2 Numero1,SI,"dolor de garganta, tos, dificultad para respirar, secreciones nasales",Calle1 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+7,5,F,73,Argentina,Calle4 Numero1,SI,"dificultad para respirar, tos",Calle1 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+8,6,F,10,Argentina,Calle1 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-02-27,,2020-03-05,
+9,7,F,69,Bolivia,Calle4 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-02-28,,2020-03-05,
+10,8,F,76,Argentina,Calle5 Numero1,SI,"tos, fiebre",Calle2 Numero1,Sospechoso,,,,2020-02-27,,2020-03-05,
+11,8,F,76,Argentina,Calle5 Numero1,SI,"tos, fiebre",Calle2 Numero1,Activo,Hospital1,Brasil,Caso importado,2020-02-27,,2020-03-05,
+12,8,F,76,Argentina,Calle5 Numero1,SI,"tos, fiebre",Calle2 Numero1,Recuperado,Hospital1,Brasil,Caso importado,2020-02-27,2020-02-28,2020-03-05,
+13,9,M,12,Argentina,Calle4 Numero1,SI,"fiebre, dolor de garganta, dificultad para respirar, tos, secreciones nasales",Calle1 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+14,10,M,69,Argentina,Calle5 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+15,11,F,76,Argentina,Calle5 Numero1,SI,"dificultad para respirar, secreciones nasales, fiebre, tos, dolor de garganta",Calle4 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+16,12,M,58,Argentina,Calle6 Numero1,SI,"tos, fiebre, dolor de garganta, dificultad para respirar",Calle3 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+17,13,F,46,Argentina,Calle5 Numero1,SI,"fiebre, secreciones nasales",Calle6 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+18,14,F,51,Argentina,Calle3 Numero1,SI,"dolor de garganta, dificultad para respirar",Calle3 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+19,14,F,51,Argentina,Calle3 Numero1,SI,"dolor de garganta, dificultad para respirar",Calle3 Numero1,Activo,Hospital5,Paraguay,Contacto estrecho,2020-02-27,2020-02-27,2020-03-05,
+20,14,F,51,Argentina,Calle3 Numero1,SI,"dolor de garganta, dificultad para respirar",Calle3 Numero1,Recuperado,Hospital5,Paraguay,Contacto estrecho,2020-02-27,2020-02-27,2020-03-05,
+21,15,M,54,Argentina,Calle4 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-02-28,,2020-03-05,
+22,16,M,18,Argentina,Calle5 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+23,17,F,10,Argentina,Calle4 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+24,18,F,57,Argentina,Calle5 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+25,19,M,61,Argentina,Calle6 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+26,20,F,20,Argentina,Calle4 Numero1,SI,"tos, dolor de garganta, dificultad para respirar, secreciones nasales",Calle5 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+27,21,F,32,Argentina,Calle5 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+28,22,F,27,Argentina,Calle6 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+29,23,M,40,Argentina,Calle4 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-03-03,2020-03-03,2020-03-05,
+30,24,M,34,Argentina,Calle5 Numero1,SI,"secreciones nasales, dolor de garganta",Calle5 Numero1,Sospechoso,,,,2020-02-26,2020-02-26,2020-03-05,
+31,25,F,73,Argentina,Calle4 Numero1,SI,"dificultad para respirar, dolor de garganta, secreciones nasales, fiebre",Calle6 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+32,26,M,4,Argentina,Calle5 Numero1,SI,"tos, fiebre, dificultad para respirar, secreciones nasales",Calle4 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+33,27,F,61,Argentina,Calle1 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+34,28,M,26,Argentina,Calle6 Numero1,SI,"dificultad para respirar, tos, fiebre, secreciones nasales",Calle4 Numero1,Sospechoso,,,,2020-02-28,2020-02-28,2020-03-05,
+35,29,F,27,Argentina,Calle1 Numero1,SI,secreciones nasales,Calle1 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+36,30,F,1,Argentina,Calle6 Numero1,SI,"dificultad para respirar, tos, fiebre",Calle3 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+37,31,F,23,Argentina,Calle4 Numero1,SI,"dificultad para respirar, tos, dolor de garganta, fiebre, secreciones nasales",Calle5 Numero1,Sospechoso,,,,2020-02-27,,2020-03-05,
+38,32,M,12,Argentina,Calle1 Numero1,SI,"fiebre, secreciones nasales, tos, dolor de garganta",Calle6 Numero1,Sospechoso,,,,2020-02-28,2020-02-28,2020-03-05,
+39,33,F,72,Argentina,Calle2 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+40,34,F,10,Argentina,Calle4 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+41,35,M,34,Argentina,Calle2 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-03,2020-03-03,2020-03-05,
+42,36,M,27,Argentina,Calle4 Numero1,SI,"tos, dolor de garganta",Calle2 Numero1,Sospechoso,,,,2020-03-03,2020-03-03,2020-03-05,
+43,37,M,79,Argentina,Calle2 Numero1,SI,"dificultad para respirar, tos, secreciones nasales",Calle3 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+44,38,F,29,Chile,Calle6 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+45,39,M,51,Argentina,Calle3 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+46,40,M,76,Argentina,Calle6 Numero1,SI,"dificultad para respirar, secreciones nasales, fiebre, dolor de garganta, tos",Calle6 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+47,41,F,20,Argentina,Calle3 Numero1,SI,"tos, dolor de garganta, dificultad para respirar",Calle1 Numero1,Sospechoso,,,,2020-02-24,2020-02-24,2020-03-05,
+48,42,F,49,Argentina,Calle3 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+49,42,F,49,Argentina,Calle3 Numero1,NO,NO,Calle5 Numero1,Activo,Hospital6,Argentina,Transmision local,2020-02-27,2020-02-27,2020-03-05,
+50,42,F,49,Argentina,Calle3 Numero1,NO,NO,Calle5 Numero1,Recuperado,Hospital6,Argentina,Transmision local,2020-02-27,2020-02-27,2020-03-05,
+51,43,F,41,Argentina,Calle2 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+52,44,F,71,Argentina,Calle1 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+53,45,M,33,Europa,Calle2 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+54,46,M,46,Argentina,Calle2 Numero1,SI,"dificultad para respirar, secreciones nasales, dolor de garganta, tos",Calle3 Numero1,Sospechoso,,,,2020-02-28,,2020-03-05,
+55,47,F,31,Argentina,Calle3 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+56,48,F,67,Argentina,Calle2 Numero1,SI,"dificultad para respirar, secreciones nasales, tos, fiebre, dolor de garganta",Calle2 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+57,49,F,4,Argentina,Calle5 Numero1,SI,"secreciones nasales, fiebre, tos",Calle4 Numero1,Sospechoso,,,,2020-02-28,2020-02-28,2020-03-05,
+58,50,F,27,Argentina,Calle4 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+59,50,F,27,Argentina,Calle4 Numero1,NO,NO,Calle3 Numero1,Activo,Hospital2,Uruguay,Indefinido,2020-03-04,2020-03-04,2020-03-05,
+60,50,F,27,Argentina,Calle4 Numero1,NO,NO,Calle3 Numero1,Fallecido,Hospital2,Uruguay,Indefinido,2020-03-04,2020-03-04,2020-03-05,
+61,51,M,47,Argentina,Calle5 Numero1,SI,"dolor de garganta, secreciones nasales, tos",Calle6 Numero1,Sospechoso,,,,2020-02-26,2020-02-26,2020-03-05,
+62,52,F,74,Argentina,Calle6 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+63,53,M,22,Argentina,Calle6 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+64,54,M,61,Argentina,Calle3 Numero1,SI,tos,Calle3 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+65,55,M,75,Argentina,Calle6 Numero1,SI,dolor de garganta,Calle1 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+66,56,F,69,Argentina,Calle3 Numero1,SI,"secreciones nasales, fiebre, tos, dificultad para respirar",Calle5 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+67,57,M,63,Argentina,Calle6 Numero1,SI,"dificultad para respirar, secreciones nasales, fiebre, dolor de garganta",Calle4 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+68,58,M,58,Argentina,Calle2 Numero1,SI,"fiebre, dolor de garganta, tos, secreciones nasales",Calle5 Numero1,Sospechoso,,,,2020-02-28,,2020-03-05,
+69,59,F,12,Argentina,Calle1 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+70,60,F,46,Argentina,Calle1 Numero1,SI,"dolor de garganta, tos, secreciones nasales",Calle6 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+71,61,M,45,Argentina,Calle4 Numero1,SI,"tos, secreciones nasales, fiebre, dificultad para respirar",Calle4 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+72,62,F,19,Uruguay,Calle6 Numero1,SI,"secreciones nasales, fiebre, tos",Calle1 Numero1,Sospechoso,,,,2020-02-24,2020-02-24,2020-03-05,
+73,62,F,19,Uruguay,Calle6 Numero1,SI,"secreciones nasales, fiebre, tos",Calle1 Numero1,Activo,Hospital6,Argentina,Transmision local,2020-02-24,2020-02-24,2020-03-05,
+74,62,F,19,Uruguay,Calle6 Numero1,SI,"secreciones nasales, fiebre, tos",Calle1 Numero1,Recuperado,Hospital6,Argentina,Transmision local,2020-02-24,2020-02-24,2020-03-05,
+75,63,F,62,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle6 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+76,64,M,39,Argentina,Calle3 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+77,65,M,70,Argentina,Calle5 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+78,66,F,40,Argentina,Calle3 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+79,67,F,25,Argentina,Calle1 Numero1,SI,fiebre,Calle4 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+80,68,F,24,Argentina,Calle3 Numero1,SI,"tos, secreciones nasales",Calle4 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+81,69,F,18,Argentina,Calle4 Numero1,SI,"secreciones nasales, dolor de garganta, dificultad para respirar",Calle2 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+82,70,F,8,Argentina,Calle6 Numero1,SI,"secreciones nasales, fiebre, tos, dificultad para respirar",Calle3 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+83,71,M,64,Argentina,Calle5 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+84,71,M,64,Argentina,Calle5 Numero1,NO,NO,Calle4 Numero1,Activo,Hospital5,Paraguay,Caso importado,2020-02-25,,2020-03-05,
+85,71,M,64,Argentina,Calle5 Numero1,NO,NO,Calle4 Numero1,Fallecido,Hospital5,Paraguay,Caso importado,2020-02-25,2020-02-27,2020-03-05,
+86,72,F,17,Argentina,Calle2 Numero1,SI,"dolor de garganta, dificultad para respirar, secreciones nasales, fiebre",Calle4 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+87,73,F,62,Europa,Calle2 Numero1,SI,"dificultad para respirar, dolor de garganta",Calle5 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+88,74,F,69,Argentina,Calle3 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+89,75,F,29,Argentina,Calle3 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+90,76,M,20,Argentina,Calle3 Numero1,SI,dolor de garganta,Calle4 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+91,77,M,52,Argentina,Calle3 Numero1,SI,"dolor de garganta, fiebre, tos, dificultad para respirar",Calle3 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+92,77,M,52,Argentina,Calle3 Numero1,SI,"dolor de garganta, fiebre, tos, dificultad para respirar",Calle3 Numero1,Activo,Hospital4,Argentina,Transmision local,2020-03-02,2020-03-02,2020-03-05,
+93,77,M,52,Argentina,Calle3 Numero1,SI,"dolor de garganta, fiebre, tos, dificultad para respirar",Calle3 Numero1,Fallecido,Hospital4,Argentina,Transmision local,2020-03-02,2020-03-02,2020-03-05,
+94,78,M,62,Argentina,Calle4 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-26,,2020-03-05,
+95,79,F,26,Bolivia,Calle5 Numero1,SI,"secreciones nasales, tos, dolor de garganta, fiebre",Calle3 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+96,80,M,39,Argentina,Calle1 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+97,81,F,4,Argentina,Calle1 Numero1,SI,"dolor de garganta, fiebre",Calle1 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+98,82,F,39,Argentina,Calle6 Numero1,SI,"tos, fiebre, dificultad para respirar, secreciones nasales",Calle4 Numero1,Sospechoso,,,,2020-02-27,,2020-03-05,
+99,83,F,18,Argentina,Calle3 Numero1,SI,"dolor de garganta, fiebre, dificultad para respirar, tos",Calle5 Numero1,Sospechoso,,,,2020-02-26,,2020-03-05,
+100,84,F,48,Argentina,Calle6 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+101,85,M,64,USA,Calle4 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-03,2020-03-03,2020-03-05,
+102,86,F,27,Argentina,Calle1 Numero1,SI,"dificultad para respirar, secreciones nasales, fiebre, tos, dolor de garganta",Calle2 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+103,87,M,76,Argentina,Calle2 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+104,88,M,66,Argentina,Calle3 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-03,2020-03-03,2020-03-05,
+105,89,M,12,Argentina,Calle6 Numero1,SI,"tos, dolor de garganta, fiebre",Calle1 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+106,90,M,34,Argentina,Calle5 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-02-26,,2020-03-05,
+107,91,F,78,Argentina,Calle5 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-02-26,,2020-03-05,
+108,92,F,43,Argentina,Calle1 Numero1,SI,"dolor de garganta, tos, secreciones nasales, fiebre, dificultad para respirar",Calle1 Numero1,Sospechoso,,,,2020-02-26,,2020-03-05,
+109,93,M,35,Argentina,Calle5 Numero1,SI,"secreciones nasales, fiebre, dolor de garganta, tos, dificultad para respirar",Calle1 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+110,94,F,20,Argentina,Calle4 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+111,95,M,31,Argentina,Calle6 Numero1,SI,"dificultad para respirar, fiebre, tos",Calle1 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+112,96,M,54,Argentina,Calle5 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+113,96,M,54,Argentina,Calle5 Numero1,NO,NO,Calle6 Numero1,Activo,Hospital5,Argentina,Transmision local,2020-03-04,2020-03-07,2020-03-05,
+114,96,M,54,Argentina,Calle5 Numero1,NO,NO,Calle6 Numero1,Recuperado,Hospital5,Argentina,Transmision local,2020-03-04,2020-03-07,2020-03-05,
+115,97,M,7,Argentina,Calle2 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+116,98,M,59,Argentina,Calle1 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+117,98,M,59,Argentina,Calle1 Numero1,NO,NO,Calle4 Numero1,Activo,Hospital4,Chile,Caso importado,2020-02-24,,2020-03-05,
+118,98,M,59,Argentina,Calle1 Numero1,NO,NO,Calle4 Numero1,Recuperado,Hospital4,Chile,Caso importado,2020-02-24,,2020-03-05,
+119,99,F,60,Argentina,Calle4 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+120,100,F,65,Argentina,Calle1 Numero1,SI,"dolor de garganta, secreciones nasales",Calle2 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+121,101,F,71,Argentina,Calle2 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+122,102,M,28,Argentina,Calle6 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+123,102,M,28,Argentina,Calle6 Numero1,NO,NO,Calle1 Numero1,Activo,Hospital6,Europa,Indefinido,2020-03-01,2020-03-01,2020-03-05,
+124,102,M,28,Argentina,Calle6 Numero1,NO,NO,Calle1 Numero1,Recuperado,Hospital6,Europa,Indefinido,2020-03-01,2020-03-01,2020-03-05,
+125,103,M,54,USA,Calle6 Numero1,SI,"dificultad para respirar, dolor de garganta, tos",Calle1 Numero1,Sospechoso,,,,2020-02-24,2020-02-24,2020-03-05,
+126,104,F,3,Argentina,Calle2 Numero1,SI,secreciones nasales,Calle6 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+127,104,F,3,Argentina,Calle2 Numero1,SI,secreciones nasales,Calle6 Numero1,Activo,Hospital4,Chile,Caso importado,2020-03-03,,2020-03-05,
+128,104,F,3,Argentina,Calle2 Numero1,SI,secreciones nasales,Calle6 Numero1,Recuperado,Hospital4,Chile,Caso importado,2020-03-03,2020-03-05,2020-03-05,
+129,105,F,16,Argentina,Calle3 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+130,106,F,28,Argentina,Calle4 Numero1,SI,"dolor de garganta, dificultad para respirar",Calle5 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+131,107,F,49,Paraguay,Calle1 Numero1,SI,"dolor de garganta, tos",Calle6 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+132,108,M,61,Argentina,Calle2 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-28,,2020-03-05,
+133,109,M,7,Argentina,Calle5 Numero1,SI,"secreciones nasales, tos, fiebre",Calle6 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+134,110,M,59,Europa,Calle6 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+135,111,M,7,Argentina,Calle2 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+136,112,M,26,Argentina,Calle3 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-02-27,,2020-03-05,
+137,112,M,26,Argentina,Calle3 Numero1,NO,NO,Calle3 Numero1,Activo,Hospital6,Argentina,Transmision local,2020-02-27,2020-03-01,2020-03-05,
+138,112,M,26,Argentina,Calle3 Numero1,NO,NO,Calle3 Numero1,Recuperado,Hospital6,Argentina,Transmision local,2020-02-27,2020-03-01,2020-03-05,
+139,113,M,77,Argentina,Calle3 Numero1,SI,fiebre,Calle6 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+140,114,M,15,Argentina,Calle6 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+141,115,M,13,Argentina,Calle6 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+142,116,M,51,Argentina,Calle2 Numero1,SI,dolor de garganta,Calle3 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+143,117,F,71,Argentina,Calle1 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+144,118,M,43,Argentina,Calle6 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+145,119,F,69,Argentina,Calle6 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-02-24,2020-02-24,2020-03-05,
+146,120,F,65,Argentina,Calle3 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+147,121,M,71,Argentina,Calle4 Numero1,SI,"secreciones nasales, dolor de garganta, tos",Calle1 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+148,122,F,6,Argentina,Calle6 Numero1,SI,secreciones nasales,Calle3 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+149,123,F,33,Argentina,Calle3 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+150,124,M,66,Argentina,Calle5 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+151,125,F,50,Argentina,Calle6 Numero1,SI,secreciones nasales,Calle3 Numero1,Sospechoso,,,,2020-02-24,2020-02-24,2020-03-05,
+152,126,F,3,Uruguay,Calle6 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-02-26,,2020-03-05,
+153,127,M,18,Argentina,Calle6 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-02-28,2020-02-28,2020-03-05,
+154,128,M,56,Argentina,Calle3 Numero1,SI,dificultad para respirar,Calle3 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+155,129,M,79,Argentina,Calle4 Numero1,SI,"secreciones nasales, tos",Calle3 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+156,130,M,9,Argentina,Calle1 Numero1,SI,"secreciones nasales, tos",Calle3 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+157,131,M,9,Argentina,Calle1 Numero1,SI,"secreciones nasales, dificultad para respirar, dolor de garganta, tos, fiebre",Calle3 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+158,132,F,10,Argentina,Calle6 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-02,2020-03-02,2020-03-05,
+159,132,F,10,Argentina,Calle6 Numero1,NO,NO,Calle2 Numero1,Activo,Hospital2,Argentina,Transmision local,2020-03-02,2020-03-02,2020-03-05,
+160,132,F,10,Argentina,Calle6 Numero1,NO,NO,Calle2 Numero1,Recuperado,Hospital2,Argentina,Transmision local,2020-03-02,2020-03-02,2020-03-05,
+161,133,F,3,Argentina,Calle3 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+162,134,M,67,Argentina,Calle6 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+163,134,M,67,Argentina,Calle6 Numero1,NO,NO,Calle4 Numero1,Activo,Hospital6,Uruguay,Indefinido,2020-02-29,2020-02-29,2020-03-05,
+164,134,M,67,Argentina,Calle6 Numero1,NO,NO,Calle4 Numero1,Recuperado,Hospital6,Uruguay,Indefinido,2020-02-29,2020-02-29,2020-03-05,
+165,135,F,14,Argentina,Calle1 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+166,136,M,55,Argentina,Calle3 Numero1,SI,"dificultad para respirar, secreciones nasales",Calle4 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+167,137,F,72,Argentina,Calle3 Numero1,SI,secreciones nasales,Calle6 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+168,138,M,24,Argentina,Calle4 Numero1,SI,"dificultad para respirar, fiebre, secreciones nasales, dolor de garganta, tos",Calle3 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+169,139,F,24,Argentina,Calle1 Numero1,SI,"dolor de garganta, dificultad para respirar, fiebre, tos",Calle1 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+170,140,M,59,Europa,Calle1 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-02-26,2020-02-26,2020-03-05,
+171,141,F,76,Argentina,Calle5 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+172,141,F,76,Argentina,Calle5 Numero1,NO,NO,Calle4 Numero1,Activo,Hospital1,USA,Contacto estrecho,2020-03-04,2020-03-07,2020-03-05,
+173,141,F,76,Argentina,Calle5 Numero1,NO,NO,Calle4 Numero1,Recuperado,Hospital1,USA,Contacto estrecho,2020-03-04,2020-03-07,2020-03-05,
+174,142,M,79,Brasil,Calle1 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+175,142,M,79,Brasil,Calle1 Numero1,NO,NO,Calle5 Numero1,Activo,Hospital3,Bolivia,Contacto estrecho,2020-02-27,2020-02-27,2020-03-05,
+176,142,M,79,Brasil,Calle1 Numero1,NO,NO,Calle5 Numero1,Recuperado,Hospital3,Bolivia,Contacto estrecho,2020-02-27,2020-02-27,2020-03-05,
+177,143,F,2,Argentina,Calle2 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-03,2020-03-03,2020-03-05,
+178,144,M,46,Argentina,Calle5 Numero1,SI,"tos, fiebre, secreciones nasales, dolor de garganta, dificultad para respirar",Calle6 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+179,145,M,4,Argentina,Calle4 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+180,146,F,1,Argentina,Calle1 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-02-25,2020-02-25,2020-03-05,
+181,147,M,24,Argentina,Calle1 Numero1,SI,"dolor de garganta, dificultad para respirar, secreciones nasales, fiebre",Calle6 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+182,148,F,52,Argentina,Calle1 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-03-02,,2020-03-05,
+183,148,F,52,Argentina,Calle1 Numero1,NO,NO,Calle5 Numero1,Activo,Hospital6,Argentina,Transmision local,2020-03-02,2020-03-05,2020-03-05,
+184,148,F,52,Argentina,Calle1 Numero1,NO,NO,Calle5 Numero1,Fallecido,Hospital6,Argentina,Transmision local,2020-03-02,2020-03-05,2020-03-05,
+185,149,F,27,Argentina,Calle1 Numero1,SI,"dificultad para respirar, secreciones nasales",Calle2 Numero1,Sospechoso,,,,2020-03-04,,2020-03-05,
+186,150,M,54,Argentina,Calle6 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-02-26,2020-02-26,2020-03-05,
+187,151,M,23,Argentina,Calle6 Numero1,SI,"fiebre, dificultad para respirar, tos, dolor de garganta",Calle5 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+188,151,M,23,Argentina,Calle6 Numero1,SI,"fiebre, dificultad para respirar, tos, dolor de garganta",Calle5 Numero1,Activo,Hospital2,USA,Indefinido,2020-03-01,2020-03-04,2020-03-05,
+189,151,M,23,Argentina,Calle6 Numero1,SI,"fiebre, dificultad para respirar, tos, dolor de garganta",Calle5 Numero1,Recuperado,Hospital2,USA,Indefinido,2020-03-01,2020-03-04,2020-03-05,
+190,152,F,25,Argentina,Calle4 Numero1,SI,"fiebre, dolor de garganta, secreciones nasales, tos, dificultad para respirar",Calle6 Numero1,Sospechoso,,,,2020-02-24,2020-02-24,2020-03-05,
+191,153,F,24,Argentina,Calle4 Numero1,SI,"secreciones nasales, dificultad para respirar, tos, dolor de garganta, fiebre",Calle1 Numero1,Sospechoso,,,,2020-02-27,2020-02-27,2020-03-05,
+192,154,F,21,Argentina,Calle4 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+193,155,F,46,Argentina,Calle6 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+194,155,F,46,Argentina,Calle6 Numero1,NO,NO,Calle5 Numero1,Activo,Hospital3,Uruguay,Indefinido,2020-03-04,2020-03-04,2020-03-05,
+195,155,F,46,Argentina,Calle6 Numero1,NO,NO,Calle5 Numero1,Recuperado,Hospital3,Uruguay,Indefinido,2020-03-04,2020-03-04,2020-03-05,
+196,156,F,16,Argentina,Calle1 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+197,157,F,12,Europa,Calle4 Numero1,SI,"dolor de garganta, secreciones nasales, fiebre",Calle2 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+198,158,M,15,Argentina,Calle3 Numero1,SI,"tos, secreciones nasales, dificultad para respirar, fiebre",Calle4 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+199,159,M,57,Argentina,Calle2 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+200,160,F,21,Argentina,Calle4 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-24,2020-02-24,2020-03-05,
+201,161,M,32,Chile,Calle1 Numero1,SI,"dolor de garganta, tos",Calle1 Numero1,Sospechoso,,,,2020-02-24,2020-02-24,2020-03-05,
+202,162,F,17,Argentina,Calle1 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+203,163,M,68,Argentina,Calle3 Numero1,SI,tos,Calle2 Numero1,Sospechoso,,,,2020-02-28,2020-02-28,2020-03-05,
+204,164,M,64,USA,Calle4 Numero1,SI,dificultad para respirar,Calle1 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+205,165,M,54,Argentina,Calle4 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-02-29,,2020-03-05,
+206,166,F,49,Bolivia,Calle6 Numero1,SI,dificultad para respirar,Calle2 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+207,167,F,26,Argentina,Calle3 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+208,168,M,6,Argentina,Calle2 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+209,169,F,44,Bolivia,Calle6 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-02-26,2020-02-26,2020-03-05,
+210,170,M,61,Argentina,Calle2 Numero1,SI,"tos, secreciones nasales, dificultad para respirar, fiebre",Calle6 Numero1,Sospechoso,,,,2020-02-26,2020-02-26,2020-03-05,
+211,171,M,39,Argentina,Calle4 Numero1,SI,"tos, dificultad para respirar, secreciones nasales, dolor de garganta, fiebre",Calle3 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+212,171,M,39,Argentina,Calle4 Numero1,SI,"tos, dificultad para respirar, secreciones nasales, dolor de garganta, fiebre",Calle3 Numero1,Activo,Hospital5,Bolivia,Indefinido,2020-03-04,2020-03-04,2020-03-05,
+213,171,M,39,Argentina,Calle4 Numero1,SI,"tos, dificultad para respirar, secreciones nasales, dolor de garganta, fiebre",Calle3 Numero1,Recuperado,Hospital5,Bolivia,Indefinido,2020-03-04,2020-03-04,2020-03-05,
+214,172,M,9,Argentina,Calle5 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-02-28,,2020-03-05,
+215,173,M,35,Argentina,Calle4 Numero1,SI,"dolor de garganta, fiebre, secreciones nasales",Calle5 Numero1,Sospechoso,,,,2020-02-28,2020-02-28,2020-03-05,
+216,174,M,8,Argentina,Calle6 Numero1,SI,"secreciones nasales, dolor de garganta, tos, dificultad para respirar",Calle6 Numero1,Sospechoso,,,,2020-02-28,2020-02-28,2020-03-05,
+217,174,M,8,Argentina,Calle6 Numero1,SI,"secreciones nasales, dolor de garganta, tos, dificultad para respirar",Calle6 Numero1,Activo,Hospital3,USA,Indefinido,2020-02-28,2020-02-28,2020-03-05,
+218,174,M,8,Argentina,Calle6 Numero1,SI,"secreciones nasales, dolor de garganta, tos, dificultad para respirar",Calle6 Numero1,Recuperado,Hospital3,USA,Indefinido,2020-02-28,2020-02-28,2020-03-05,
+219,175,M,68,Argentina,Calle5 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-02-26,2020-02-26,2020-03-05,
+220,176,M,62,Argentina,Calle6 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+221,177,M,58,Argentina,Calle3 Numero1,SI,"fiebre, tos, dificultad para respirar",Calle6 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+222,178,F,48,Argentina,Calle1 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-01,2020-03-01,2020-03-05,
+223,179,F,19,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle6 Numero1,Sospechoso,,,,2020-02-29,2020-02-29,2020-03-05,
+224,179,F,19,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle6 Numero1,Activo,Hospital5,Uruguay,Caso importado,2020-02-29,2020-02-29,2020-03-05,
+225,179,F,19,Argentina,Calle5 Numero1,SI,dificultad para respirar,Calle6 Numero1,Fallecido,Hospital5,Uruguay,Caso importado,2020-02-29,2020-02-29,2020-03-05,
+226,180,F,70,Argentina,Calle4 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+227,180,F,70,Argentina,Calle4 Numero1,NO,NO,Calle3 Numero1,Activo,Hospital5,Brasil,Caso importado,2020-02-24,,2020-03-05,
+228,180,F,70,Argentina,Calle4 Numero1,NO,NO,Calle3 Numero1,Fallecido,Hospital5,Brasil,Caso importado,2020-02-24,2020-02-26,2020-03-05,
+229,181,F,62,USA,Calle1 Numero1,NO,NO,Calle1 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+230,182,M,17,Argentina,Calle6 Numero1,NO,NO,Calle3 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+231,183,F,68,Argentina,Calle2 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-03-03,2020-03-03,2020-03-05,
+232,184,F,7,Argentina,Calle2 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+233,185,M,18,Argentina,Calle5 Numero1,NO,NO,Calle5 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+234,186,M,47,Argentina,Calle1 Numero1,NO,NO,Calle4 Numero1,Sospechoso,,,,2020-02-26,,2020-03-05,
+235,187,M,15,USA,Calle1 Numero1,SI,"dolor de garganta, dificultad para respirar, tos",Calle5 Numero1,Sospechoso,,,,2020-02-24,,2020-03-05,
+236,187,M,15,USA,Calle1 Numero1,SI,"dolor de garganta, dificultad para respirar, tos",Calle5 Numero1,Activo,Hospital1,Brasil,Indefinido,2020-02-24,,2020-03-05,
+237,187,M,15,USA,Calle1 Numero1,SI,"dolor de garganta, dificultad para respirar, tos",Calle5 Numero1,Recuperado,Hospital1,Brasil,Indefinido,2020-02-24,,2020-03-05,
+238,188,F,43,Argentina,Calle3 Numero1,SI,"dificultad para respirar, fiebre",Calle6 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+239,189,M,58,Argentina,Calle4 Numero1,SI,tos,Calle4 Numero1,Sospechoso,,,,2020-02-28,2020-02-28,2020-03-05,
+240,189,M,58,Argentina,Calle4 Numero1,SI,tos,Calle4 Numero1,Activo,Hospital6,Brasil,Caso importado,2020-02-28,2020-02-28,2020-03-05,
+241,189,M,58,Argentina,Calle4 Numero1,SI,tos,Calle4 Numero1,Recuperado,Hospital6,Brasil,Caso importado,2020-02-28,2020-02-28,2020-03-05,
+242,190,F,40,Argentina,Calle5 Numero1,NO,NO,Calle6 Numero1,Sospechoso,,,,2020-03-04,2020-03-04,2020-03-05,
+243,191,M,11,Argentina,Calle3 Numero1,SI,dolor de garganta,Calle4 Numero1,Sospechoso,,,,2020-03-01,,2020-03-05,
+244,192,M,73,Argentina,Calle1 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-02-28,,2020-03-05,
+245,193,M,32,Argentina,Calle6 Numero1,SI,tos,Calle5 Numero1,Sospechoso,,,,2020-02-25,,2020-03-05,
+246,193,M,32,Argentina,Calle6 Numero1,SI,tos,Calle5 Numero1,Activo,Hospital2,Bolivia,Indefinido,2020-02-25,,2020-03-05,
+247,193,M,32,Argentina,Calle6 Numero1,SI,tos,Calle5 Numero1,Recuperado,Hospital2,Bolivia,Indefinido,2020-02-25,,2020-03-05,
+248,194,M,1,Argentina,Calle6 Numero1,NO,NO,Calle2 Numero1,Sospechoso,,,,2020-02-26,2020-02-26,2020-03-05,
+249,195,F,40,Argentina,Calle3 Numero1,SI,"fiebre, secreciones nasales, tos, dificultad para respirar",Calle2 Numero1,Sospechoso,,,,2020-03-03,,2020-03-05,
+250,196,F,22,Argentina,Calle1 Numero1,SI,"dolor de garganta, dificultad para respirar, tos",Calle1 Numero1,Sospechoso,,,,2020-02-26,,2020-03-05,
+251,196,F,22,Argentina,Calle1 Numero1,SI,"dolor de garganta, dificultad para respirar, tos",Calle1 Numero1,Activo,Hospital2,Argentina,Transmision local,2020-02-26,,2020-03-05,
+252,196,F,22,Argentina,Calle1 Numero1,SI,"dolor de garganta, dificultad para respirar, tos",Calle1 Numero1,Recuperado,Hospital2,Argentina,Transmision local,2020-02-26,,2020-03-05,
