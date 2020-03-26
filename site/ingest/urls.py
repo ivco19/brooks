@@ -17,4 +17,14 @@ urlpatterns = [
     path(
         'list_files/',
         views.ListRawFileView.as_view(),
-        name='list_files')]
+        name='list_files'),
+
+    path(
+        'list_patient/',
+        views.ListPatientView.as_view(),
+        name='list_patient'),
+
+    path(
+        'patient/<int:pk>/',
+        views.PatientDetailView.as_view(),
+        name='patient_detail')]

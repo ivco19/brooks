@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% block page_title %}Pacientes{% endblock %}
+{% block title %}
+    Pacientes
+{%endblock %}
+
+{% block page_css %}
+<style>
+    table.table thead a{
+        color: white;
+        font-weight: bolder;
+        text-decoration:underline;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div id="filter-container" class="float-right">
+        <span class="text-info">
+            <input id="supectedCheck" data-status=".suspected" type="checkbox" checked> Sospechosos
+        </span>
+        <span class="text-warning">
+            <input id="activeCheck" data-status=".active" type="checkbox" checked> Activos
+        </span>
+        <span class="text-danger">
+            <input id="deceasedCheck" data-status=".deceased" type="checkbox"> Fallecido
+        </span>
+        <span class="text-success">
+            <input id="recoveredCheck" data-status=".recovered" type="checkbox"> Recuperados
+        </span>
+    </div>
+    {% render_table table %}
+</div>
+{% endblock %}
+
+
+{% block page_js %}
+<script>
+$(document).ready(function(){
+    $("div#filter-container input").click(function(evt){
+        var $input = $(evt.currentTarget);
+        var status = $input.data("status");
+        if($input.is(":checked")){
+            $("table.table tr" + status).removeClass("d-none");
+        } else {
+            $("table.table tr" + status).addClass("d-none");
+        }
+    });
+
+});
+</script>
+{% endblock %}

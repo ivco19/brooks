@@ -233,7 +233,20 @@ class Patient(TimeStampedModel):
     nationality = models.CharField(max_length=255, verbose_name="nacionalidad")
     address = models.CharField(max_length=255, verbose_name="dirección")
     notes = models.TextField(blank=True, verbose_name="notas", null=True)
-    age = models.PositiveIntegerField(null=True)
+    age = models.PositiveIntegerField(null=True, verbose_name="edad")
+
+    @property
+    def last_event(self):
+        return self.events.order_by("created").last()
+
+    @property
+    def last_status(self):
+        st = self.last_event.status
+        if st not in Event.STATUSES:
+            for k, v in Event.STATUSES.items():
+                if st == v:
+                    return k
+        return st
 
 
 class Symptom(TimeStampedModel):
