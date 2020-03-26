@@ -45,17 +45,11 @@ class CheckRawFileView(LogginRequired, UpdateView):
     success_url = reverse_lazy("ingest:list_files")
 
     def get_context_data(self):
-        if not self.object.parse_checked:
-            resume = self.object.parse(commit=False)
-            self.object.info_errors_and_warnings = resume
-            self.object.save()
-        else:
-            resume = self.object.info_errors_and_warnings
-
-
         context_data = super().get_context_data()
+        if not self.object.is_parsed:
+            resume = self.object.parse(commit=False)
+            context_data.update(resume)
         context_data["conf_code"] = "".join(random.sample(LETTERS, 6))
-        context_data.update(resume)
         return context_data
 
 

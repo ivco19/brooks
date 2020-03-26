@@ -48,6 +48,9 @@
                     {{rawfile.created}}
             </p>
             <div data-toggle="modal" data-target="#resumeModal" class="float-right">
+                {% if rawfile.is_parsed %}
+                <h5 class="text-success">Archivo cargado</h5>
+                {% else %}
                 <a href="#" class="badge badge-info">
                     Info
                     {{infos|length}}
@@ -60,7 +63,7 @@
                     Errores
                     {{errors|length}}
                 </a>
-
+                {% endif %}
             </div>
         </div>
         <hr>
@@ -86,14 +89,25 @@
         </div>
         <div class="modal-body">
             <div id="modal-confirmed" class="alert alert-success" role="alert">
-                El archivo #{{ rawfile.pk }}
-                <strong>Si</strong> sera integrado a la base de datos
+                {% if not rawfile.is_parsed %}
+                    Se guardaran cambios en el archivo #{{ rawfile.pk }}
+                    el cual <strong>ya fue integrado</strong> a la base de datos
+                    en el pasado.
+                {% else %}
+                    El archivo #{{ rawfile.pk }}
+                    <strong>Si</strong> sera integrado a la base de datos
+                {% endif %}
             </div>
             <div id="modal-not-confirmed" class="alert alert-danger" role="alert">
-                El archivo #{{ rawfile.pk }}
-                <strong>NO</strong> sera integrado a la base de datos
+                {% if rawfile.is_parsed %}
+                    Los eventos del archivo #{{ rawfile.pk }}
+                    sera <strong>removidos</strong> de la base de datos
+                {% else %}
+                    El archivo #{{ rawfile.pk }}
+                    <strong>NO</strong> sera integrado a la base de datos
+                {% endif %}
             </div>
-            <input type="text" id="superSeguro">
+            <input type="text" id="superSeguro" value="{{conf_code}}">
                 <label for="vehicle1">copiar <strong class="text-info">{{conf_code}}</strong></label><br>
                 <small>Respetar mayúsculas y no agregar espacios</small>
             </div>
@@ -108,6 +122,7 @@
     </div>
 </div>
 
+{% if not rawfile.is_parsed %}
 <div id="resumeModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -187,7 +202,9 @@
       </div>
     </div>
 </div>
-{% endblock %}
+{% endif %}
+
+{% endblock modals %}
 
 
 {% block page_js %}

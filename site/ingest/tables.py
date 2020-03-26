@@ -19,6 +19,8 @@ class RawFileTable(tables.Table):
     created = tables.Column(verbose_name="Fecha de creación")
     modified = tables.Column(verbose_name="Última modificación")
     file = tables.Column()
+    file_size = tables.Column(accessor="file", verbose_name="Eventos en archivo")
+    events = tables.Column(verbose_name="Eventos generados")
 
     class Meta:
         model = models.RawFile
@@ -28,7 +30,7 @@ class RawFileTable(tables.Table):
             "thead": {"class": "thead-dark"}}
         row_attrs = {
             "class": lambda record: CONFIRMED_CLASSES[record.confirmed]}
-        sequence = ('id', 'created_by', )
+        sequence = ('id', 'created_by', "...", "open" )
 
     def render_open(self, value):
         return f"Ver #{value}"
@@ -40,3 +42,12 @@ class RawFileTable(tables.Table):
 
     def render_file(self, value):
         return os.path.basename(value.file.name)
+
+    def render_events(self, value):
+        return value.count()
+
+    def render_file_size(self, value, record):
+        try:
+            return len(record.as_df())
+        except:
+            return "Incorrecto"

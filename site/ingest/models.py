@@ -46,20 +46,6 @@ class RawFile(TimeStampedModel):
         on_delete=models.CASCADE, verbose_name="creado por")
 
     is_parsed = models.BooleanField(default=False, verbose_name="Parseado")
-    _iew = models.TextField(
-        default="null", db_column="Info, errors and Warnings")
-
-    @property
-    def info_errors_and_warnings(self):
-        return json.loads(self._iew)
-
-    @info_errors_and_warnings.setter
-    def info_errors_and_warnings(self, value):
-        self._iew = json.dumps(value)
-
-    @property
-    def parse_checked(self):
-        return bool(self.info_errors_and_warnings)
 
     @property
     def filename(self):
@@ -73,8 +59,19 @@ class RawFile(TimeStampedModel):
         parser = self.PARSERS[self.ext[1:]]
         return parser(self.file.path)
 
+    def remove_events(self, commit=False):
+        if commit and not self.is_parsed:
+            raise ValueError(f"RawFile #{self.pk} no esta cargado")
+        with transaction.atomic():
+            self.events.all().delete()
+            if commit:
+                self.is_parsed = False
+            else:
+                transaction.set_rollback(True)
+
+
     def parse(self, commit=False):
-        if self.is_parsed:
+        if commit and self.is_parsed:
             raise ValueError(f"RawFile #{self.pk} ya esta cargado")
 
         infos, errors, warnings = [], [], []
