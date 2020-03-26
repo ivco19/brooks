@@ -41,13 +41,11 @@ notebook==6.0.3
 numpy==1.18.2
 packaging==20.3
 pandas==1.0.3
-pandas-interactive-html==0.1.0
 pandocfilters==1.4.2
 parso==0.6.2
 pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==7.0.0
-pkg-resources==0.0.0
 prometheus-client==0.7.1
 prompt-toolkit==3.0.4
 ptyprocess==0.6.0
