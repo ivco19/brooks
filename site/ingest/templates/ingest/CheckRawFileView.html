@@ -15,7 +15,12 @@
 {%endblock %}
 
 {% block page_css %}
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 <style>
+    div.scroll {
+        overflow: auto;
+        height:400px;
+    }
 </style>
 {% endblock %}
 
@@ -63,7 +68,7 @@
     <div class="row">
         <div class="col">
             {% crispy form %}
-            {{rawfile.as_df.to_interactive_html|safe}}
+            {{rawfile.as_df.to_html|safe}}
         </div>
     </div>
 </div>
@@ -104,7 +109,7 @@
 </div>
 
 <div id="resumeModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Resumen del archivo #{{rawfile.pk}}</h5>
@@ -125,11 +130,13 @@
 
                   <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
-                        <ol>
-                            {% for elem in infos %}
-                            <li>{{elem}}</li>
-                            {% endfor %}
-                        </ol>
+                        <div class="scroll">
+                            <ol>
+                                {% for elem in infos %}
+                                <li>{{elem}}</li>
+                                {% endfor %}
+                            </ol>
+                        </div>
                     </div>
                   </div>
                 </div>
@@ -143,9 +150,13 @@
                   </div>
                   <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                     <div class="card-body">
-                        {% for elem in warnings %}
-                        <li>{{elem}}</li>
-                        {% endfor %}
+                        <div class="scroll">
+                            <ol>
+                                {% for elem in warnings %}
+                                <li>{{elem}}</li>
+                                {% endfor %}
+                            </ol>
+                        </div>
                     </div>
                   </div>
                 </div>
@@ -159,9 +170,13 @@
                   </div>
                   <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                     <div class="card-body">
-                        {% for elem in errors %}
-                        <li>{{elem}}</li>
-                        {% endfor %}
+                        <div class="scroll">
+                            <ol>
+                                {% for elem in errors %}
+                                <li>{{elem}}</li>
+                                {% endfor %}
+                            </ol>
+                        </div>
                     </div>
                   </div>
                 </div>
@@ -176,8 +191,18 @@
 
 
 {% block page_js %}
+<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
 <script>
 $(document).ready(function(){
+
+    $('table.dataframe').DataTable({
+        "scrollX": true
+    });
+
+    $("table.dataframe").addClass("table table-striped")
+    $("table.dataframe th").addClass("table-dark")
+
     var $rawFileForm = $("form#rawFileForm");
     $confirmedInput = $("input#id_confirmed");
 
