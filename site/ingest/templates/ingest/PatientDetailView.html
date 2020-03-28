@@ -27,6 +27,14 @@
             {%crispy form%}
         </div>
     </div>
+    <div>
+        <ul>
+        {% for event in patient.events.all %}
+            <li>{{event.created}}: {{event.status}}</li>
+
+        {% endfor %}
+        </ul>
+    </div>
 
 </div>
 {% endblock %}

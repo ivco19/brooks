@@ -9,16 +9,37 @@
     .markdown  h1{
         display: none;
     }
+
+    .plot {
+        margin-bottom: 30px;
+    }
+
 </style>
 {% endblock %}
 
 
 {% block content %}
-<div class="markdown">
-    {{about|safe}}
-</div>
-<img width="30%" src="{% static 'logos.png' %}"></img>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col plot">
+            <div class="text-center">
+            {{plot.to_html}}
+        </div>
+        </div>
+    </div>
 
+    <div class="row"></div>
+        <div class="markdown col">
+            {{about|safe}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <img width="30%" src="{% static 'logos.png' %}"></img>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 

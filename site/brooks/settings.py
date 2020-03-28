@@ -171,9 +171,10 @@ SUMMERNOTE_CONFIG = {
 
 }
 
-# django tables-2
 
+# django tables-2
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+
 
 
 try:
