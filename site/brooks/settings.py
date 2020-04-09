@@ -34,7 +34,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '_media/')
 SECRET_KEY = 'iy7m=jh@n-z9r!r=0mn*d&ru_lj@#*$i2gvse69@1xrha7te$2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+PRODUCTION = os.environ.get("BROOKS_PRODUCTION", "true").lower() == "true"
+DEBUG = not PRODUCTION
 
 ALLOWED_HOSTS = []
 
@@ -163,10 +164,10 @@ SHELL_PLUS = "ipython"
 SUMMERNOTE_THEME = 'lite'
 
 SUMMERNOTE_CONFIG = {
-
-    # Or, you can set it as False to use SummernoteInplaceWidget by default - no iframe mode
-    # In this case, you have to load Bootstrap/jQuery stuff by manually.
-    # Use this when you're already using Bootstraip/jQuery based themes.
+    # Or, you can set it as False to use SummernoteInplaceWidget by default -
+    # no iframe mode In this case, you have to load Bootstrap/jQuery stuff by
+    # manually. Use this when you're already using Bootstraip/jQuery based
+    # themes.
     'iframe': False,
 
 }
@@ -175,23 +176,26 @@ SUMMERNOTE_CONFIG = {
 # django tables-2
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
+if DEBUG:
+    try:
+        from local_settings import *  # noqa
+    except ImportError:
+        import shutil
+        import sys
 
+        print("[ALERT] 'local_settings.py' not found.")
 
-try:
-    from local_settings import *  # noqa
-except ImportError:
-    import shutil
-    import sys
+        print("[ALERT] Creating an empty one")
 
-    print("[ALERT] 'local_settings.py' not found.")
+        org = os.path.join(BASE_DIR, "brooks", "local_settings.template")
+        dest = os.path.join(BASE_DIR, "local_settings.py")
+        shutil.copy(org, dest)
 
-    print("[ALERT] Creating an empty one")
+        print("[ALERT] Please edit 'local_settings.py'")
+        print("")
 
-    org = os.path.join(BASE_DIR, "brooks", "local_settings.template")
-    dest = os.path.join(BASE_DIR, "local_settings.py")
-    shutil.copy(org, dest)
-
-    print("[ALERT] Please edit 'local_settings.py'")
-    print("")
-
-    sys.exit(1)
+        sys.exit(1)
+else:
+    # Configure Django App for Heroku.
+    import django_heroku  # noqa
+    django_heroku.settings(locals())
