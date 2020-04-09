@@ -16,3 +16,5 @@ DATABASES = {
         'NAME': str(PROJECT_DIR / 'db.sqlite3'),
     }
 }
+
+BROOKS_DEMO_MODE = False

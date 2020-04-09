@@ -34,8 +34,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '_media/')
 SECRET_KEY = 'iy7m=jh@n-z9r!r=0mn*d&ru_lj@#*$i2gvse69@1xrha7te$2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-PRODUCTION = os.environ.get("BROOKS_PRODUCTION", "true").lower() == "true"
+PRODUCTION = os.environ.get("BROOKS_PRODUCTION", "false").lower() == "true"
 DEBUG = not PRODUCTION
+
+
+DEMO_MODE = os.environ.get("BROOKS_DEMO_MODE", "false").lower() == "false"
+
 
 ALLOWED_HOSTS = []
 
@@ -72,6 +76,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEMO_MODE:
+    MIDDLEWARE.append('brooks.middleware.DemoUserMiddleware')
 
 ROOT_URLCONF = 'brooks.urls'
 
