@@ -38,7 +38,7 @@ PRODUCTION = os.environ.get("BROOKS_PRODUCTION", "false").lower() == "true"
 DEBUG = not PRODUCTION
 
 
-DEMO_MODE = os.environ.get("BROOKS_DEMO_MODE", "false").lower() == "false"
+DEMO_MODE = os.environ.get("BROOKS_DEMO_MODE", "false").lower() == "true"
 
 
 ALLOWED_HOSTS = []
