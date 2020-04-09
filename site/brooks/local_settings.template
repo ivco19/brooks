@@ -17,4 +17,4 @@ DATABASES = {
     }
 }
 
-BROOKS_DEMO_MODE = False
+DEMO_MODE = False
