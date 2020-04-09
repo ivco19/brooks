@@ -1,1 +1,1 @@
-web: gunicorn brooks.wsgi
+web: gunicorn --pythonpath site brooks.wsgi
