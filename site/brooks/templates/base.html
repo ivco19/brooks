@@ -102,9 +102,16 @@
                 {% block page_js %}{% endblock %}
             </div>
 
+            {% if DEMO_MODE %}
+                <div class="alert alert-danger" role="alert">
+                    Esto es un <strong>DEMO</strong> todos los datos se eliminarán regularmente
+                </div>
+            {% endif %}
+
             <!--MAIN-->
             <main class="col bg-faded py-3">
                 <div><h2>{% block title %}{% endblock title %}</h2></div>
+
                 <hr>
                 {% include "messages.html" %}
                 {% block content %}

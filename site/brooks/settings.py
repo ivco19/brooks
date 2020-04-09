@@ -75,10 +75,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'brooks.middleware.DemoUserMiddleware'  # this is only used when demo
+                                            # mode is True
 ]
 
-if DEMO_MODE:
-    MIDDLEWARE.append('brooks.middleware.DemoUserMiddleware')
 
 ROOT_URLCONF = 'brooks.urls'
 
@@ -93,6 +94,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "brooks.context_processors.export_some_settings",
             ],
         },
     },

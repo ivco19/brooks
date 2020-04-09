@@ -1,5 +1,6 @@
 import shutil
 import os
+import django.apps
 
 from django.conf import settings
 
@@ -15,17 +16,11 @@ class Command(BaseCommand):
             raise CommandError("This command can only run in demo mode")
 
         print(f"!!! Reset DB")
-
-        user = settings.DATABASES["default"]["USER"]
-        password = settings.DATABASES["default"]["PASSWORD"]
-
-        call_command(
-            'reset_db', '--noinput', "-U", user, "-P", password)
-
-        print(f"!!! Migrate")
-        call_command('migrate')
+        for model in django.apps.apps.get_models():
+            model.objects.all().delete()
 
         print(f"!!! Removing {settings.MEDIA_ROOT}")
         if os.path.exists(settings.MEDIA_ROOT):
             shutil.rmtree(settings.MEDIA_ROOT)
+
 
