@@ -15,9 +15,16 @@ class Command(BaseCommand):
             raise CommandError("This command can only run in demo mode")
 
         print(f"!!! Reset DB")
-        call_command('reset_db', '--noinput')
+
+        user = settings.DATABASES["default"]["USER"]
+        password = settings.DATABASES["default"]["PASSWORD"]
+
+        call_command(
+            'reset_db', '--noinput', "-U", user, "-P", password)
+
         print(f"!!! Migrate")
         call_command('migrate')
+
         print(f"!!! Removing {settings.MEDIA_ROOT}")
         if os.path.exists(settings.MEDIA_ROOT):
             shutil.rmtree(settings.MEDIA_ROOT)
