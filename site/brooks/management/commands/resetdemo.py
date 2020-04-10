@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not settings.DEMO_MODE:
-            raise CommandError("This command can only run in demo mode")
+            raise CommandError("This command can only run in DEMO_MODE")
 
         print(f"!!! Reset DB")
         for model in django.apps.apps.get_models():
