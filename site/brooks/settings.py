@@ -182,6 +182,9 @@ SUMMERNOTE_CONFIG = {
 }
 
 
+MODELS_DESCRIPTION = os.environ.get("BROOKS_MODELS_DECRTIPTION", "")
+
+
 # django tables-2
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
