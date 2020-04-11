@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Multiples Plots{% endblock %}
+{% block title %}Multiples Plots{% endblock %}
+
+{% block page_css %}
+<style>
+    .markdown  h1{
+        display: none;
+    }
+
+    .plot {
+        margin-bottom: 30px;
+    }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+Algunas de las visualizaciones:
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col plot">
+            <div class="text-center">
+            {{plot.to_html}}
+            {{plot1.to_html}}
+            {{plot3.to_html}}
+            {{plot4.to_html}}
+            {{plot5.to_html}}
+            {{plot2.to_html}}
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block page_js %}
+<script>
+$(document).ready(function(){
+
+});
+</script>
+{% endblock %}

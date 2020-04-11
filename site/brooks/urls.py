@@ -27,7 +27,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/about', permanent=False)),
+    path('', RedirectView.as_view(url='/dashboard', permanent=False)),
 
     path('admin/', admin.site.urls),
 
@@ -44,6 +44,11 @@ urlpatterns = [
         'about/',
         views.AboutView.as_view(),
         name='about'),
+    
+    path(
+        'dashboard/',
+        views.PlotView.as_view(),
+        name='dashboard'),
 
     path('ingest/', include(('ingest.urls', 'ingest'), namespace='ingest')),
     path('reporter/', include(('reporter.urls', 'reporter'), namespace='reporter')),
