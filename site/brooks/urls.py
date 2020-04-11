@@ -44,10 +44,9 @@ urlpatterns = [
         'about/',
         views.AboutView.as_view(),
         name='about'),
-    
     path(
         'dashboard/',
-        views.PlotView.as_view(),
+        views.DashboardView.as_view(),
         name='dashboard'),
 
     path('ingest/', include(('ingest.urls', 'ingest'), namespace='ingest')),

@@ -46,81 +46,33 @@ def subplots(*args, **kwargs):
 
 class MatplotlibMixin:
 
-    plot_kwargs = None
     subplots_kwargs = None
-
-    def get_plot_kwargs(self):
-        return self.plot_kwargs or {}
 
     def get_subplots_kwargs(self):
         return self.subplots_kwargs or {}
 
     def get_plot(self):
         """Return the plot to be injected in the context_data"""
-        plot_kwargs = self.get_plot_kwargs()
-        return subplots(**plot_kwargs)
+        splot_kwargs = self.get_subplots_kwargs()
+        return subplots(**splot_kwargs)
 
     def draw_plot(self, fig, ax, **kwargs):
-        """Draw the plot"""
-        print('Grafico copado')
-        raise NotImplementedError("Please implement the draw_plot method")
-
-    def draw_plot1(self, fig, ax, **kwargs):
-        """Draw the plot"""
-        raise NotImplementedError("Please implement the draw_plot method")
-    
-    def draw_plot2(self, fig, ax, **kwargs):
-        """Draw the plot"""
-        raise NotImplementedError("Please implement the draw_plot method")
-
-    def draw_plot3(self, fig, ax, **kwargs):
-        """Draw the plot"""
-        raise NotImplementedError("Please implement the draw_plot method")
-
-    def draw_plot4(self, fig, ax, **kwargs):
-        """Draw the plot"""
-        raise NotImplementedError("Please implement the draw_plot method")
-
-    def draw_plot5(self, fig, ax, **kwargs):
         """Draw the plot"""
         raise NotImplementedError("Please implement the draw_plot method")
 
     def get_context_data(self, **kwargs):
-        """
-        Overridden version of `.TemplateResponseMixin` to inject the plot into
-        the template's context.
+        """Overridden version of `.TemplateResponseMixin` to inject the
+        plot into the template's context.
         """
         context = super().get_context_data(**kwargs)
 
         plot = self.get_plot()
-        fig, ax = plot.figaxes(**self.get_subplots_kwargs())
+        fig, ax = plot.figaxes()
         self.draw_plot(fig=fig, ax=ax, **kwargs)
 
-        plot1 = self.get_plot()
-        fig, ax = plot1.figaxes(**self.get_subplots_kwargs())
-        self.draw_plot1(fig=fig, ax=ax, **kwargs)
-
-        plot2 = self.get_plot()
-        fig, ax = plot2.figaxes(**self.get_subplots_kwargs())
-        self.draw_plot2(fig=fig, ax=ax, **kwargs)
-
-        plot3 = self.get_plot()
-        fig, ax = plot3.figaxes(**self.get_subplots_kwargs())
-        self.draw_plot3(fig=fig, ax=ax, **kwargs)
-
-        plot4 = self.get_plot()
-        fig, ax = plot4.figaxes(**self.get_subplots_kwargs())
-        self.draw_plot4(fig=fig, ax=ax, **kwargs)
-
-        plot5 = self.get_plot()
-        fig, ax = plot5.figaxes(**self.get_subplots_kwargs())
-        self.draw_plot5(fig=fig, ax=ax, **kwargs)
-
-        context = {"plot":plot, "plot1":plot1, "plot2":plot2, "plot3":plot3, "plot4":plot4, "plot5":plot5}
+        context["plot"] = plot
         return context
 
 
 class MatplotlibView(MatplotlibMixin, TemplateView):
     pass
-
-

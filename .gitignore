@@ -131,3 +131,4 @@ dmypy.json
 # brooks
 local_settings.py
 _media/
+.vscode/
