@@ -32,9 +32,9 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 
 
-from django.conf import settings
-from libs import model_descriptions as mdesc
+# from django.conf import settings
+# from libs import model_descriptions as mdesc
 
-mdesc.from_description(
-    descfile=settings.MODELS_DESCRIPTION,
-    context=locals())
+# mdesc.from_description(
+#     descfile=settings.MODELS_DESCRIPTION,
+#     context=locals())
