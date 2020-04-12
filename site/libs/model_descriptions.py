@@ -156,17 +156,17 @@ def create_field(*, name, data, emodels):
         return dj_ftype(**data)
 
     else:
+        link_to = emodels[dj_ftype]
         # we have a foreign key, si tiene "sep" es un many-to-many
         sep = data.pop("sep", None)
         if sep:
-            return models.ManyToManyField(dj_ftype, **data)
+            return models.ManyToManyField(link_to, **data)
         else:
             return models.ForeignKey(
-                dj_ftype, on_delete=models.CASCADE, **data)
+                link_to, on_delete=models.CASCADE, **data)
 
 
 def create_model(*, name, data, emodels, module_spec):
-    print(f"> Model '{name}'")
     # copiamos los datos para manipular tranquilos
     data = copy.deepcopy(data)
 
@@ -176,7 +176,6 @@ def create_model(*, name, data, emodels, module_spec):
     # iteramos sobre
     attributes = data.pop("attributes", {})
     for field_name, field_data in attributes.items():
-        print(f">> Attribute '{name}.{field_name}'")
         new_field = create_field(
             name=field_name, data=field_data, emodels=emodels)
         attrs[field_name] = new_field
