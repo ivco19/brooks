@@ -47,6 +47,7 @@ class AboutView(LogginRequired, TemplateView):
 
         return context
 
+
 class DashboardView(MatplotlibView):
 
     template_name = "Dashboard.html"

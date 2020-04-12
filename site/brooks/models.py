@@ -29,3 +29,12 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.create(user=instance)
     else:
         instance.profile.save()
+
+
+
+from django.conf import settings
+from libs import model_descriptions as mdesc
+
+mdesc.from_description(
+    descfile=settings.MODELS_DESCRIPTION,
+    context=locals())

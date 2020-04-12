@@ -27,7 +27,10 @@ from . import views
 
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/dashboard', permanent=False)),
+    path(
+        '',
+        RedirectView.as_view(url='/dashboard', permanent=False),
+        name="home"),
 
     path('admin/', admin.site.urls),
 
