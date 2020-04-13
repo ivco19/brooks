@@ -8,6 +8,7 @@ from ingest import models
 
 @receiver(post_save, sender=models.RawFile)
 def compile_file(sender, instance, created, **kwargs):
+    return
     if instance.confirmed and not instance.is_parsed:
         instance.parse(commit=True)
         instance.save()

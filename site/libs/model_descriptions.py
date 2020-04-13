@@ -6,7 +6,7 @@ import importlib
 
 import yaml
 
-from django.db import models
+from django.db import models, transaction
 from django.core import validators
 from django.conf import settings
 from django.contrib import admin
@@ -69,13 +69,13 @@ DESCRIPTOR_FILE_PARSERS = MultiKeyDict({
 })
 
 
-DATA_PARSERS = MultiKeyDict({
+DATA_FILE_PARSERS = MultiKeyDict({
     (".csv",): pd.read_csv,
     (".xlsx",): pd.read_excel,
 })
 
 
-DATA_EXTENSIONS = list(DATA_PARSERS)
+DATA_FILE_EXTENSIONS = list(DATA_FILE_PARSERS)
 
 
 FIELD_TYPES = {
@@ -206,6 +206,7 @@ class Compiler:
     def create_model(self, *, name, data, emodels, module_spec):
 
         from django_extensions.db.models import TimeStampedModel as basemodel
+
         # copiamos los datos para manipular tranquilos
         data = copy.deepcopy(data)
 
@@ -302,7 +303,9 @@ class AdminRegister:
 class FileParser:
 
     def parse(self, df, models, principal):
-        import ipdb; ipdb.set_trace()
+        for row in df.iterrows():
+            import ipdb; ipdb.set_trace()
+
 
 
 # =============================================================================
@@ -324,6 +327,12 @@ class DynamicModels:
         parser = DESCRIPTOR_FILE_PARSERS[ext]
         with open(filename) as fp:
             return parser(fp)
+
+    def load_data_file(self, filename):
+        """Load the data based on the file extension"""
+        ext = os.path.splitext(filename)[-1].lower()
+        parser = DATA_FILE_PARSERS[ext]
+        return parser(filename)
 
     def create_models(self, app_config):
         if self.cache.get("compiled"):
@@ -355,11 +364,16 @@ class DynamicModels:
             if name not in exclude}
         return self.admin.register(models)
 
-    def parse_file(self, df):
+    def merge_info(self, filepath):
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
-        return self.fileparser.parse(
-            df=df,
-            models=self.cache.models,
-            principal=self.cache.principal)
 
+        df = self.load_data_file(filepath)
+
+        with transaction.atomic():
+            merge_info = self.fileparser.parse(
+                df=df, models=self.cache.models,
+                principal=self.cache.principal)
+            transaction.set_rollback(True)
+
+        return merge_info

@@ -32,10 +32,12 @@ def _raw_file_upload_to(instance, filename):
 
 class RawFile(TimeStampedModel):
 
+    DATA_FILE_EXTENSIONS = [e[1:] for e in mdesc.DATA_FILE_EXTENSIONS]
+
     file = models.FileField(
         upload_to=_raw_file_upload_to,
         validators=[
-            FileExtensionValidator(allowed_extensions=mdesc.DATA_EXTENSIONS)],
+            FileExtensionValidator(allowed_extensions=DATA_FILE_EXTENSIONS)],
         verbose_name="archivo")
 
     notes = models.TextField(blank=True, verbose_name="notas")
