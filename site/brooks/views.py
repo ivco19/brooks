@@ -48,7 +48,7 @@ class AboutView(LogginRequired, TemplateView):
         return context
 
 
-class DashboardView(MatplotlibView):
+class DashboardView(LogginRequired, MatplotlibView):
 
     template_name = "Dashboard.html"
     draw_methods = [
