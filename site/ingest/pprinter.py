@@ -8,10 +8,10 @@ from libs import dpprint
 from ingest import models
 
 
-class PatientPrinter(dpprint.ULPPrinter):
-    class Meta:
-        model = models.Patient
-        exclude = ["notes", "modified"]
+# class PatientPrinter(dpprint.ULPPrinter):
+#     class Meta:
+#         model = models.Patient
+#         exclude = ["notes", "modified"]
 
-        order = ('id',)
+#         order = ('id',)
 

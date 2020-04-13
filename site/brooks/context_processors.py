@@ -4,8 +4,6 @@ from django.conf import settings
 def export_some_settings(request):
     context = {}
 
-    to_export = ["DEMO_MODE"]
-
-    for te in to_export:
+    for te in settings.TO_EXPORT:
         context[te] = getattr(settings, te, None)
     return context

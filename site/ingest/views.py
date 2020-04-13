@@ -60,24 +60,24 @@ class ListRawFileView(LogginRequired, SingleTableView):
     template_name = "ingest/ListRawFileView.html"
 
 
-class ListPatientView(LogginRequired, SingleTableView):
+# class ListPatientView(LogginRequired, SingleTableView):
 
-    model = models.Patient
-    table_class = tables.PatientTable
-    template_name = "ingest/ListPatientView.html"
+#     model = models.Patient
+#     table_class = tables.PatientTable
+#     template_name = "ingest/ListPatientView.html"
 
 
-class PatientDetailView(LogginRequired, UpdateView):
+# class PatientDetailView(LogginRequired, UpdateView):
 
-    template_name = "ingest/PatientDetailView.html"
-    form_class = forms.PatientDetailForm
-    model = models.Patient
+#     template_name = "ingest/PatientDetailView.html"
+#     form_class = forms.PatientDetailForm
+#     model = models.Patient
 
-    def get_success_url(self):
-        patient = self.object
-        return reverse_lazy('ingest:patient_detail', args=[patient.pk])
+#     def get_success_url(self):
+#         patient = self.object
+#         return reverse_lazy('ingest:patient_detail', args=[patient.pk])
 
-    def get_context_data(self):
-        context_data = super().get_context_data()
-        context_data["pp_patient"] = pprinter.PatientPrinter(self.object)
-        return context_data
+#     def get_context_data(self):
+#         context_data = super().get_context_data()
+#         context_data["pp_patient"] = pprinter.PatientPrinter(self.object)
+#         return context_data

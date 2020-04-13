@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {{ tool }}
+    <small class="float-right">
+        <a class="btn btn-info btn-sm" href="{{ tool_url }}" target="_new">
+        Tool Link</a>
+    </small>
+{% endblock %}
+{% block page_title %}{{ tool }}{% endblock %}
+
+{% block page_css %}
+<style>
+    /* https://cp.grupo.host/index.php/knowledgebase/72/Como-hacer-un-andltiframeandgt-en-Full-Screen.html */
+    iframe#tool {
+        display: block;       /* iframes are inline by default */
+        border: none;         /* Reset default border */
+        height: 100vh;        /* Viewport-relative units */
+        width: 97vw;
+    }
+
+    #content-title h2 {
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<iframe id="tool" src="{{ tool_url }}">
+</iframe>
+{% endblock %}

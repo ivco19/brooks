@@ -2,14 +2,16 @@ import copy
 import os
 import json
 import inspect
+import importlib
 
 import yaml
 
 from django.db import models
 from django.core import validators
 from django.conf import settings
+from django.contrib import admin
 
-from django_extensions.db.models import TimeStampedModel
+import attr
 
 
 # =============================================================================
@@ -27,7 +29,6 @@ from django_extensions.db.models import TimeStampedModel
 # =============================================================================
 
 class MultiKeyDict(dict):
-
     def __init__(self, data):
         for keys, v in data.items():
             for k in keys:
@@ -36,12 +37,32 @@ class MultiKeyDict(dict):
                 self[k] = v
 
 
+class Bunch(dict):
+    def __getattr__(self, a):
+        return self[a]
+
+    def __setattr__(self, a, v):
+        self[a] = v
+
+
+# =============================================================================
+# ERROR
+# =============================================================================
+
+class MethodsCallOrderError(RuntimeError):
+    pass
+
+
+class IncorrectConfigurationError(ValueError):
+    pass
+
+
 # =============================================================================
 # CONSTANTS
 # =============================================================================
 
 PARSERS = MultiKeyDict({
-    (".yaml", ".yml"): yaml.load,
+    (".yaml", ".yml"): yaml.safe_load,
     (".json",): json.load,
 })
 
@@ -59,6 +80,11 @@ FIELD_TYPES = {
 DATA_TRANSLATIONS = MultiKeyDict({
     # MODEL
     ("attributes", "atributos"): "attributes",
+    ("meta", "Meta"): "meta",
+
+    # META AND DMETA
+    ("verbose_name_plural", "plural"): "verbose_name_plural",
+    ("principal",): "principal",
 
     # field types
     ("int", "integer", "entero"): "int",
@@ -93,6 +119,11 @@ NO_TRANSLATE = ["choices", "related_name"]
 
 
 KEYS_TO_REMOVE = ["format", "tag"]
+
+
+DMETA_ATTRS = {
+    "principal": False
+}
 
 
 # =============================================================================
@@ -169,6 +200,8 @@ class Compiler:
 
 
     def create_model(self, *, name, data, emodels, module_spec):
+
+        from django_extensions.db.models import TimeStampedModel as basemodel
         # copiamos los datos para manipular tranquilos
         data = copy.deepcopy(data)
 
@@ -182,15 +215,30 @@ class Compiler:
                 name=field_name, data=field_data, emodels=emodels)
             attrs[field_name] = new_field
 
+        # sacamos los meta
+        meta_attrs = data.pop("meta", {})
+
+        # aca sacamos todo lo meta que es exclusivo de esta app
+        dmeta_attrs = {
+            dma: meta_attrs.pop(dma, default)
+            for dma, default in DMETA_ATTRS.items()}
+        attrs["DMeta"] = type("DMeta", (object,), dmeta_attrs)
+
+        # creamos la django Meta
+        attrs["Meta"] = type("Meta", (object,), meta_attrs)
+
         # creamos el modelo en si
-        modelcls = type(name, (TimeStampedModel,), attrs)
+        modelcls = type(name, (basemodel,), attrs)
 
         return modelcls
 
-    def mcompile(self, context):
+    def mcompile(self, descfile, app_config):
 
         # determinar y leer el formato del archivo
-        data = self.load_file(self.descfile)
+        data = self.load_file(descfile)
+
+        # sacamos el contexto del app.models
+        context = vars(app_config.models_module)
 
         # sacamos todos los modelos preexistentes en el contexto
         emodels = {
@@ -201,7 +249,12 @@ class Compiler:
         # buscamos en que modelo nos estan definiendo
         module_spec = context["__spec__"]
 
-        # creamos los nuevos modelos en un nuevo diccionario
+        # aca vamos a guardar el modelo dinamico principal que tiene que ser
+        # ser uno y tiene que ser uno
+        principal = None
+
+        # creamos los nuevos modelos y los vamos agregando al contexto de
+        # emodels pero ademas los separamos en su propio diccionario dmodels
         for model_name, model_data in data.items():
 
             # traducimos las llaves del dicionario de datos
@@ -211,12 +264,65 @@ class Compiler:
                 name=model_name, data=tmodel_data,
                 emodels=emodels, module_spec=module_spec)
 
+            # here we orchestrate if the model is the principal one
+            if new_model.DMeta.principal and principal:
+                raise ValueError(
+                    "Duplicate principal model "
+                    f"'{principal.__name__}' and '{new_model.__name__}'")
+            elif new_model.DMeta.principal:
+                principal = new_model
+
             dmodels[model_name] = new_model
             emodels[model_name] = new_model
 
-        # injectar modelos en el contexto
-        context.update(emodels)
+        # if we process all the models and no one is principal
+        # we have a problem
+        if not principal:
+            raise IncorrectConfigurationError("No principal model")
 
-        self._compiled = True
-        self._dmodels = dmodels
+        # retornamos los nuevos modelos
+        return Bunch(models=dmodels, principal=principal)
 
+# =============================================================================
+# ADMIN REGISTER
+# =============================================================================
+
+class AdminRegister:
+
+    def register(self, descfile, context):
+        ...
+
+# =============================================================================
+# API
+# =============================================================================
+
+@attr.s(frozen=True, repr=False)
+class DynamicModels:
+
+    descfile = attr.ib()
+    cache = attr.ib(init=False, factory=Bunch)
+    compiler = attr.ib(init=False, factory=Compiler)
+    admin = attr.ib(init=False, factory=AdminRegister)
+
+    def create_models(self, app_config):
+        if self.cache.get("compiled"):
+            module_spec = self.models_context["__spec__"]
+            raise MethodsCallOrderError("models already defined in {module_spec.name}")
+
+        compile_info = self.compiler.mcompile(self.descfile, app_config)
+
+        self.cache.compiled = True
+        self.cache.app_config = app_config
+        self.cache.models = compile_info.models
+        self.cache.principal = compile_info.principal
+
+        # inject models into the context
+        context = vars(app_config.models_module)
+        context.update(compile_info.models)
+
+    def register_admin(self, exclude=None):
+        if not self.cache.compiled:
+            raise MethodsCallOrderError("models not yet defined")
+
+        for model_name, model in self.cache.models.items():
+            reg = admin.site.register(model, admin.ModelAdmin)

@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'brooks.apps.BrooksConfig',
     'ingest.apps.IngestConfig',
     'reporter.apps.ReporterConfig',
+    'webtools.apps.WebtoolsConfig'
 ]
 
 MIDDLEWARE = [
@@ -178,11 +179,22 @@ SUMMERNOTE_CONFIG = {
     # manually. Use this when you're already using Bootstraip/jQuery based
     # themes.
     'iframe': False,
+}
 
+# list of sites with interesting functionalities to integrate with brooks
+WEBTOOLS = {
+    "Calculadora Epidémica SEIR": "https://epacalc-arg.now.sh/",
+    "Covid dashboard by IBM": "https://accelerator.weather.com/bi/",
+    "COVID-19 Map - Johns Hopkins Coronavirus Resource Center": "https://coronavirus.jhu.edu/map.html",
 }
 
 
+# dynamic model description
 MODELS_DESCRIPTION = os.environ.get("BROOKS_MODELS_DECRTIPTION", "")
+
+
+# the list of configurations to export to the template view
+TO_EXPORT = ["DEMO_MODE", "WEBTOOLS"]
 
 
 # django tables-2

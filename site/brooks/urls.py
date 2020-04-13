@@ -52,8 +52,15 @@ urlpatterns = [
         views.DashboardView.as_view(),
         name='dashboard'),
 
-    path('ingest/', include(('ingest.urls', 'ingest'), namespace='ingest')),
-    path('reporter/', include(('reporter.urls', 'reporter'), namespace='reporter')),
+    path(
+        'ingest/',
+        include(('ingest.urls', 'ingest'), namespace='ingest')),
+    path(
+        'reporter/',
+        include(('reporter.urls', 'reporter'), namespace='reporter')),
+    path(
+        'webtools/',
+        include(('webtools.urls', 'webtools'), namespace='webtools')),
 
 ]
 

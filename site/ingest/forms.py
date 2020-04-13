@@ -56,27 +56,3 @@ class UpdateRawFileForm(forms.ModelForm):
             field.required = False
             field.widget.attrs['placeholder'] = self.placeholders.get(
                 name, field.label)
-
-
-class PatientDetailForm(forms.ModelForm):
-    class Meta:
-        model = models.Patient
-        fields = ("notes",)
-        widgets = {
-            'notes': SummernoteInplaceWidget(
-                attrs={'summernote': {'width': '100%', 'height': '200px'}})}
-
-    placeholders = {
-        "notes": "Alguna nota en particular sobre el paciente",
-    }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = 'post'
-        self.helper.add_input(Submit('submit', 'Guardar Notas'))
-
-        for name, field in self.fields.items():
-            field.required = False
-            field.widget.attrs['placeholder'] = self.placeholders.get(
-                name, field.label)
