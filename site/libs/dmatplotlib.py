@@ -47,6 +47,7 @@ def subplots(*args, **kwargs):
 class MatplotlibMixin:
 
     subplots_kwargs = None
+    draw_methods = None
 
     def get_subplots_kwargs(self):
         return self.subplots_kwargs or {}
@@ -56,9 +57,18 @@ class MatplotlibMixin:
         splot_kwargs = self.get_subplots_kwargs()
         return subplots(**splot_kwargs)
 
+    def get_draw_methods(self):
+        draw_methods = self.draw_methods or ["draw_plot"]
+        methods = [getattr(self, m) for m in draw_methods]
+        return methods
+
     def draw_plot(self, fig, ax, **kwargs):
         """Draw the plot"""
         raise NotImplementedError("Please implement the draw_plot method")
+
+    def get_draw_context(self):
+        "Returns a dictionary to be pased to all the draw_methods"
+        return {}
 
     def get_context_data(self, **kwargs):
         """Overridden version of `.TemplateResponseMixin` to inject the
@@ -66,11 +76,20 @@ class MatplotlibMixin:
         """
         context = super().get_context_data(**kwargs)
 
-        plot = self.get_plot()
-        fig, ax = plot.figaxes()
-        self.draw_plot(fig=fig, ax=ax, **kwargs)
+        # inject the context info into the kwargs
+        kwargs.update(self.get_draw_context())
 
-        context["plot"] = plot
+        draw_methods = self.get_draw_methods()
+        plots = []
+
+        for dm in draw_methods:
+            plot = self.get_plot()
+            fig, ax = plot.figaxes()
+            dm(fig=fig, ax=ax, **kwargs)
+            plots.append(plot)
+
+        context["plot"] = plots[0]
+        context["plots"] = plots
         return context
 
 
