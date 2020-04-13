@@ -9,7 +9,7 @@ from django_tables2.views import SingleTableView
 
 from brooks.views_mixins import LogginRequired
 
-from ingest import models, forms, tables, pprinter
+from ingest import apps, models, forms, tables, pprinter
 
 
 LETTERS = string.ascii_uppercase + string.digits
@@ -33,6 +33,7 @@ class UploadRawFileView(LogginRequired, CreateView):
         def form_valid(self, form):
             rawfile = form.save(commit=False)
             rawfile.created_by = self.request.user
+
             rawfile.save()
             return super().form_valid(form)
 

@@ -37,7 +37,7 @@ class UploadRawFileForm(forms.ModelForm):
 class UpdateRawFileForm(forms.ModelForm):
     class Meta:
         model = models.RawFile
-        fields = ("notes", "confirmed")
+        fields = ("notes", "merged")
         widgets = {
             'notes': SummernoteInplaceWidget(
                 attrs={'summernote': {'width': '100%', 'height': '200px'}})}

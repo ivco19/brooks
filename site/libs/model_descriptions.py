@@ -11,6 +11,8 @@ from django.core import validators
 from django.conf import settings
 from django.contrib import admin
 
+import pandas as pd
+
 import attr
 
 
@@ -61,10 +63,19 @@ class IncorrectConfigurationError(ValueError):
 # CONSTANTS
 # =============================================================================
 
-PARSERS = MultiKeyDict({
+DESCRIPTOR_FILE_PARSERS = MultiKeyDict({
     (".yaml", ".yml"): yaml.safe_load,
     (".json",): json.load,
 })
+
+
+DATA_PARSERS = MultiKeyDict({
+    (".csv",): pd.read_csv,
+    (".xlsx",): pd.read_excel,
+})
+
+
+DATA_EXTENSIONS = list(DATA_PARSERS)
 
 
 FIELD_TYPES = {
@@ -307,10 +318,10 @@ class DynamicModels:
     admin = attr.ib(init=False, factory=AdminRegister)
     fileparser = attr.ib(init=False, factory=FileParser)
 
-    def load_file(self, filename):
+    def load_descriptor_file(self, filename):
         """Load the descfile based on the file extension"""
         ext = os.path.splitext(filename)[-1].lower()
-        parser = PARSERS[ext]
+        parser = DESCRIPTOR_FILE_PARSERS[ext]
         with open(filename) as fp:
             return parser(fp)
 
@@ -320,7 +331,7 @@ class DynamicModels:
             raise MethodsCallOrderError(
                 "models already defined in {module_spec.name}")
 
-        data = self.load_file(self.descfile)
+        data = self.load_descriptor_file(self.descfile)
         compile_info = self.compiler.mcompile(data, app_config)
 
         self.cache.descfile_content = data
