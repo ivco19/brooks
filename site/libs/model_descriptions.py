@@ -290,7 +290,7 @@ class AdminRegister:
 
 class FileParser:
 
-    def parse(self, filepath, models, principal):
+    def parse(self, df, models, principal):
         import ipdb; ipdb.set_trace()
 
 
@@ -344,11 +344,11 @@ class DynamicModels:
             if name not in exclude}
         return self.admin.register(models)
 
-    def parse_file(self, filepath):
+    def parse_file(self, df):
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
         return self.fileparser.parse(
-            filepath=filepath,
+            df=df,
             models=self.cache.models,
             principal=self.cache.principal)
 
