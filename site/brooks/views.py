@@ -48,13 +48,19 @@ class AboutView(LogginRequired, TemplateView):
         return context
 
 
-class DashboardView(MatplotlibView):
+class DashboardView(LogginRequired, MatplotlibView):
 
     template_name = "Dashboard.html"
+    draw_methods = [
+        "draw_grate_full_period_ar",
+        "draw_grate_full_period_bs",
+        "draw_time_serie_all",
+        "draw_time_serie_ar",
+        "draw_barplot",
+        "draw_boxplot"]
 
-    def draw_plot(self, **kwargs):
-        # vacio para que el context del mixin no explote
-        pass
+    def get_draw_context(self):
+        return {"cases": arcovid19.load_cases()}
 
     def draw_grate_full_period_ar(self, cases, fig, ax, **kwargs):
         cases.plot.grate_full_period(
@@ -63,7 +69,7 @@ class DashboardView(MatplotlibView):
         ax.legend(loc=2)
 
     def draw_grate_full_period_bs(self, cases, fig, ax, **kwargs):
-        ax = cases.plot.grate_full_period(
+        cases.plot.grate_full_period(
             'Bs As', ax=ax, confirmed=True, active=True,
             recovered=True, deceased=True)
 
@@ -78,32 +84,3 @@ class DashboardView(MatplotlibView):
 
     def draw_boxplot(self, cases, fig, ax, **kwargs):
         cases.plot.boxplot(showfliers=False, ax=ax)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        cases = arcovid19.load_cases()
-
-        plot_methods = [
-            self.draw_grate_full_period_ar,
-            self.draw_grate_full_period_bs,
-            self.draw_time_serie_all,
-            self.draw_time_serie_ar,
-            self.draw_barplot,
-            self.draw_boxplot]
-        plots = []
-
-        for idx, pm in enumerate(plot_methods):
-            plot = self.get_plot()
-            fig, ax = plot.figaxes()
-            pm(cases=cases, fig=fig, ax=ax, **kwargs)
-            plots.append(plot)
-
-        context["plots"] = plots
-        return context
-
-
-
-
-
-
