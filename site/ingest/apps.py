@@ -11,7 +11,7 @@ class IngestConfig(AppConfig):
 
     def ready(self):
         self.dmodels.create_models(self)
-        self.dmodels.register_admin(self)
+        self.dmodels.register_admin()
 
         import ingest.signals
 

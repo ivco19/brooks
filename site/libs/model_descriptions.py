@@ -132,13 +132,6 @@ DMETA_ATTRS = {
 
 class Compiler:
 
-    def load_file(self, filename):
-        """Load the descfile based on the file extension"""
-        ext = os.path.splitext(filename)[-1].lower()
-        parser = PARSERS[ext]
-        with open(filename) as fp:
-            return parser(fp)
-
     def translate(self, data):
         """Traduce todo lo que tiene el diccionario de datos
         si la llave traducida esta incluida en NO_TRANSLATE.
@@ -232,10 +225,7 @@ class Compiler:
 
         return modelcls
 
-    def mcompile(self, descfile, app_config):
-
-        # determinar y leer el formato del archivo
-        data = self.load_file(descfile)
+    def mcompile(self, data, app_config):
 
         # sacamos el contexto del app.models
         context = vars(app_config.models_module)
@@ -289,8 +279,20 @@ class Compiler:
 
 class AdminRegister:
 
-    def register(self, descfile, context):
-        ...
+    def register(self, models):
+        for model_name, model in models.items():
+            reg = admin.site.register(model, admin.ModelAdmin)
+
+
+# =============================================================================
+# FILE_PARSER
+# =============================================================================
+
+class FileParser:
+
+    def parse(self, filepath, models, principal):
+        import ipdb; ipdb.set_trace()
+
 
 # =============================================================================
 # API
@@ -303,14 +305,25 @@ class DynamicModels:
     cache = attr.ib(init=False, factory=Bunch)
     compiler = attr.ib(init=False, factory=Compiler)
     admin = attr.ib(init=False, factory=AdminRegister)
+    fileparser = attr.ib(init=False, factory=FileParser)
+
+    def load_file(self, filename):
+        """Load the descfile based on the file extension"""
+        ext = os.path.splitext(filename)[-1].lower()
+        parser = PARSERS[ext]
+        with open(filename) as fp:
+            return parser(fp)
 
     def create_models(self, app_config):
         if self.cache.get("compiled"):
             module_spec = self.models_context["__spec__"]
-            raise MethodsCallOrderError("models already defined in {module_spec.name}")
+            raise MethodsCallOrderError(
+                "models already defined in {module_spec.name}")
 
-        compile_info = self.compiler.mcompile(self.descfile, app_config)
+        data = self.load_file(self.descfile)
+        compile_info = self.compiler.mcompile(data, app_config)
 
+        self.cache.descfile_content = data
         self.cache.compiled = True
         self.cache.app_config = app_config
         self.cache.models = compile_info.models
@@ -324,5 +337,18 @@ class DynamicModels:
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
 
-        for model_name, model in self.cache.models.items():
-            reg = admin.site.register(model, admin.ModelAdmin)
+        exclude = [] if exclude is None else exclude
+        models = {
+            name: model
+            for name, model in self.cache.models.items()
+            if name not in exclude}
+        return self.admin.register(models)
+
+    def parse_file(self, filepath):
+        if not self.cache.compiled:
+            raise MethodsCallOrderError("models not yet defined")
+        return self.fileparser.parse(
+            filepath=filepath,
+            models=self.cache.models,
+            principal=self.cache.principal)
+
