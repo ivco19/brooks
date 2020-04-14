@@ -3,8 +3,6 @@ from django.db.models.signals import post_save
 
 from django.dispatch import receiver
 
-from ingest import models
-
 
 @receiver(post_save, sender=models.RawFile)
 def compile_file(sender, instance, created, **kwargs):

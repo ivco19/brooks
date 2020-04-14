@@ -2,6 +2,11 @@ import datetime as dt
 
 from django.utils.html import format_html
 
+
+# =============================================================================
+# BASECLASS
+# =============================================================================
+
 class PPrinter:
     def __init_subclass__(cls, *a, **kw):
         cls._meta = cls.Meta
@@ -23,7 +28,7 @@ class PPrinter:
             fvalue = (
                 "" if value_obj is None else
                 field.value_to_string(self._inst))
-            fields[field.name] = (fvname,  fvalue)
+            fields[field.name] = (fvname, fvalue)
 
         for fname in self._meta.order:
             fvname, fvalue = fields.pop(fname)
@@ -40,15 +45,14 @@ class PPrinter:
         return format_html(self.pprint())
 
 
-
+# =============================================================================
+# UL
+# =============================================================================
 
 class ULPPrinter(PPrinter):
 
     class Meta:
         abstract = True
-
-    def get_template(self):
-        return UL_TEMPLATE
 
     def pprint(self):
         parts = ["<ul class='pprint-ul'>"]

@@ -2,13 +2,11 @@ import copy
 import os
 import json
 import inspect
-import importlib
 
 import yaml
 
 from django.db import models, transaction
 from django.core import validators
-from django.conf import settings
 from django.contrib import admin
 
 import pandas as pd
@@ -202,7 +200,6 @@ class Compiler:
                 return models.ForeignKey(
                     link_to, on_delete=models.CASCADE, **data)
 
-
     def create_model(self, *, name, data, emodels, module_spec):
 
         from django_extensions.db.models import TimeStampedModel as basemodel
@@ -260,7 +257,7 @@ class Compiler:
         for model_name, model_data in data.items():
 
             # traducimos las llaves del dicionario de datos
-            tmodel_data =  self.translate(model_data)
+            tmodel_data = self.translate(model_data)
 
             new_model = self.create_model(
                 name=model_name, data=tmodel_data,
@@ -285,6 +282,7 @@ class Compiler:
         # retornamos los nuevos modelos
         return Bunch(models=dmodels, principal=principal)
 
+
 # =============================================================================
 # ADMIN REGISTER
 # =============================================================================
@@ -292,8 +290,11 @@ class Compiler:
 class AdminRegister:
 
     def register(self, models):
+        regs = []
         for model_name, model in models.items():
             reg = admin.site.register(model, admin.ModelAdmin)
+            regs.append(reg)
+        return regs
 
 
 # =============================================================================
@@ -304,8 +305,8 @@ class FileParser:
 
     def parse(self, df, models, principal):
         for row in df.iterrows():
-            import ipdb; ipdb.set_trace()
-
+            import ipdb
+            ipdb.set_trace()
 
 
 # =============================================================================
@@ -338,7 +339,7 @@ class DynamicModels:
         if self.cache.get("compiled"):
             module_spec = self.models_context["__spec__"]
             raise MethodsCallOrderError(
-                "models already defined in {module_spec.name}")
+                f"models already defined in {module_spec.name}")
 
         data = self.load_descriptor_file(self.descfile)
         compile_info = self.compiler.mcompile(data, app_config)

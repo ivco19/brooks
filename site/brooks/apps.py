@@ -6,4 +6,3 @@ class BrooksConfig(AppConfig):
 
     def ready(self):
         import brooks.checks  # noqa
-

@@ -32,12 +32,19 @@ urlpatterns = [
         RedirectView.as_view(url='/dashboard', permanent=False),
         name="home"),
 
-    path('admin/', admin.site.urls),
+    path(
+        'admin/',
+        admin.site.urls),
 
-    path('login/', auth_views.LoginView.as_view()),
-    path('logout/', auth_views.LogoutView.as_view(), name="logout"),
-    path('summernote/', include('django_summernote.urls')),
-
+    path(
+        'login/',
+        auth_views.LoginView.as_view()),
+    path(
+        'logout/',
+        auth_views.LogoutView.as_view(), name="logout"),
+    path(
+        'summernote/',
+        include('django_summernote.urls')),
 
     path(
         'changes/',
@@ -66,6 +73,7 @@ urlpatterns = [
 
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL)
-
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.STATIC_URL, document_root=settings.STATIC_URL)

@@ -8,6 +8,10 @@ from django_summernote.widgets import SummernoteInplaceWidget
 from . import models
 
 
+# =============================================================================
+# FORMS
+# =============================================================================
+
 class UploadRawFileForm(forms.ModelForm):
     class Meta:
         model = models.RawFile
@@ -15,7 +19,6 @@ class UploadRawFileForm(forms.ModelForm):
         widgets = {
             'notes': SummernoteInplaceWidget(
                 attrs={'summernote': {'width': '100%', 'height': '200px'}})}
-
 
     placeholders = {
         "file": "Nuevo archivo con los datos",

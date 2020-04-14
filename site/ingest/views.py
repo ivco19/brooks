@@ -9,33 +9,41 @@ from django_tables2.views import SingleTableView
 
 from brooks.views_mixins import LogginRequired
 
-from ingest import apps, models, forms, tables, pprinter
+from ingest import apps, models, forms, tables
 
+
+# =============================================================================
+# CONSTANTS
+# =============================================================================
 
 LETTERS = string.ascii_uppercase + string.digits
 
 
+# =============================================================================
+# CLASSES
+# =============================================================================
+
 class UploadRawFileView(LogginRequired, CreateView):
 
-        model = models.RawFile
-        form_class = forms.UploadRawFileForm
-        template_name = "ingest/UploadRawFile.html"
-        success_message = "Archivo ({id}) '{filename}' subido con éxito"
+    model = models.RawFile
+    form_class = forms.UploadRawFileForm
+    template_name = "ingest/UploadRawFile.html"
+    success_message = "Archivo ({id}) '{filename}' subido con éxito"
 
-        def get_success_url(self):
-            rawfile = self.object
-            return reverse_lazy('ingest:check_file', args=[rawfile.pk])
+    def get_success_url(self):
+        rawfile = self.object
+        return reverse_lazy('ingest:check_file', args=[rawfile.pk])
 
-        def get_success_message(self, cleaned_data):
-            return self.success_message.format(
-                id=self.object.id, filename=self.object.filename)
+    def get_success_message(self, cleaned_data):
+        return self.success_message.format(
+            id=self.object.id, filename=self.object.filename)
 
-        def form_valid(self, form):
-            rawfile = form.save(commit=False)
-            rawfile.created_by = self.request.user
+    def form_valid(self, form):
+        rawfile = form.save(commit=False)
+        rawfile.created_by = self.request.user
 
-            rawfile.save()
-            return super().form_valid(form)
+        rawfile.save()
+        return super().form_valid(form)
 
 
 class CheckRawFileView(LogginRequired, UpdateView):
@@ -49,7 +57,7 @@ class CheckRawFileView(LogginRequired, UpdateView):
         context_data = super().get_context_data()
         if not self.object.merged:
             filepath = self.object.file.path
-            merge_info = apps.IngestConfig.dmodels.merge_info(filepath)
+            merge_info = apps.IngestConfig.dmodels.merge_info(filepath)  # noqa
             # context_data.update(resume)
         context_data["conf_code"] = "".join(random.sample(LETTERS, 6))
         return context_data
@@ -60,7 +68,6 @@ class ListRawFileView(LogginRequired, SingleTableView):
     model = models.RawFile
     table_class = tables.RawFileTable
     template_name = "ingest/ListRawFileView.html"
-
 
 # class ListPatientView(LogginRequired, SingleTableView):
 

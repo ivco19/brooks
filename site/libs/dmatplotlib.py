@@ -3,14 +3,16 @@ import base64
 import functools
 
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_svg import FigureCanvas
 
-from django.conf import settings
 from django.utils.html import format_html
 from django.views.generic.base import TemplateView
 
 import attr
 
+
+# =============================================================================
+# CLASSES BASE
+# =============================================================================
 
 @attr.s(frozen=True)
 class DjangoMatplotlibWrapper:

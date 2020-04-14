@@ -1,5 +1,3 @@
-import datetime as dt
-
 from django.conf import settings
 
 from django.views.generic.base import TemplateView
@@ -11,11 +9,6 @@ import arcovid19
 from libs.dmatplotlib import MatplotlibView
 
 from brooks.views_mixins import LogginRequired
-
-from libs import dmatplotlib as dplt
-
-import matplotlib.pyplot as plt
-
 
 
 # =============================================================================

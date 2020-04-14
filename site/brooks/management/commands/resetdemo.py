@@ -5,7 +5,6 @@ import django.apps
 from django.conf import settings
 
 from django.core.management.base import BaseCommand, CommandError
-from django.core.management import call_command
 
 
 class Command(BaseCommand):
@@ -22,5 +21,3 @@ class Command(BaseCommand):
         print(f"!!! Removing {settings.MEDIA_ROOT}")
         if os.path.exists(settings.MEDIA_ROOT):
             shutil.rmtree(settings.MEDIA_ROOT)
-
-

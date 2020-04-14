@@ -8,6 +8,7 @@ from django.utils.deprecation import MiddlewareMixin
 
 
 class DemoUserMiddleware(MiddlewareMixin):
+    """Automatically creates and login a user for the demo mode"""
 
     def process_request(self, request):
         assert hasattr(request, 'user'), "The Login Required Middleware"
@@ -27,6 +28,3 @@ class DemoUserMiddleware(MiddlewareMixin):
 
             authenticate(username="demo", password='')
             request.user = user
-
-
-

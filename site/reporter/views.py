@@ -11,6 +11,5 @@ class ReportConfigurationView(LogginRequired, UpdateView):
     template_name = "reporter/ReportConfiguration.html"
     success_message = "Configuración de reportes exitosa"
 
-
     def get_object(self):
         return models.ReportConfiguration.get_solo()

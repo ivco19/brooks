@@ -1,11 +1,11 @@
 
-import os
+# import os
 
-from django.urls import reverse
+# from django.urls import reverse
 
-from libs import dpprint
+# from libs import dpprint
 
-from ingest import models
+# from ingest import models
 
 
 # class PatientPrinter(dpprint.ULPPrinter):
@@ -14,4 +14,3 @@ from ingest import models
 #         exclude = ["notes", "modified"]
 
 #         order = ('id',)
-

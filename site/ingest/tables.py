@@ -19,7 +19,8 @@ class RawFileTable(tables.Table):
     created = tables.Column(verbose_name="Fecha de creación")
     modified = tables.Column(verbose_name="Última modificación")
     file = tables.Column()
-    file_size = tables.Column(accessor="file", verbose_name="Eventos en archivo")
+    file_size = tables.Column(
+        accessor="file", verbose_name="Eventos en archivo")
     events = tables.Column(verbose_name="Eventos generados")
 
     class Meta:
@@ -30,7 +31,7 @@ class RawFileTable(tables.Table):
             "thead": {"class": "thead-dark"}}
         row_attrs = {
             "class": lambda record: CONFIRMED_CLASSES[record.confirmed]}
-        sequence = ('id', 'created_by', "...", "open" )
+        sequence = ('id', 'created_by', "...", "open")
 
     def render_open(self, value):
         return f"Ver #{value}"
@@ -49,7 +50,7 @@ class RawFileTable(tables.Table):
     def render_file_size(self, value, record):
         try:
             return len(record.as_df())
-        except:
+        except Exception:
             return "Incorrecto"
 
 
@@ -68,7 +69,8 @@ class RawFileTable(tables.Table):
 # class PatientTable(tables.Table):
 #     open = tables.Column(
 #         accessor="pk", verbose_name="Abrir",
-#         linkify=lambda record: reverse('ingest:patient_detail', args=[record.pk]))
+#         linkify=lambda record: reverse(
+#                     'ingest:patient_detail', args=[record.pk]))
 
 #     created = tables.Column(verbose_name="Fecha de creación")
 #     events = tables.Column(verbose_name="Eventos")

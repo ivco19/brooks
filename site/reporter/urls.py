@@ -7,4 +7,4 @@ urlpatterns = [
     path(
         'configuration/',
         views.ReportConfigurationView.as_view(),
-        name='configuration'),]
+        name='configuration')]

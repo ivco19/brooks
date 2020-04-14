@@ -1,22 +1,10 @@
 
-import os
-import json
-
-import dateutil
-
-from django.db import models, transaction
 from django.contrib.auth.models import User
-from django.conf import settings
+from django.db import models
 from django.core.validators import FileExtensionValidator
-
 from django_extensions.db.models import TimeStampedModel
 
-import numpy as np
-
-import pandas as pd
-
-import pandas_interactive_html
-
+# import pandas_interactive_html
 
 from libs import model_descriptions as mdesc
 
@@ -51,7 +39,6 @@ class RawFile(TimeStampedModel):
     def filename(self):
         return self.file.url.rsplit("/", 1)[-1]
 
-
     # def remove_events(self, commit=False):
     #     if commit and not self.is_parsed:
     #         raise ValueError(f"RawFile #{self.pk} no esta cargado")
@@ -61,8 +48,3 @@ class RawFile(TimeStampedModel):
     #             self.is_parsed = False
     #         else:
     #             transaction.set_rollback(True)
-
-
-
-
-
