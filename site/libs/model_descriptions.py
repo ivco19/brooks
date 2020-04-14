@@ -33,7 +33,8 @@ class MultiKeyDict(dict):
         for keys, v in data.items():
             for k in keys:
                 if k in self:
-                    raise KeyError(f"Duplicated key '{k}'")
+                    raise KeyError(
+                        f"Duplicated key '{k}' for value {v} and {self[k]}")
                 self[k] = v
 
 
@@ -107,6 +108,7 @@ DATA_TRANSLATIONS = MultiKeyDict({
     ("type", "tipo"): "type",
     ("sep",): "sep",
     ("formato", "format"): "format",
+    ("link", "enlace"): "link",
 
     ("length", "max_length", "largo"): "max_length",
     ("default",): "default",
@@ -114,6 +116,7 @@ DATA_TRANSLATIONS = MultiKeyDict({
     ("opciones", "choices"): "choices",
     ("min",): "min",
     ("max",): "max",
+    ("null", "vacio"): "null",
 
     ("related_name", "relacion", "relación"): "related_name",
 
@@ -127,7 +130,11 @@ DATA_TRANSLATIONS = MultiKeyDict({
 NO_TRANSLATE = ["choices", "related_name"]
 
 
-KEYS_TO_REMOVE = ["format", "tag"]
+KEYS_TO_REMOVE = ["format", "tag", "link"]
+
+ATTRS_DEFAULT = {
+    "null": True
+}
 
 
 DMETA_ATTRS = {
@@ -170,6 +177,11 @@ class Compiler:
         for tr in KEYS_TO_REMOVE:
             data.pop(tr, None)
 
+        # add the default fields if not present
+        for k, v in ATTRS_DEFAULT.items():
+            if k not in data:
+                data[k] = v
+
         # ahora el tipo puede ser uno nativo o un foreign key
         if inspect.isclass(dj_ftype) and issubclass(dj_ftype, models.Field):
 
@@ -195,6 +207,7 @@ class Compiler:
             # if we have sep is a many to many
             sep = data.pop("sep", None)
             if sep:
+                data.pop("null", None)
                 return models.ManyToManyField(link_to, **data)
             else:
                 return models.ForeignKey(
@@ -212,10 +225,12 @@ class Compiler:
 
         # iteramos sobre
         attributes = data.pop("attributes", {})
+        field_names = []
         for field_name, field_data in attributes.items():
             new_field = self.create_field(
                 name=field_name, data=field_data, emodels=emodels)
             attrs[field_name] = new_field
+            field_names.append(field_name)
 
         # sacamos los meta
         meta_attrs = data.pop("meta", {})
@@ -224,6 +239,7 @@ class Compiler:
         dmeta_attrs = {
             dma: meta_attrs.pop(dma, default)
             for dma, default in DMETA_ATTRS.items()}
+        dmeta_attrs["field_names"] = tuple(field_names)
         attrs["DMeta"] = type("DMeta", (object,), dmeta_attrs)
 
         # creamos la django Meta
@@ -279,8 +295,15 @@ class Compiler:
         if not principal:
             raise IncorrectConfigurationError("No principal model")
 
+        # create a link inverted between name and model
+        fields_to_model = MultiKeyDict({
+            model.DMeta.field_names: model
+            for model in dmodels.values()})
+
         # retornamos los nuevos modelos
-        return Bunch(models=dmodels, principal=principal)
+        return Bunch(
+            models=dmodels, principal=principal,
+            fields_to_model=fields_to_model)
 
 
 # =============================================================================
@@ -347,8 +370,7 @@ class DynamicModels:
         self.cache.descfile_content = data
         self.cache.compiled = True
         self.cache.app_config = app_config
-        self.cache.models = compile_info.models
-        self.cache.principal = compile_info.principal
+        self.cache.update(compile_info)
 
         # inject models into the context
         context = vars(app_config.models_module)
