@@ -343,6 +343,16 @@ class Compiler:
                 emodels["User"], on_delete=models.CASCADE,
                 related_name="generated")
 
+        # creamos un repr aceptable
+        def __repr__(self):
+            desc_name = self.DMeta.desc_name
+            identifier = self.DMeta.identifier
+            ivalue = getattr(self, identifier)
+            return f"{desc_name}({identifier} => {ivalue})"
+
+        attrs["__repr__"] = __repr__
+        attrs["__str__"] = __repr__
+
         # creamos la django Meta
         attrs["Meta"] = type("Meta", (object,), meta_attrs)
 
@@ -704,3 +714,13 @@ class DynamicModels:
                 raw_file=raw_file)
 
         return merge_info
+
+    def list_models(self):
+        principal_vn = self.cache.principal._meta.verbose_name_plural.title()
+        model_list = {
+            principal_vn: self.cache.principal.DMeta.desc_name
+        }
+        for name, model in sorted(self.cache.models.items()):
+            if model != self.cache.principal:
+                model_list[model._meta.verbose_name_plural.title()] = name
+        return model_list

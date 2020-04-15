@@ -86,11 +86,15 @@ class ListRawFileView(LogginRequired, SingleTableView):
     table_class = tables.RawFileTable
     template_name = "ingest/ListRawFileView.html"
 
-# class ListPatientView(LogginRequired, SingleTableView):
 
-#     model = models.Patient
-#     table_class = tables.PatientTable
-#     template_name = "ingest/ListPatientView.html"
+class ListDmodelView(LogginRequired, SingleTableView):
+
+    model = None
+    table_class = None
+    template_name = "ingest/ListDModelView.html"
+
+    def get_context_data(self, dmodel, *args, **kwargs):
+        import ipdb; ipdb.set_trace()
 
 
 # class PatientDetailView(LogginRequired, UpdateView):

@@ -19,10 +19,10 @@ urlpatterns = [
         views.ListRawFileView.as_view(),
         name='list_files'),
 
-    # path(
-    #     'list_patient/',
-    #     views.ListPatientView.as_view(),
-    #     name='list_patient'),
+    path(
+        'list_dmodel/<dmodel>/',
+        views.ListDmodelView.as_view(),
+        name='list_dmodel'),
 
     # path(
     #     'patient/<int:pk>/',

@@ -4,17 +4,21 @@
         Datos
     </a>
     <div class="dropdown-menu">
-
+        {% for dmname, dmodel_dname in dmodels.items %}
+        <a class="dropdown-item" href="{% url 'ingest:list_dmodel' dmodel=dmodel_dname%}">
+            <i class="fas fa-eye"></i>
+            {{dmname}}
+        </a>
+        {% endfor %}
+        <a class="dropdown-item" href=""><hr></a>
         <a class="dropdown-item" href="{% url 'ingest:upload' %}">
             <i class="fas fa-file-upload"></i>
             Cargar nuevos datos
         </a>
         <a class="dropdown-item" href=""><hr></a>
-
         <a class="dropdown-item" href="{% url 'ingest:list_files' %}">
             <i class="fas fa-list"></i>
             Ver todos los archivos
         </a>
-
     </div>
   </li>

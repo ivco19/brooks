@@ -98,6 +98,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 "brooks.context_processors.export_some_settings",
+                "ingest.context_processors.export_available_models",
             ],
         },
     },
