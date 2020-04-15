@@ -147,7 +147,6 @@ class ListDmodelView(LogginRequired, SingleTableView):
         table_cls = type(table_name, bases, attrs)
         return table_cls
 
-
     def get_dmodel(self):
         dmodel_name = self.kwargs["dmodel"]
         return apps.IngestConfig.dmodels.get_dmodel(dmodel_name)
