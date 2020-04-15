@@ -478,7 +478,6 @@ class FileParser:
         instance.save()
         return mm_info, instance
 
-
     def parse(self, df, models, principal, fields_to_model):
         merge_info = self.make_minfo()
         new_instances = []
@@ -501,7 +500,8 @@ class FileParser:
                 merge_info = self.merge_minfo(
                     merge_info, mminfo, prefix=prefix)
 
-        return Bunch(merge_info=merge_info, new_instances=new_instances)
+        return Bunch(
+            merge_info=merge_info, new_instances=new_instances, df=df)
 
 
 # =============================================================================
@@ -598,4 +598,4 @@ class DynamicModels:
             # make the rollback
             transaction.set_rollback(True)
 
-        return merge_info.merge_info
+        return merge_info

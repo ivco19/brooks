@@ -30,7 +30,7 @@ class RawFileTable(tables.Table):
             "class": "table table-hover",
             "thead": {"class": "thead-dark"}}
         row_attrs = {
-            "class": lambda record: CONFIRMED_CLASSES[record.confirmed]}
+            "class": lambda record: CONFIRMED_CLASSES[record.merged]}
         sequence = ('id', 'created_by', "...", "open")
 
     def render_open(self, value):
