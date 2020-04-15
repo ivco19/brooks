@@ -52,5 +52,3 @@ class RawFileTable(Table):
             return record.size
         except Exception:
             return "Incorrecto"
-
-

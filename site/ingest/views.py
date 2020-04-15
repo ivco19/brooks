@@ -3,7 +3,7 @@ import random
 import os
 import itertools as it
 
-from django.views.generic import CreateView, UpdateView, ListView
+from django.views.generic import CreateView, UpdateView
 
 from django.urls import reverse_lazy, reverse
 
@@ -14,8 +14,6 @@ from brooks.views_mixins import LogginRequired
 from libs.dmatplotlib import MatplotlibView
 
 from django_pandas.io import read_frame
-
-import pandas as pd
 
 from ingest import apps, models, forms, tables
 
@@ -102,7 +100,7 @@ class ListDmodelView(LogginRequired, SingleTableView):
     template_name = "ingest/ListDModelView.html"
 
     def get_table_class(self, *args, **kwargs):
-        dmodel =  self.get_dmodel()
+        dmodel = self.get_dmodel()
 
         # columna de abrir
         def open_linkify(record):
@@ -161,12 +159,12 @@ class ListDmodelView(LogginRequired, SingleTableView):
         return apps.IngestConfig.dmodels.get_dmodel(dmodel_name)
 
     def get_queryset(self, *args, **kwargs):
-        dmodel =  self.get_dmodel()
+        dmodel = self.get_dmodel()
         return dmodel.objects.all()
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context["dmodel"] =  self.get_dmodel()
+        context["dmodel"] = self.get_dmodel()
         return context
 
 
@@ -180,7 +178,7 @@ class PlotDmodelView(LogginRequired, MatplotlibView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context["dmodel"] =  self.get_dmodel()
+        context["dmodel"] = self.get_dmodel()
         return context
 
     def get_dmodel(self):
@@ -247,11 +245,7 @@ class PlotDmodelView(LogginRequired, MatplotlibView):
         xtick_labels = [l for l in sorted(it.chain(datac, datam))]
         ax.set_xticklabels(xtick_labels, rotation=45)
 
-
         ax.legend()
-
-
-
 
 
 # class PatientDetailView(LogginRequired, UpdateView):

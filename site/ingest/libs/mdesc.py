@@ -357,7 +357,6 @@ class Compiler:
         attrs["__repr__"] = __repr__
 
         def __str__(self):
-            desc_name = self.DMeta.desc_name
             identifier = self.DMeta.identifier
             ivalue = getattr(self, identifier)
             return ivalue
@@ -751,4 +750,3 @@ class DynamicModels:
         return self.cache.models[model]
         if query:
             return model.objects.filter(**query)
-
