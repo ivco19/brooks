@@ -44,13 +44,3 @@ class RawFile(TimeStampedModel):
     @property
     def filename(self):
         return self.file.url.rsplit("/", 1)[-1]
-
-    # def remove_events(self, commit=False):
-    #     if commit and not self.is_parsed:
-    #         raise ValueError(f"RawFile #{self.pk} no esta cargado")
-    #     with transaction.atomic():
-    #         self.events.all().delete()
-    #         if commit:
-    #             self.is_parsed = False
-    #         else:
-    #             transaction.set_rollback(True)
