@@ -62,7 +62,8 @@ class CheckRawFileView(LogginRequired, UpdateView):
         context_data = super().get_context_data()
         if not self.object.merged:
             filepath = self.object.file.path
-            mmd = apps.IngestConfig.dmodels.merge_info(filepath)
+            mmd = apps.IngestConfig.dmodels.merge_info(
+                filepath, created_by=self.request.user, raw_file=self.object)
             context_data["merge_info"] = mmd.merge_info
             context_data["df"] = mmd.df
         context_data["conf_code"] = "".join(random.sample(LETTERS, 6))

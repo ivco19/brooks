@@ -4,8 +4,6 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from django_extensions.db.models import TimeStampedModel
 
-# import pandas_interactive_html
-
 from ingest.libs import mdesc
 
 

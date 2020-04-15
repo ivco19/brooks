@@ -112,10 +112,6 @@ Evento:
   meta:
     principal: si
   atributos:
-    creado_por:
-      tipo: User
-      relacion: eventos
-      tag: ["request.user"]
     id_evento:
       tipo: entero
       identificador: si

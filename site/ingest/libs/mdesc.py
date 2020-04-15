@@ -202,6 +202,9 @@ class FIELD_PARSERS:
 FIELD_PARSERS = FIELD_PARSERS()
 
 
+FORBIDEN_FIELDS = ["user", "created_by", "created", "modified"]
+
+
 # =============================================================================
 # FUNCTIONS
 # =============================================================================
@@ -225,6 +228,10 @@ class Compiler:
         return DATA_TRANSLATIONS.get(data, data)
 
     def create_field(self, *, name, data, emodels):
+        if name in FORBIDEN_FIELDS:
+            raise IncorrectConfigurationError(
+                f"El nombre de atributo {name} esta prohibido")
+
         # copiamos los datos para manipular tranquilos
         data = copy.deepcopy(data)
 
@@ -279,7 +286,7 @@ class Compiler:
 
     def create_model(self, *, name, data, emodels, module_spec):
 
-        from django_extensions.db.models import TimeStampedModel as basemodel
+        basemodel = emodels["TimeStampedModel"]
 
         # copiamos los datos para manipular tranquilos
         original_data = copy.deepcopy(data)
@@ -326,6 +333,15 @@ class Compiler:
         dmeta_attrs["desc"] = original_data
         dmeta_attrs["identifier"] = identifier
         attrs["DMeta"] = type("DMeta", (object,), dmeta_attrs)
+
+        # si es el principal necesitamos linkerarlo a rawfile
+        if dmeta_attrs["principal"]:
+            attrs["raw_file"] = models.ForeignKey(
+                emodels["RawFile"], on_delete=models.CASCADE,
+                related_name="generated")
+            attrs["created_by"] = models.ForeignKey(
+                emodels["User"], on_delete=models.CASCADE,
+                related_name="generated")
 
         # creamos la django Meta
         attrs["Meta"] = type("Meta", (object,), meta_attrs)
@@ -445,7 +461,9 @@ class FileParser:
             if odata != v:
                 yield k, v
 
-    def create_model_instance(self, model, data, models, is_principal):
+    def create_model_instance(
+        self, model, data, models, is_principal, created_by, raw_file,
+    ):
         mm_info = self.make_minfo()
         model_name = model.DMeta.desc_name
         model_desc = model.DMeta.desc
@@ -484,21 +502,25 @@ class FileParser:
                     m2m_instances = []
                     for m2md in m2m_splited_data:
                         rel_mminfo, rel_instance = self.create_model_instance(
-                            model=rel_model, data=m2md,
-                            models=models, is_principal=False)
+                            model=rel_model, data=m2md, created_by=created_by,
+                            raw_file=raw_file, models=models,
+                            is_principal=False)
                         m2m_instances.append(rel_instance)
                         mm_info = self.merge_minfo(mm_info, rel_mminfo)
                     m2m_data[fname] = m2m_instances
                 else:  # FK
                     rel_model = models[field_type]
                     rel_mminfo, rel_instance = self.create_model_instance(
-                        model=rel_model, data=data,
-                        models=models, is_principal=False)
+                        model=rel_model, data=data, created_by=created_by,
+                        raw_file=raw_file, models=models, is_principal=False)
                     s_data[fname] = rel_instance
                     mm_info = self.merge_minfo(mm_info, rel_mminfo)
 
         identf_value = s_data[identifier]
         query = {identifier: identf_value}
+        if is_principal:
+            query.update(created_by=created_by, raw_file=raw_file)
+
         instance, created = model.objects.get_or_create(**query)
         if created:
             for k, v in s_data.items():
@@ -517,6 +539,7 @@ class FileParser:
                     f"Cambio valor de {model_name} con "
                     f"{identifier}={identf_value} en el valor de {k}")
 
+
         instance.save()
         for k, links in m2m_data.items():
             manager = getattr(instance, k)
@@ -525,7 +548,10 @@ class FileParser:
 
         return mm_info, instance
 
-    def parse(self, df, models, principal, fields_to_model):
+    def parse(
+        self, df, models, principal,
+        fields_to_model, created_by, raw_file
+    ):
         merge_info = self.make_minfo()
         new_instances = []
         for row_idx, row in df.iterrows():
@@ -538,8 +564,8 @@ class FileParser:
             data = row.where(pd.notnull(row), None).to_dict()
             try:
                 mminfo, instance = self.create_model_instance(
-                    model=principal, data=data,
-                    models=models, is_principal=True)
+                    model=principal, data=data, created_by=created_by,
+                    raw_file=raw_file, models=models, is_principal=True)
                 new_instances.append(instance)
             except ParseError as err:
                 merge_info.warning.append(f"{prefix} {str(err)}")
@@ -630,7 +656,7 @@ class DynamicModels:
         row = extract_fields(principal)
         return pd.DataFrame([dict(row)])
 
-    def merge_info(self, filepath):
+    def merge_info(self, filepath, created_by, raw_file):
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
 
@@ -638,6 +664,7 @@ class DynamicModels:
 
         with transaction.atomic():
             merge_info = self.fileparser.parse(
+                created_by=created_by, raw_file=raw_file,
                 df=df, models=self.cache.models,
                 principal=self.cache.principal,
                 fields_to_model=self.cache.fields_to_model)
