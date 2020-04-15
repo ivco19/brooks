@@ -132,3 +132,4 @@ dmypy.json
 local_settings.py
 _media/
 .vscode/
+.~lock*

@@ -8,6 +8,7 @@ Pais:
     nombre_pais:
       tipo: texto
       largo: 255
+      identificador: si
 
 
 Provincia:
@@ -15,6 +16,7 @@ Provincia:
     id_provincia:
       tipo: entero
       unico: si
+      identificador: si
     nombre_provincia:
       tipo: texto
       largo: 255
@@ -28,6 +30,7 @@ Departamento:
     nombre_departamento:
       tipo: texto
       largo: 255
+      identificador: si
     id_departamento:
       tipo: entero
       unico: si
@@ -44,6 +47,7 @@ Localidad:
     nombre_localidad:
       tipo: texto
       largo: 255
+      identificador: si
     id_localidad:
       tipo: entero
       unico: si
@@ -57,6 +61,7 @@ ClasificacionEpidemiologica:
     plural: Clasificaciones Epidemiologicas
   atributos:
     nombre_ce:
+      identificador: si
       tipo: texto
       largo: 255
 
@@ -64,6 +69,7 @@ ClasificacionEpidemiologica:
 Paciente:
   atributos:
     nombre_paciente:
+      identificador: si
       tipo: texto
       largo: 255
     sexo:
@@ -85,6 +91,7 @@ Paciente:
 TipoEvento:
   atributos:
     nombre_tipo_evento:
+      identificador: si
       tipo: texto
       largo: 255
     notas_tipo_evento:
@@ -94,6 +101,7 @@ TipoEvento:
 Sintoma:
   atributos:
     nombre_sintoma:
+      identificador: si
       tipo: texto
       largo: 255
     notas_sintoma:
@@ -110,7 +118,7 @@ Evento:
       tag: ["request.user"]
     id_evento:
       tipo: entero
-      unico: si
+      identificador: si
     paciente:
       tipo: Paciente
     fecha_internacion:

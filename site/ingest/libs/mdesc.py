@@ -9,6 +9,8 @@ from django.db import models, transaction
 from django.core import validators
 from django.contrib import admin
 
+import dateutil.parser
+
 import numpy as np
 
 import pandas as pd
@@ -66,6 +68,10 @@ class IncorrectConfigurationError(ValueError):
     pass
 
 
+class ParseError(RuntimeError):
+    pass
+
+
 # =============================================================================
 # CONSTANTS
 # =============================================================================
@@ -115,8 +121,11 @@ DATA_TRANSLATIONS = MultiKeyDict({
     # FIELD_ATTRS
     ("type", "tipo"): "type",
     ("sep",): "sep",
-    ("formato", "format"): "format",
+
+    ("format", "formato"): "format",
+    ("tag", ): "tag",
     ("link", "enlace"): "link",
+    ("identifier", "identificador"): "identifier",
 
     ("length", "max_length", "largo"): "max_length",
     ("default",): "default",
@@ -131,14 +140,12 @@ DATA_TRANSLATIONS = MultiKeyDict({
     # FIELD_VALUES
     ("True", "true", "si", "Sí", "Si", "SI", "SÍ"): True,
     ("False", "false", "no", "No", "NO"): False,
-
 })
 
 
 NO_TRANSLATE = ["choices", "related_name"]
 
-
-KEYS_TO_REMOVE = ["format", "tag", "link"]
+KEYS_TO_REMOVE = ["format", "tag", "link", "identifier"]
 
 ATTRS_DEFAULT = {
     "null": True
@@ -158,6 +165,39 @@ PLACEHOLDERS = {
     "char": "str",
     "freetext": "str",
 }
+
+
+class FIELD_PARSERS:
+
+    def __getitem__(self, ftype):
+        key = f"parse_{ftype}"
+        return getattr(self, key, self.no_parse)
+
+    def no_parse(self, x, **kwargs):
+        return x
+
+    def parse_int(self, x, **kwargs):
+        return int(x)
+
+    def parse_float(self, x, **kwargs):
+        return float(x)
+
+    def parse_date(self, x, **kwargs):
+        format = kwargs.get("format")
+        if format:
+            return dt.datetime.strfparse(x, format).date()
+        return dateutil.parser.parse(x).date()
+
+    def parse_bool(self, x, **kwargs):
+        return bool(x)
+
+    def parse_char(self, x, **kwargs):
+        return str(x)
+
+    def parse_freetext(self, x, **kwargs):
+        return str(x)
+
+FIELD_PARSERS = FIELD_PARSERS()
 
 
 # =============================================================================
@@ -244,12 +284,28 @@ class Compiler:
 
         # iteramos sobre
         attributes = data.pop("attributes", {})
-        field_names = []
+        field_names, identifier = [], None
         for field_name, field_data in attributes.items():
+
+            if "identifier" in field_data:
+                if identifier:
+                    raise IncorrectConfigurationError(
+                        f"Model '{name}' has more than one identifier")
+                elif field_data["type"] not in FIELD_TYPES:
+                    raise IncorrectConfigurationError(
+                        f"Model '{name}' identifier cant be a reference")
+
+                identifier = field_name
+                field_data["unique"] = True
+
             new_field = self.create_field(
                 name=field_name, data=field_data, emodels=emodels)
             attrs[field_name] = new_field
             field_names.append(field_name)
+
+        if identifier is None:
+            raise IncorrectConfigurationError(
+                f"Missing identifier for Model '{name}'")
 
         # sacamos los meta
         meta_attrs = data.pop("meta", {})
@@ -261,6 +317,7 @@ class Compiler:
         dmeta_attrs["desc_name"] = name
         dmeta_attrs["field_names"] = tuple(field_names)
         dmeta_attrs["desc"] = original_data
+        dmeta_attrs["identifier"] = identifier
         attrs["DMeta"] = type("DMeta", (object,), dmeta_attrs)
 
         # creamos la django Meta
@@ -347,20 +404,85 @@ class AdminRegister:
 
 class FileParser:
 
+    def create_model_instance(self, model, data, models, is_principal):
+        model_name = model.DMeta.desc_name
+        model_desc = model.DMeta.desc
+        fields_names = model.DMeta.field_names
+        identifier = model.DMeta.identifier
+
+        # sacamos los datos en crudo
+        model_data = {}
+        for k in fields_names:
+            v = data.get(k)
+            if v is not None:
+                model_data[k] = v
+
+        # ahora parseamos todo lo que no sea foreignkey
+        s_data, m2m_data = {}, {}
+
+        for fname, fvalue in model_data.items():
+            fvalue = str(fvalue)
+
+            field_desc = model_desc["attributes"][fname]
+            field_type = field_desc["type"]
+
+            if field_type in FIELD_TYPES:
+                # es nativo
+                try:
+                    fvalue = FIELD_PARSERS[field_type](fvalue, **field_desc)
+                except Exception as err:
+                    raise ParseError(str(err))
+
+                s_data[fname] = fvalue
+            elif field_type in models:
+                # hay que orquestar el tema de los foreign key
+                sep = field_desc.get("sep")
+                if sep:  # M2;
+                    import ipdb; ipdb.set_trace()
+                else:  # FK
+                    rel_model = models[field_type]
+                    rel_instance = self.create_model_instance(
+                        model=rel_model, data=data,
+                        models=models, is_principal=False)
+                    s_data[fname] = rel_instance
+
+        identf_value = s_data[identifier]
+        query = {identifier: identf_value}
+        instance, created = model.objects.get_or_create(**query)
+        if created:
+            for k, v in s_data.items():
+                setattr(instance, k, v)
+        else:
+            if is_principal:
+                raise ParseError(
+                    f"{model_name} con {identifier}={identf_value} duplicado")
+            import ipdb; ipdb.set_trace()
+
+        instance.save()
+        return instance
+
+
     def parse(self, df, models, principal, fields_to_model):
+
         merge_info = Bunch(info=[], warning=[], error=[])
+        new_models = []
         for row_idx, row in df.iterrows():
-            prefix = f"Fila.{row_idx+1}"
+            prefix = f"[Fila.{row_idx+1}]"
 
             if np.all(row.isnull().values):
                 merge_info.warning.append(f"{prefix} vacia")
                 continue
 
-            import ipdb; ipdb.set_trace()
+            row = row.to_dict()
+            try:
+                models = self.create_model_instance(
+                    model=principal, data=row,
+                    models=models, is_principal=True)
+                new_models.append(models)
+            except ParseError as err:
+                merge_info.warning.append(f"{prefix} {str(err)}")
 
-            ipdb.set_trace()
-
-        return Bunch(merge_info=merge_info, models=models)
+        return Bunch(merge_info=merge_info, new_models=new_models)
 
 
 # =============================================================================
@@ -421,7 +543,6 @@ class DynamicModels:
     def make_empty_df(self):
         principal = self.cache.principal
         fields_to_model = self.cache.fields_to_model
-        desc = self.cache.descfile_content
 
         def extract_fields(model):
             dmodels = self.cache.models
@@ -457,5 +578,5 @@ class DynamicModels:
 
             # make the rollback
             transaction.set_rollback(True)
-        raise Exception()
+
         return merge_info

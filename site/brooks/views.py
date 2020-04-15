@@ -51,6 +51,7 @@ class DashboardView(LogginRequired, MatplotlibView):
         "draw_time_serie_ar",
         "draw_barplot",
         "draw_boxplot"]
+    plot_format = "png"
 
     def get_draw_context(self):
         return {"cases": arcovid19.load_cases()}
