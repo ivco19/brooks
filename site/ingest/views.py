@@ -10,6 +10,12 @@ from django_tables2.views import SingleTableView
 
 from brooks.views_mixins import LogginRequired
 
+from libs.dmatplotlib import MatplotlibView
+
+from django_pandas.io import read_frame
+
+import pandas as pd
+
 from ingest import apps, models, forms, tables
 
 
@@ -134,7 +140,9 @@ class ListDmodelView(LogginRequired, SingleTableView):
         if dmodel.DMeta.principal:
             def render_created_by(self, value):
                 if value.last_name and value.first_name:
-                    return f"{value.last_name}, {value.first_name} (@{value.username})"
+                    return (
+                        f"{value.last_name}, {value.first_name}"
+                        f"(@{value.username})")
                 return f"@{value.username}"
 
             def render_raw_file(self, value):
@@ -159,6 +167,79 @@ class ListDmodelView(LogginRequired, SingleTableView):
         context = super().get_context_data(*args, **kwargs)
         context["dmodel"] =  self.get_dmodel()
         return context
+
+
+class PlotDmodelView(LogginRequired, MatplotlibView):
+
+    template_name = "ingest/PlotDModelView.html"
+    draw_methods = [
+        "draw_creation_time"]
+    plot_format = "png"
+    tight_layout = True
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["dmodel"] =  self.get_dmodel()
+        return context
+
+    def get_dmodel(self):
+        dmodel_name = self.kwargs["dmodel"]
+        return apps.IngestConfig.dmodels.get_dmodel(dmodel_name)
+
+    def get_draw_context(self):
+        dmodel = self.get_dmodel()
+        df = read_frame(dmodel.objects.all())
+        return {"dmodel": dmodel, "queryset": dmodel.objects.all(), "df": df}
+
+    def sin_datos(self, fig, ax):
+        ax.text(
+            0.6, 0.7, "Datos", size=50, rotation=30., ha="center", va="center",
+            bbox={
+                "boxstyle": "round",
+                "ec": (1., 0.5, 0.5),
+                "fc": (1., 0.8, 0.8)})
+
+        ax.text(
+            0.5, 0.5, "Sin", size=50, rotation=-25., ha="right", va="top",
+            bbox={
+                "boxstyle": "round",
+                "ec": (1., 0.5, 0.5),
+                "fc": (1., 0.8, 0.8)})
+
+        ax.set_yticks([])
+        ax.set_xticks([])
+
+    def draw_creation_time(self, dmodel, df, queryset, fig, ax, **kwargs):
+        dmodel_name = dmodel.DMeta.verbose_name_title
+
+        ax.set_title(f"{dmodel_name} creados y modificados por fecha")
+        ax.set_ylabel(f"Número de {dmodel_name}")
+        ax.set_xlabel("Fecha")
+
+        if not queryset.exists():
+            self.sin_datos(fig, ax)
+            return
+
+        datac, datam = {}, {}
+        for instance in queryset:
+            created = instance.created.date()
+            datac[created] = datac.setdefault(created, 0) + 1
+
+            modified = instance.modified.date()
+            datam[modified] = datam.setdefault(modified, 0) + 1
+
+        ax.plot(
+            [k.isoformat() for k in datac.keys()],
+            list(datac.values()), ls="--", marker="o", label="Creados")
+
+        ax.plot(
+            [k.isoformat() for k in datam.keys()],
+            list(datam.values()), ls="--", marker="o", label="Modificados")
+
+        ax.legend()
+
+
+
 
 
 # class PatientDetailView(LogginRequired, UpdateView):

@@ -52,6 +52,7 @@ class DashboardView(LogginRequired, MatplotlibView):
         "draw_barplot",
         "draw_boxplot"]
     plot_format = "png"
+    tight_layout = True
 
     def get_draw_context(self):
         return {"cases": arcovid19.load_cases()}

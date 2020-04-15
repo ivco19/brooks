@@ -24,6 +24,11 @@ urlpatterns = [
         views.ListDmodelView.as_view(),
         name='list_dmodel'),
 
+    path(
+        'plot_dmodel/<dmodel>/',
+        views.PlotDmodelView.as_view(),
+        name='plot_dmodel'),
+
     # path(
     #     'patient/<int:pk>/',
     #     views.PatientDetailView.as_view(),

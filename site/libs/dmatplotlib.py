@@ -61,6 +61,7 @@ class MatplotlibMixin:
     subplots_kwargs = None
     draw_methods = None
     plot_format = "png"
+    tight_layout = False
 
     def get_subplots_kwargs(self):
         return self.subplots_kwargs or {}
@@ -69,6 +70,10 @@ class MatplotlibMixin:
         """Return the plot to be injected in the context_data"""
         splot_kwargs = self.get_subplots_kwargs()
         return subplots(plot_format=self.plot_format, **splot_kwargs)
+
+    def get_tight_layout(self):
+        """Return true if all the figures by default are tighned"""
+        return bool(self.tight_layout)
 
     def get_draw_methods(self):
         draw_methods = self.draw_methods or ["draw_plot"]
@@ -99,6 +104,10 @@ class MatplotlibMixin:
             plot = self.get_plot()
             fig, ax = plot.figaxes()
             dm(fig=fig, ax=ax, **kwargs)
+
+            if self.get_tight_layout():
+                fig.tight_layout()
+
             plots.append(plot)
 
         context["plot"] = plots[0]

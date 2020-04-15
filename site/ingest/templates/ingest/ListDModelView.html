@@ -6,7 +6,9 @@
 {% block title %}
     {{dmodel.DMeta.verbose_name_title}}
     <small class="float-right">
-        <a class="btn btn-primary btn-sm" href="#"><i class="fas fa-chart-bar"></i></a>
+        <a class="btn btn-primary btn-sm" href="{% url 'ingest:plot_dmodel' dmodel=dmodel.DMeta.desc_name%}">
+            <i class="fas fa-chart-bar"></i>
+        </a>
     </small>
 {%endblock %}
 

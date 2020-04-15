@@ -6,7 +6,7 @@
     <div class="dropdown-menu">
         {% for dmname, dmodel_dname in dmodels.items %}
         <a class="dropdown-item" href="{% url 'ingest:list_dmodel' dmodel=dmodel_dname%}">
-            <i class="fas fa-eye"></i>
+            <i class="fas fa-table"></i>
             {{dmname}}
         </a>
         {% endfor %}
