@@ -30,6 +30,7 @@ class RawFile(TimeStampedModel):
 
     notes = models.TextField(blank=True, verbose_name="notas")
     merged = models.BooleanField(default=False, verbose_name="integrado")
+    size = models.IntegerField(null=True)
 
     created_by = models.ForeignKey(
         User, related_name="raw_files",

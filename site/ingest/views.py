@@ -41,7 +41,12 @@ class UploadRawFileView(LogginRequired, CreateView):
     def form_valid(self, form):
         rawfile = form.save(commit=False)
         rawfile.created_by = self.request.user
-
+        try:
+            filepath = rawfile.file.path
+            df = apps.IngestConfig.dmodels.load_data_file(filepath)
+            rawfile.size = len(df)
+        except:
+            pass
         rawfile.save()
         return super().form_valid(form)
 

@@ -19,9 +19,8 @@ class RawFileTable(tables.Table):
     created = tables.Column(verbose_name="Fecha de creación")
     modified = tables.Column(verbose_name="Última modificación")
     file = tables.Column()
-    file_size = tables.Column(
-        accessor="file", verbose_name="Eventos en archivo")
-    events = tables.Column(verbose_name="Eventos generados")
+    size = tables.Column(verbose_name="Registros")
+    rcreated = tables.Column(verbose_name="Registros generados")
 
     class Meta:
         model = models.RawFile
@@ -44,12 +43,13 @@ class RawFileTable(tables.Table):
     def render_file(self, value):
         return os.path.basename(value.file.name)
 
-    def render_events(self, value):
+    def render_rcreated(self, value):
         return value.count()
 
-    def render_file_size(self, value, record):
+    def render_size(self, value, record):
+        import ipdb; ipdb.set_trace()
         try:
-            return len(record.as_df())
+            return record.size
         except Exception:
             return "Incorrecto"
 

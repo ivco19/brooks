@@ -245,6 +245,10 @@ class Compiler:
         # ahora el tipo puede ser uno nativo o un foreign key
         if inspect.isclass(dj_ftype) and issubclass(dj_ftype, models.Field):
 
+            if "sep" in data:
+                raise IncorrectConfigurationError(
+                    "sep solo puede ser definida con una referencia")
+
             if "choices" in data:
                 data["choices"] = [(e, e) for e in data["choices"]]
 
@@ -299,6 +303,7 @@ class Compiler:
 
                 identifier = field_name
                 field_data["unique"] = True
+                field_data["null"] = False
 
             new_field = self.create_field(
                 name=field_name, data=field_data, emodels=emodels)
@@ -419,6 +424,27 @@ class FileParser:
                     v.append(msg)
         return merged
 
+    def m2m_split_data(self, model, sep, data):
+        field_names = model.DMeta.field_names
+        no_model_data = {k: v for k, v in data.items() if k not in field_names}
+        model_data = {k: str(data.get(k, "")).split(sep) for k in field_names}
+        max_split = max(map(len, model_data.values()))
+
+        datas = []
+        for idx in range(max_split):
+            d = {}
+            for k, v in model_data.items():
+                d[k] = v[idx] if idx < len(v) else None
+            d.update(no_model_data)
+            datas.append(d)
+        return datas
+
+    def diff_instance(self, instance, s_data):
+        for k, v in s_data.items():
+            odata = getattr(instance, k)
+            if odata != v:
+                yield k, v
+
     def create_model_instance(self, model, data, models, is_principal):
         mm_info = self.make_minfo()
         model_name = model.DMeta.desc_name
@@ -447,10 +473,22 @@ class FileParser:
 
                 s_data[fname] = fvalue
             elif field_type in models:
+
                 # hay que orquestar el tema de los foreign key
                 sep = field_desc.get("sep")
+
                 if sep:  # M2;
-                    continue
+                    rel_model = models[field_type]
+                    m2m_splited_data = self.m2m_split_data(
+                        rel_model, sep, data)
+                    m2m_instances = []
+                    for m2md in m2m_splited_data:
+                        rel_mminfo, rel_instance = self.create_model_instance(
+                            model=rel_model, data=m2md,
+                            models=models, is_principal=False)
+                        m2m_instances.append(rel_instance)
+                        mm_info = self.merge_minfo(mm_info, rel_mminfo)
+                    m2m_data[fname] = m2m_instances
                 else:  # FK
                     rel_model = models[field_type]
                     rel_mminfo, rel_instance = self.create_model_instance(
@@ -458,7 +496,6 @@ class FileParser:
                         models=models, is_principal=False)
                     s_data[fname] = rel_instance
                     mm_info = self.merge_minfo(mm_info, rel_mminfo)
-
 
         identf_value = s_data[identifier]
         query = {identifier: identf_value}
@@ -474,8 +511,18 @@ class FileParser:
             if is_principal:
                 raise ParseError(
                     f"{model_name} con {identifier}={identf_value} duplicado")
+            for k, v in self.diff_instance(instance, s_data):
+                setattr(instance, k, v)
+                mm_info.warning.append(
+                    f"Cambio valor de {model_name} con "
+                    f"{identifier}={identf_value} en el valor de {k}")
 
         instance.save()
+        for k, links in m2m_data.items():
+            manager = getattr(instance, k)
+            for v in links:
+                manager.add(v)
+
         return mm_info, instance
 
     def parse(self, df, models, principal, fields_to_model):
@@ -491,7 +538,7 @@ class FileParser:
             data = row.where(pd.notnull(row), None).to_dict()
             try:
                 mminfo, instance = self.create_model_instance(
-                    model=principal, data=row,
+                    model=principal, data=data,
                     models=models, is_principal=True)
                 new_instances.append(instance)
             except ParseError as err:
