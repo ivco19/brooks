@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 from django.conf import settings
 
-from libs import model_descriptions as mdesc
+from ingest.libs import mdesc
 
 
 class IngestConfig(AppConfig):

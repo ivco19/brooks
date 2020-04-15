@@ -9,6 +9,8 @@ from django.db import models, transaction
 from django.core import validators
 from django.contrib import admin
 
+import numpy as np
+
 import pandas as pd
 
 import attr
@@ -41,6 +43,12 @@ class MultiKeyDict(dict):
 class Bunch(dict):
     def __getattr__(self, a):
         return self[a]
+
+    def __dir__(self):
+        return super().__dir__() + list(self.keys())
+
+    def __repr__(self):
+        return f"Bunch({', '.join(self.keys())})"
 
     def __setattr__(self, a, v):
         self[a] = v
@@ -141,6 +149,16 @@ DMETA_ATTRS = {
     "principal": False
 }
 
+PLACEHOLDERS = {
+    "date": "DD-MM-YYYY",
+    "int": "1",
+    "float": "1.2",
+    "date": "DD-MM-YYYY",
+    "bool": "true",
+    "char": "str",
+    "freetext": "str",
+}
+
 
 # =============================================================================
 # FUNCTIONS
@@ -218,6 +236,7 @@ class Compiler:
         from django_extensions.db.models import TimeStampedModel as basemodel
 
         # copiamos los datos para manipular tranquilos
+        original_data = copy.deepcopy(data)
         data = copy.deepcopy(data)
 
         # creamos el contenedor de todos los atributos para el modelo
@@ -239,7 +258,9 @@ class Compiler:
         dmeta_attrs = {
             dma: meta_attrs.pop(dma, default)
             for dma, default in DMETA_ATTRS.items()}
+        dmeta_attrs["desc_name"] = name
         dmeta_attrs["field_names"] = tuple(field_names)
+        dmeta_attrs["desc"] = original_data
         attrs["DMeta"] = type("DMeta", (object,), dmeta_attrs)
 
         # creamos la django Meta
@@ -326,10 +347,20 @@ class AdminRegister:
 
 class FileParser:
 
-    def parse(self, df, models, principal):
-        for row in df.iterrows():
-            import ipdb
+    def parse(self, df, models, principal, fields_to_model):
+        merge_info = Bunch(info=[], warning=[], error=[])
+        for row_idx, row in df.iterrows():
+            prefix = f"Fila.{row_idx+1}"
+
+            if np.all(row.isnull().values):
+                merge_info.warning.append(f"{prefix} vacia")
+                continue
+
+            import ipdb; ipdb.set_trace()
+
             ipdb.set_trace()
+
+        return Bunch(merge_info=merge_info, models=models)
 
 
 # =============================================================================
@@ -387,6 +418,31 @@ class DynamicModels:
             if name not in exclude}
         return self.admin.register(models)
 
+    def make_empty_df(self):
+        principal = self.cache.principal
+        fields_to_model = self.cache.fields_to_model
+        desc = self.cache.descfile_content
+
+        def extract_fields(model):
+            dmodels = self.cache.models
+
+            columns = []
+            for fn in model.DMeta.field_names:
+                mf = fields_to_model[fn]
+                model_desc = mf.DMeta.desc
+
+                attr_desc = model_desc["attributes"][fn]
+                atype = attr_desc["type"]
+                if atype in FIELD_TYPES:
+                    columns.append((fn, PLACEHOLDERS[atype]))
+                elif atype in dmodels:
+                    amodel = dmodels[atype]
+                    columns.extend(extract_fields(amodel))
+            return columns
+
+        row = extract_fields(principal)
+        return pd.DataFrame([dict(row)])
+
     def merge_info(self, filepath):
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
@@ -396,7 +452,10 @@ class DynamicModels:
         with transaction.atomic():
             merge_info = self.fileparser.parse(
                 df=df, models=self.cache.models,
-                principal=self.cache.principal)
-            transaction.set_rollback(True)
+                principal=self.cache.principal,
+                fields_to_model=self.cache.fields_to_model)
 
+            # make the rollback
+            transaction.set_rollback(True)
+        raise Exception()
         return merge_info

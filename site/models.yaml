@@ -1,0 +1,124 @@
+Pais:
+  meta:
+    plural: Paises
+  atributos:
+    id_pais:
+      tipo: entero
+      unico: si
+    nombre_pais:
+      tipo: texto
+      largo: 255
+
+
+Provincia:
+  atributos:
+    id_provincia:
+      tipo: entero
+      unico: si
+    nombre_provincia:
+      tipo: texto
+      largo: 255
+    pais:
+      tipo: Pais
+      relacion: provincias
+
+
+Departamento:
+  atributos:
+    nombre_departamento:
+      tipo: texto
+      largo: 255
+    id_departamento:
+      tipo: entero
+      unico: si
+    provincia:
+      tipo: Provincia
+      relacion: departamentos
+      enlace: nombre
+
+
+Localidad:
+  meta:
+    plural: Localidades
+  atributos:
+    nombre_localidad:
+      tipo: texto
+      largo: 255
+    id_localidad:
+      tipo: entero
+      unico: si
+    departamento:
+      tipo: Departamento
+      relacion: localidades
+
+
+ClasificacionEpidemiologica:
+  meta:
+    plural: Clasificaciones Epidemiologicas
+  atributos:
+    nombre_ce:
+      tipo: texto
+      largo: 255
+
+
+Paciente:
+  atributos:
+    nombre_paciente:
+      tipo: texto
+      largo: 255
+    sexo:
+      tipo: texto
+      largo: 2
+      opciones: [M, F, O]
+    sepi_apertura:
+      tipo: entero
+      min: 0
+      unico: si
+    edad_actual:
+      tipo: entero
+      max: 200
+      min: 0
+    localidad_residencia:
+      tipo: Localidad
+
+
+TipoEvento:
+  atributos:
+    nombre_tipo_evento:
+      tipo: texto
+      largo: 255
+    notas_tipo_evento:
+      tipo: libre
+
+
+Sintoma:
+  atributos:
+    nombre_sintoma:
+      tipo: texto
+      largo: 255
+    notas_sintoma:
+      tipo: libre
+
+
+Evento:
+  meta:
+    principal: si
+  atributos:
+    creado_por:
+      tipo: User
+      relacion: eventos
+      tag: ["request.user"]
+    id_evento:
+      tipo: entero
+      unico: si
+    paciente:
+      tipo: Paciente
+    fecha_internacion:
+      tipo: fecha
+    tipo_evento:
+      tipo: TipoEvento
+    signo_sintoma:
+      tipo: Sintoma
+      sep: ";"
+    notas_evento:
+      tipo: libre

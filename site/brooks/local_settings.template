@@ -17,4 +17,6 @@ DATABASES = {
     }
 }
 
+MODELS_DESCRIPTION = PROJECT_DIR / "models.yaml"
+
 DEMO_MODE = False

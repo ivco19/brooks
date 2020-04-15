@@ -6,7 +6,7 @@ from django_extensions.db.models import TimeStampedModel
 
 # import pandas_interactive_html
 
-from libs import model_descriptions as mdesc
+from ingest.libs import mdesc
 
 
 # =============================================================================
