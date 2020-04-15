@@ -12,7 +12,7 @@ disponible publicamente en: https://github.com/ivco19/brooks
 Más proyectos del grupo se encuentran en:
 [https://ivco19.github.io/](https://ivco19.github.io/)
 
-[Grcias Fred!](http://www.cs.unc.edu/~brooks/)
+[Gracias Fred!](http://www.cs.unc.edu/~brooks/)
 
 
 ## Miembros del grupo
