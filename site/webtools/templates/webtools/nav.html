@@ -5,7 +5,7 @@
     </a>
     <div class="dropdown-menu">
         {% for k, v in WEBTOOLS.items %}
-        <a class="dropdown-item" href="{% url 'webtools:show' tool=k %}"">
+        <a class="dropdown-item" href="{% url 'webtools:show' tool=k %}">
             {{k}}
         </a>
         {%endfor%}

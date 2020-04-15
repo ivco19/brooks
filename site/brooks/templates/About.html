@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block page_title %}Acerca de Brooks{% endblock %}
-{% block title %}Acerca de Brooks{% endblock %}
+{% block title %}{% endblock %}
 
 {% block page_css %}
 <style>
@@ -14,23 +14,41 @@
         margin-bottom: 30px;
     }
 
+    .logo{
+        background-color: #007bff !important;
+
+    }
+
 </style>
 {% endblock %}
 
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row"></div>
-        <div class="markdown col">
-            {{about|safe}}
+<div class="container">
+    <div class="row logo">
+        <div class="col">
+            <div class="text-center">
+                <img width="20%" src="{% static 'logo.png' %}"></img>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <span class="float-right">
+                <img src="https://avatars1.githubusercontent.com/u/62436982?s=200&v=4">
+            </span>
+            <div class="markdown">
+                {{about|safe}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div  class="text-center">
+            <img width="80%" src="{% static 'logos.png' %}"></img>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-            <img width="30%" src="{% static 'logos.png' %}"></img>
-        </div>
-    </div>
 </div>
 {% endblock %}
 

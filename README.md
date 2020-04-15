@@ -1,43 +1,53 @@
 # Brooks
 
-Sistema de soporte para el análisis de datos
-de la pandemia de COVID-19 en la provincia de
-Córdoba.
+Sistema de carga rápida de datos diseñado para de COVID-19 en la provincia
+en Argentina
 
 Este proyecto esta distribuido con
 licencia [BSD-3](https://github.com/ivco19/brooks/blob/master/LICENSE), y
 disponible publicamente en: https://github.com/ivco19/brooks
 
-El desarrollo e investigación fue
-llevado adelante por
 
-- Juan B Cabral (CIFASIS-UNR, IATE-OAC-UNC).
-- Vanessa Daza (IATE-OAC-UNC, FaMAF-UNC).
-- Mariano Dominguez (IATE-OAC-UNC, FaMAF-UNC).
-- Marcelo Lares (IATE-OAC-UNC, FaMAF-UNC).
-- Nadia Luczywo (LIMI-FCEFyN-UNC, IED-FCE-UNC, FCA-IUA-UNDEF)
-- Dante Paz (IATE-OAC-UNC, FaMAF-UNC).
-- Rodrigo Quiroga (INFIQC-CFQ, FCQ-UNC).
-- Martín de los Ríos (ICTP-SAIFR).
-- Bruno Sanchez (Department of Physics, Duke University).
-- Federico Stasyszyn (IATE-OAC, FaMAF-UNC).
+**Brooks** es un proyecto de **Arcovid19**
+Más proyectos del grupo se encuentran en:
+[https://ivco19.github.io/](https://ivco19.github.io/)
 
-**Afiliaciones:**
+[Grcias Fred!](http://www.cs.unc.edu/~brooks/)
 
-- [Centro Franco Argentino de Ciencias de la Información y de Sistemas (CIFASIS-UNR)](https://www.cifasis-conicet.gov.ar/)
-- [Instituto de Astronomía Téorico y Experimental (IATE-OAC-UNC)](http://iate.oac.uncor.edu/)
-- [Facultad de Matemática Física y Computación (FaMAF-UNC)](https://www.famaf.unc.edu.ar/)
-- [Laboratorio de Ingeniería y Mantenimiento Industrial (LIMI-FCEFyN-UNC)](https://fcefyn.unc.edu.ar/facultad/secretarias/investigacion-y-posgrado/-investigacion/laboratorio-de-ingenieria-y-mantenimiento-industrial/)
-- [Instituto De Estadística Y Demografía - Facultad de Ciencias Económicas (IED-FCE-UNC)](http://www.eco.unc.edu.ar/instituto-de-estadistica-y-demografia)
-- [Department of Physics, Duke University](https://phy.duke.edu/)
-- [Facultad de Ciencias de la Administación (FCA-IUA-UNDEF)](https://www.iua.edu.ar/)
-- [Instituto de Investigaciones en Físico-Química de Córdoba (INFIQC-CONICET)](http://infiqc-fcq.psi.unc.edu.ar/)
-- [ICTP South American Institute for Fundamental Research (ICTP-SAIFR)](ICTP-SAIFR)
+
+## Miembros del grupo
+
+-   Juan B Cabral (CIFASIS-UNR, IATE-OAC-UNC).
+-   Vanessa Daza (IATE-OAC-UNC, FaMAF-UNC).
+-   Diego García Lambas (IATE-OAC-UNC, FaMAF-UNC).
+-   Marcelo Lares (IATE-OAC-UNC, FaMAF-UNC).
+-   Nadia Luczywo (LIMI-FCEFyN-UNC, IED-FCE-UNC, FCA-IUA-UNDEF)
+-   Dante Paz (IATE-OAC-UNC, FaMAF-UNC).
+-   Rodrigo Quiroga (INFIQC-CFQ, FCQ-UNC).
+-   Bruno Sanchez (Department of Physics, Duke University).
+-   Federico Stasyszyn (IATE-OAC, FaMAF-UNC).
+
+## Instituciones
+
+-   [Centro Franco Argentino de Ciencias de la Información y de Sistemas (CIFASIS-UNR)](https://www.cifasis-conicet.gov.ar/)
+-   [Instituto de Astronomía Teórica y Experimental (IATE-OAC-UNC)](http://iate.oac.uncor.edu/)
+-   [Facultad de Matemática Astronomía Física y Computación (FaMAF-UNC)](https://www.famaf.unc.edu.ar/)
+-   [Laboratorio de Ingeniería y Mantenimiento Industrial
+    (LIMI-FCEFyN-UNC)](https://fcefyn.unc.edu.ar/facultad/secretarias/extension/prosecretaria-de-vinculacion-tecnologica/centro-de-transferencia-y-servicios/centro-de-vinculacion-del-centro-de-asesoramiento-matematico-a-procesos-organizacionales/)
+-   [Instituto De Estadística Y Demografía - Facultad de Ciencias Económicas (IED-FCE-UNC)](http://www.eco.unc.edu.ar/instituto-de-estadistica-y-demografia)
+-   [Department of Physics, Duke University](https://phy.duke.edu/)
+-   [Facultad de Ciencias de la Administración (FCA-IUA-UNDEF)](https://www.iua.edu.ar/)
+-   [Instituto de Investigaciones en Físico-Química de Córdoba (INFIQC-CONICET)](http://infiqc-fcq.psi.unc.edu.ar/)
+
+
+## Contacto
+
+[jbcabral@unc.edu.ar](jbcabral@unc.edu.ar)
 
 
 ----
 
-## Instalacion
+## Instalación
 
 - Utiliza "python3.7" o superior
 - Recomiendo crear un environment con virtualenv o anaconda
@@ -76,3 +86,5 @@ $ python manage.py createsuperuser
 ...
 $ python manage.py runserver
 ```
+
+Por defecto la definición de modelos es la presente en `site/models.yaml`
