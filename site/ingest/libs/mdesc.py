@@ -2,6 +2,7 @@ import copy
 import os
 import json
 import inspect
+import datetime as dt
 
 import yaml
 
@@ -198,6 +199,7 @@ class FIELD_PARSERS:
 
     def parse_freetext(self, x, **kwargs):
         return str(x)
+
 
 FIELD_PARSERS = FIELD_PARSERS()
 
@@ -549,7 +551,6 @@ class FileParser:
                     f"Cambio valor de {model_name} con "
                     f"{identifier}={identf_value} en el valor de {k}")
 
-
         instance.save()
         for k, links in m2m_data.items():
             manager = getattr(instance, k)
@@ -603,6 +604,10 @@ class DynamicModels:
     admin = attr.ib(init=False, factory=AdminRegister)
     fileparser = attr.ib(init=False, factory=FileParser)
 
+    # =========================================================================
+    # FILE PARSERS
+    # =========================================================================
+
     def load_descriptor_file(self, filename):
         """Load the descfile based on the file extension"""
         ext = os.path.splitext(filename)[-1].lower()
@@ -615,6 +620,10 @@ class DynamicModels:
         ext = os.path.splitext(filename)[-1].lower()
         parser = DATA_FILE_PARSERS[ext]
         return parser(filename)
+
+    # =========================================================================
+    # MODELS CREATION
+    # =========================================================================
 
     def create_models(self, app_config):
         if self.cache.get("compiled"):
@@ -669,6 +678,10 @@ class DynamicModels:
         row = extract_fields(principal)
         return pd.DataFrame([dict(row)])
 
+    # =========================================================================
+    # INSTANTIATION
+    # =========================================================================
+
     def merge_info(self, created_by, raw_file):
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
@@ -705,15 +718,15 @@ class DynamicModels:
     def remove(self, raw_file):
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
-
-        filepath = raw_file.file.path
-        df = self.load_data_file(filepath)
-
         with transaction.atomic():
             merge_info = self.fileparser.remove(
                 raw_file=raw_file)
 
         return merge_info
+
+    # =========================================================================
+    # VIEWS HELPERS
+    # =========================================================================
 
     def list_models(self):
         principal_vn = self.cache.principal._meta.verbose_name_plural.title()

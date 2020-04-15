@@ -47,7 +47,6 @@ class RawFileTable(tables.Table):
         return value.count()
 
     def render_size(self, value, record):
-        import ipdb; ipdb.set_trace()
         try:
             return record.size
         except Exception:

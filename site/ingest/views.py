@@ -46,7 +46,7 @@ class UploadRawFileView(LogginRequired, CreateView):
             filepath = rawfile.file.path
             df = apps.IngestConfig.dmodels.load_data_file(filepath)
             rawfile.size = len(df)
-        except:
+        except Exception:
             pass
         rawfile.save()
         return super().form_valid(form)
@@ -94,7 +94,7 @@ class ListDmodelView(LogginRequired, SingleTableView):
     template_name = "ingest/ListDModelView.html"
 
     def get_context_data(self, dmodel, *args, **kwargs):
-        import ipdb; ipdb.set_trace()
+        pass
 
 
 # class PatientDetailView(LogginRequired, UpdateView):
