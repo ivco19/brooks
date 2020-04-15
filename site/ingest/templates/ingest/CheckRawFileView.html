@@ -53,15 +53,15 @@
                 {% else %}
                 <a href="#" class="badge badge-info">
                     Info
-                    {{infos|length}}
+                    {{merge_info.info|length}}
                 </a>
                 <a href="#" class="badge badge-warning">
                     Advertencias
-                    {{warnings|length}}
+                    {{merge_info.warning|length}}
                 </a>
                 <a href="#" class="badge badge-danger">
                     Errores
-                    {{errors|length}}
+                    {{merge_info.error|length}}
                 </a>
                 {% endif %}
             </div>
@@ -138,7 +138,7 @@
                   <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
                       <button class="btn btn-link text-info " data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Información ({{infos|length}})
+                        Información ({{merge_info.info|length}})
                       </button>
                     </h5>
                   </div>
@@ -147,7 +147,7 @@
                     <div class="card-body">
                         <div class="scroll">
                             <ol>
-                                {% for elem in infos %}
+                                {% for elem in merge_info.info %}
                                 <li>{{elem}}</li>
                                 {% endfor %}
                             </ol>
@@ -159,7 +159,7 @@
                   <div class="card-header" id="headingTwo">
                     <h5 class="mb-0">
                       <button class="text-warning btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Advertencias ({{warnings|length}})
+                        Advertencias ({{merge_info.warning|length}})
                       </button>
                     </h5>
                   </div>
@@ -167,7 +167,7 @@
                     <div class="card-body">
                         <div class="scroll">
                             <ol>
-                                {% for elem in warnings %}
+                                {% for elem in merge_info.warning %}
                                 <li>{{elem}}</li>
                                 {% endfor %}
                             </ol>
@@ -179,7 +179,7 @@
                   <div class="card-header" id="headingThree">
                     <h5 class="mb-0">
                       <button class="text-danger btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Errores ({{errors|length}})
+                        Errores ({{merge_info.error|length}})
                       </button>
                     </h5>
                   </div>
@@ -187,7 +187,7 @@
                     <div class="card-body">
                         <div class="scroll">
                             <ol>
-                                {% for elem in errors %}
+                                {% for elem in merge_info.error %}
                                 <li>{{elem}}</li>
                                 {% endfor %}
                             </ol>
@@ -212,6 +212,12 @@
 
 <script>
 $(document).ready(function(){
+
+    {% if raw_file.merged %}
+    $("#div_id_merged").parent().addClass("alert alert-success float-right");
+    {% else %}
+    $("#div_id_merged").parent().addClass("alert alert-secondary float-right");
+    {% endif %}
 
     $('table.dataframe').DataTable({
         "scrollX": true

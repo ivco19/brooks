@@ -38,7 +38,7 @@ class DjangoMatplotlibWrapper:
         def not_implemented_plot_format():
             raise NotImplementedError(f"Format unknown {self.plot_format}")
         key = f"get_img_{self.plot_format}"
-        method = getattr(self, key, not_implemented_plot_format())
+        method = getattr(self, key, not_implemented_plot_format)
         img = method()
         return format_html(img)
 

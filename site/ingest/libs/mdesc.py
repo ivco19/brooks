@@ -183,6 +183,8 @@ class FIELD_PARSERS:
         return float(x)
 
     def parse_date(self, x, **kwargs):
+        if isinstance(x, pd.Timestamp):
+            return x.date()
         format = kwargs.get("format")
         if format:
             return dt.datetime.strfparse(x, format).date()
@@ -404,24 +406,32 @@ class AdminRegister:
 
 class FileParser:
 
+    def make_minfo(self):
+        return Bunch(info=[], warning=[], error=[])
+
+    def merge_minfo(self, a, b, prefix=None):
+        merged = Bunch(copy.deepcopy(dict(a)))
+        for k, v in merged.items():
+            for msg in b[k]:
+                if prefix:
+                    v.append(f"{prefix} {msg}")
+                else:
+                    v.append(msg)
+        return merged
+
     def create_model_instance(self, model, data, models, is_principal):
+        mm_info = self.make_minfo()
         model_name = model.DMeta.desc_name
         model_desc = model.DMeta.desc
         fields_names = model.DMeta.field_names
         identifier = model.DMeta.identifier
 
         # sacamos los datos en crudo
-        model_data = {}
-        for k in fields_names:
-            v = data.get(k)
-            if v is not None:
-                model_data[k] = v
+        model_data = {k: data.get(k) for k in fields_names}
 
         # ahora parseamos todo lo que no sea foreignkey
         s_data, m2m_data = {}, {}
-
         for fname, fvalue in model_data.items():
-            fvalue = str(fvalue)
 
             field_desc = model_desc["attributes"][fname]
             field_type = field_desc["type"]
@@ -429,7 +439,9 @@ class FileParser:
             if field_type in FIELD_TYPES:
                 # es nativo
                 try:
-                    fvalue = FIELD_PARSERS[field_type](fvalue, **field_desc)
+                    fvalue = (
+                        None if fvalue is None else
+                        FIELD_PARSERS[field_type](fvalue, **field_desc))
                 except Exception as err:
                     raise ParseError(str(err))
 
@@ -438,13 +450,15 @@ class FileParser:
                 # hay que orquestar el tema de los foreign key
                 sep = field_desc.get("sep")
                 if sep:  # M2;
-                    import ipdb; ipdb.set_trace()
+                    continue
                 else:  # FK
                     rel_model = models[field_type]
-                    rel_instance = self.create_model_instance(
+                    rel_mminfo, rel_instance = self.create_model_instance(
                         model=rel_model, data=data,
                         models=models, is_principal=False)
                     s_data[fname] = rel_instance
+                    mm_info = self.merge_minfo(mm_info, rel_mminfo)
+
 
         identf_value = s_data[identifier]
         query = {identifier: identf_value}
@@ -452,20 +466,22 @@ class FileParser:
         if created:
             for k, v in s_data.items():
                 setattr(instance, k, v)
+
+            if not is_principal:
+                mm_info.info.append(
+                    f"Nuevo {model_name} con {identifier}={identf_value}")
         else:
             if is_principal:
                 raise ParseError(
                     f"{model_name} con {identifier}={identf_value} duplicado")
-            import ipdb; ipdb.set_trace()
 
         instance.save()
-        return instance
+        return mm_info, instance
 
 
     def parse(self, df, models, principal, fields_to_model):
-
-        merge_info = Bunch(info=[], warning=[], error=[])
-        new_models = []
+        merge_info = self.make_minfo()
+        new_instances = []
         for row_idx, row in df.iterrows():
             prefix = f"[Fila.{row_idx+1}]"
 
@@ -473,16 +489,19 @@ class FileParser:
                 merge_info.warning.append(f"{prefix} vacia")
                 continue
 
-            row = row.to_dict()
+            data = row.where(pd.notnull(row), None).to_dict()
             try:
-                models = self.create_model_instance(
+                mminfo, instance = self.create_model_instance(
                     model=principal, data=row,
                     models=models, is_principal=True)
-                new_models.append(models)
+                new_instances.append(instance)
             except ParseError as err:
                 merge_info.warning.append(f"{prefix} {str(err)}")
+            else:
+                merge_info = self.merge_minfo(
+                    merge_info, mminfo, prefix=prefix)
 
-        return Bunch(merge_info=merge_info, new_models=new_models)
+        return Bunch(merge_info=merge_info, new_instances=new_instances)
 
 
 # =============================================================================
@@ -579,4 +598,4 @@ class DynamicModels:
             # make the rollback
             transaction.set_rollback(True)
 
-        return merge_info
+        return merge_info.merge_info
