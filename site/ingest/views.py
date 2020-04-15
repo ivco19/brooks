@@ -1,6 +1,7 @@
 import string
 import random
 import os
+import itertools as it
 
 from django.views.generic import CreateView, UpdateView, ListView
 
@@ -228,6 +229,13 @@ class PlotDmodelView(LogginRequired, MatplotlibView):
             modified = instance.modified.date()
             datam[modified] = datam.setdefault(modified, 0) + 1
 
+        # for idx in range(10):
+        #     import datetime as dt
+        #     import random
+        #     now = (dt.datetime.now() + dt.timedelta(days=idx)).date()
+        #     datac[now] = random.randint(1, 100)
+        #     datam[now] = random.randint(1, 100)
+
         ax.plot(
             [k.isoformat() for k in datac.keys()],
             list(datac.values()), ls="--", marker="o", label="Creados")
@@ -235,6 +243,10 @@ class PlotDmodelView(LogginRequired, MatplotlibView):
         ax.plot(
             [k.isoformat() for k in datam.keys()],
             list(datam.values()), ls="--", marker="o", label="Modificados")
+
+        xtick_labels = [l for l in sorted(it.chain(datac, datam))]
+        ax.set_xticklabels(xtick_labels, rotation=45)
+
 
         ax.legend()
 
