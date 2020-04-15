@@ -41,6 +41,7 @@ class UploadRawFileView(LogginRequired, CreateView):
     def form_valid(self, form):
         rawfile = form.save(commit=False)
         rawfile.created_by = self.request.user
+        rawfile.modify_by = self.request.user
         try:
             filepath = rawfile.file.path
             df = apps.IngestConfig.dmodels.load_data_file(filepath)
@@ -60,14 +61,23 @@ class CheckRawFileView(LogginRequired, UpdateView):
 
     def get_context_data(self):
         context_data = super().get_context_data()
+        dmodels = apps.IngestConfig.dmodels
         if not self.object.merged:
-            filepath = self.object.file.path
-            mmd = apps.IngestConfig.dmodels.merge_info(
-                filepath, created_by=self.request.user, raw_file=self.object)
+            mmd = dmodels.merge_info(
+                created_by=self.request.user, raw_file=self.object)
             context_data["merge_info"] = mmd.merge_info
             context_data["df"] = mmd.df
+        else:
+            filepath = self.object.file.path
+            context_data["df"] = dmodels.load_data_file(filepath)
         context_data["conf_code"] = "".join(random.sample(LETTERS, 6))
         return context_data
+
+    def form_valid(self, form):
+        rawfile = form.save(commit=False)
+        rawfile.modify_by = self.request.user
+        rawfile.save()
+        return super().form_valid(form)
 
 
 class ListRawFileView(LogginRequired, SingleTableView):

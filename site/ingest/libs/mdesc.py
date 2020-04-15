@@ -458,7 +458,7 @@ class FileParser:
     def diff_instance(self, instance, s_data):
         for k, v in s_data.items():
             odata = getattr(instance, k)
-            if odata != v:
+            if v is not None and odata != v:
                 yield k, v
 
     def create_model_instance(
@@ -576,6 +576,9 @@ class FileParser:
         return Bunch(
             merge_info=merge_info, new_instances=new_instances, df=df)
 
+    def remove(self, raw_file):
+        return raw_file.generated.all().delete()
+
 
 # =============================================================================
 # API
@@ -656,10 +659,28 @@ class DynamicModels:
         row = extract_fields(principal)
         return pd.DataFrame([dict(row)])
 
-    def merge_info(self, filepath, created_by, raw_file):
+    def merge_info(self, created_by, raw_file):
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
 
+        filepath = raw_file.file.path
+        df = self.load_data_file(filepath)
+
+        with transaction.atomic():
+            merge_info = self.fileparser.parse(
+                created_by=created_by, raw_file=raw_file,
+                df=df, models=self.cache.models,
+                principal=self.cache.principal,
+                fields_to_model=self.cache.fields_to_model)
+            transaction.set_rollback(True)
+
+        return merge_info
+
+    def merge(self, created_by, raw_file):
+        if not self.cache.compiled:
+            raise MethodsCallOrderError("models not yet defined")
+
+        filepath = raw_file.file.path
         df = self.load_data_file(filepath)
 
         with transaction.atomic():
@@ -669,7 +690,17 @@ class DynamicModels:
                 principal=self.cache.principal,
                 fields_to_model=self.cache.fields_to_model)
 
-            # make the rollback
-            transaction.set_rollback(True)
+        return merge_info
+
+    def remove(self, raw_file):
+        if not self.cache.compiled:
+            raise MethodsCallOrderError("models not yet defined")
+
+        filepath = raw_file.file.path
+        df = self.load_data_file(filepath)
+
+        with transaction.atomic():
+            merge_info = self.fileparser.remove(
+                raw_file=raw_file)
 
         return merge_info

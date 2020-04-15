@@ -89,19 +89,19 @@
         </div>
         <div class="modal-body">
             <div id="modal-confirmed" class="alert alert-success" role="alert">
-                {% if not rawfile.is_parsed %}
+                {% if rawfile.is_parsed %}
                     Se guardaran cambios en el archivo #{{ rawfile.pk }}
-                    el cual <strong>ya fue integrado</strong> a la base de datos
+                    <strong>que ya fue integrado</strong> a la base de datos
                     en el pasado.
                 {% else %}
                     El archivo #{{ rawfile.pk }}
-                    <strong>Si</strong> sera integrado a la base de datos
+                    <strong>Si sera integrado</strong> a la base de datos
                 {% endif %}
             </div>
             <div id="modal-not-confirmed" class="alert alert-danger" role="alert">
                 {% if rawfile.is_parsed %}
-                    Los eventos del archivo #{{ rawfile.pk }}
-                    sera <strong>removidos</strong> de la base de datos
+                    Los registros del archivo #{{ rawfile.pk }}
+                    seran <strong>removidos</strong> de la base de datos
                 {% else %}
                     El archivo #{{ rawfile.pk }}
                     <strong>NO</strong> sera integrado a la base de datos
@@ -227,7 +227,7 @@ $(document).ready(function(){
     $("table.dataframe th").addClass("table-dark")
 
     var $rawFileForm = $("form#rawFileForm");
-    $confirmedInput = $("input#id_confirmed");
+    $confirmedInput = $("input#id_merged");
 
     $("button#saveButton").click(function(evt){
         if($confirmedInput.is(':checked')){

@@ -33,6 +33,13 @@ class RawFile(TimeStampedModel):
     created_by = models.ForeignKey(
         User, related_name="raw_files",
         on_delete=models.CASCADE, verbose_name="creado por")
+    modify_by = models.ForeignKey(
+        User, related_name="raw_files_modified",
+        on_delete=models.CASCADE, verbose_name="modificado por")
+
+    @property
+    def is_parsed(self):
+        return bool(self.generated.count())
 
     @property
     def filename(self):
