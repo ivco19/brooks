@@ -17,13 +17,18 @@ import string
 import random
 import os
 import itertools as it
+import datetime as dt
 
 from django.views.generic import CreateView, UpdateView, DetailView
 from django.urls import reverse_lazy, reverse
+from django.db.models import ForeignKey, TextField
+from django.db.models.fields.files  import FieldFile
 
 from django_tables2.views import SingleTableView
 
 from django_pandas.io import read_frame
+
+import humanize
 
 from brooks.views_mixins import LogginRequired
 from brooks.libs.dmatplotlib import MatplotlibView
@@ -257,6 +262,7 @@ class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
 
         ax.legend()
 
+from django.utils.html import format_html
 
 class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
 
@@ -268,13 +274,28 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
         "modified": "Fecha de modificación",
     }
 
+    FORMATTERS = {
+        FieldFile: lambda v: os.path.basename(v.name),
+        dt.date: humanize.naturaldate,
+        dt.datetime: humanize.naturaldate,
+        bool: lambda v: "Sí" if v else "No"
+    }
+
     def get_label(self, fname, dj_field):
         label = dj_field.verbose_name
         label = self.CUSTOM_LABELS.get(label, label)
         return label.title()
 
+    def format_value(self, value, dj_type):
+        humanize.i18n.activate("es_ES")
+        ftype = type(value)
+        formatter = self.FORMATTERS.get(ftype, str)
+        fvalue = formatter(value)
+        if isinstance(dj_type, TextField):
+            fvalue = format_html(fvalue)
+        return fvalue
+
     def split_dminstance(self, instance, check_forbidden=False):
-        ForeignKey = models.models.ForeignKey
 
         if hasattr(instance, "DMeta"):
             is_dmodel = True
@@ -300,6 +321,7 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
                     "value": value}
             elif dj_field:
                 value = getattr(instance, fname)
+                value = self.format_value(value=value, dj_type=dj_field)
                 props[fname] = {"label": vname, "value": value or "--"}
 
         identifier = props.get(identifier)
