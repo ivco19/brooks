@@ -1,3 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# This file is part of Arcovid-19 Brooks.
+# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
+#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
+#                     Bruno Sanchez, Federico Stasyszyn.
+# License: BSD-3-Clause
+#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
+
+
+# =============================================================================
+# DOCS
+# =============================================================================
+
 """brooks URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -13,6 +28,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
 from django.contrib import admin
 from django.urls import path, include
 
@@ -25,6 +46,10 @@ from django.views.generic import RedirectView
 
 from . import views
 
+
+# =============================================================================
+# PATTERNS
+# =============================================================================
 
 urlpatterns = [
     path(
@@ -71,6 +96,10 @@ urlpatterns = [
 
 ]
 
+
+# =============================================================================
+# DEBUG ONLY PATTERNS
+# =============================================================================
 
 if settings.DEBUG:
     urlpatterns += static(
