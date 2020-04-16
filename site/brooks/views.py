@@ -6,7 +6,7 @@ import mistune
 
 import arcovid19
 
-from libs.dmatplotlib import MatplotlibView
+from brooks.libs.dmatplotlib import MatplotlibView
 
 from brooks.views_mixins import LogginRequired
 

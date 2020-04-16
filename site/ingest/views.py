@@ -4,19 +4,16 @@ import os
 import itertools as it
 
 from django.views.generic import CreateView, UpdateView
-
 from django.urls import reverse_lazy, reverse
 
 from django_tables2.views import SingleTableView
 
-from brooks.views_mixins import LogginRequired
-
-from libs.dmatplotlib import MatplotlibView
-
 from django_pandas.io import read_frame
 
-from ingest import apps, models, forms, tables
+from brooks.views_mixins import LogginRequired
+from brooks.libs.dmatplotlib import MatplotlibView
 
+from ingest import apps, models, forms, tables
 
 # =============================================================================
 # CONSTANTS
