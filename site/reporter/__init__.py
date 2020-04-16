@@ -14,6 +14,7 @@
 # =============================================================================
 
 
-"""The app of apps, this ingest ahd analize mostly of the data.
+"""The objective of this unimplemented app is to generate reports based on
+the data adquired from the ingest app.
 
 """
