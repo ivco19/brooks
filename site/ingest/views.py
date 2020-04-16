@@ -28,7 +28,7 @@ from django_pandas.io import read_frame
 from brooks.views_mixins import LogginRequired
 from brooks.libs.dmatplotlib import MatplotlibView
 
-from ingest.libs.mdesc import DModelViewMixin
+from ingest.libs.mdesc import DModelViewMixin, is_name_forbidden
 from ingest import apps, models, forms, tables
 
 
@@ -273,25 +273,45 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
         label = self.CUSTOM_LABELS.get(label, label)
         return label.title()
 
-    def split_dminstance(self, instance):
+    def split_dminstance(self, instance, check_forbidden=False):
         ForeignKey = models.models.ForeignKey
 
-        is_principal = instance.DMeta.principal
-        desc = instance.DMeta.desc
-        dmodels_fields = instance.DMeta.field_names
+        if hasattr(instance, "DMeta"):
+            is_dmodel = True
+            is_principal = instance.DMeta.principal
+            identifier = instance.DMeta.identifier
+        else:
+            is_dmodel = False
+            is_principal = False
+            identifier = None
+
         dj_fields = {f.name: f for f in instance._meta.fields}
 
-        props, lou, lin = {}, {}, {}
+        props, lout, lin = {}, {}, {}
         for fname, dj_field in dj_fields.items():
-            vname =  self.get_label(fname, dj_field)
+            if check_forbidden and is_name_forbidden(fname):
+                continue
+            vname = self.get_label(fname, dj_field)
             if isinstance(dj_field, ForeignKey):
-                continue # lin
-            if dj_field:
+                sinstance = getattr(instance, fname)
+                value = self.split_dminstance(sinstance, check_forbidden=True)
+                lout[fname] = {
+                    "label": vname,
+                    "value": value}
+            elif dj_field:
                 value = getattr(instance, fname)
                 props[fname] = {"label": vname, "value": value or "--"}
-        identifier = props[instance.DMeta.identifier]
-        return {"idf": identifier, "props": props}
 
+        identifier = props.get(identifier)
+        desc_name = instance.DMeta.desc_name if is_dmodel else None
+
+        return {
+            "is_dmodel": is_dmodel,
+            "desc_name": desc_name,
+            "idf": identifier,
+            "pk": instance.pk,
+            "props": props,
+            "lout": lout}
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)

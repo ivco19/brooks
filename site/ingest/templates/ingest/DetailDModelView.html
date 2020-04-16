@@ -35,9 +35,9 @@ License: BSD-3-Clause
 {% block content %}
 <div class="container">
     <div class="row justify-content-md-center">
-        <div class="col col-14">
+        <div class="col">
             <h3 class=" alert alert-info">Datos principales</h3>
-            <table class="table table-stripped table-hover">
+            <table class="table table-stripped table-hover table-sm ">
                 {% for n, d in objd.props.items %}
                 <tr class="prop" id="prop-{{n}}">
                     <th class="prop-label">
@@ -54,6 +54,40 @@ License: BSD-3-Clause
             </table>
         </div>
     </div>
+</div>
+
+<div class="container-fluid">
+    {% for slabel, sdata in objd.lout.items %}
+    <div class="row justify-content-md-center">
+        <div class="col col-14">
+            <h3 class=" alert alert-secondary">
+                {{sdata.label}}
+                {% if sdata.value.is_dmodel %}
+                <small class="float-right">
+                    <a href="{% url 'ingest:dmodel_details' sdata.value.desc_name sdata.value.pk %}" class="btn btn-dark" href="#">
+                        <i class="fas fa-share"></i>
+                    </a>
+                </small>
+                {% endif %}
+            </h3>
+            <table class="table table-stripped table-hover table-sm ">
+                {% for n, d in sdata.value.props.items %}
+                <tr class="prop" id="prop-{{n}}">
+                    <th class="prop-label">
+                        {{d.label}}
+                        {% if d == sdata.value.idf %}
+                            <small class="text-info">(Identificador)</small>
+                        {% endif %}
+                    </th>
+                    <td class="prop-value">
+                        {{d.value}}
+                    </td>
+                <tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}
 

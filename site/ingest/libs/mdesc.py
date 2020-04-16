@@ -223,11 +223,27 @@ class FIELD_PARSERS:
 FIELD_PARSERS = FIELD_PARSERS()
 
 
-FORBIDEN_FIELDS = ["user", "created_by", "modified_by", "created", "modified"]
+FORBIDDEN_NAMES = (
+    "user", "created_by", "modified_by", "created", "modified",
+    "password", "secret", "loggin", "superuser", "staff", "login")
 
 
 # =============================================================================
 # FUNCTIONS
+# =============================================================================
+
+def is_name_forbidden(fname):
+    fname = fname.lower()
+    if fname.startswith("_"):
+        return True
+    for forbidden in FORBIDDEN_NAMES:
+        if forbidden in fname.split("_"):
+            return True
+    return False
+
+
+# =============================================================================
+# CLASSES
 # =============================================================================
 
 class Compiler:
@@ -250,7 +266,7 @@ class Compiler:
         return DATA_TRANSLATIONS.get(data, data)
 
     def create_field(self, *, name, data, emodels):
-        if name in FORBIDEN_FIELDS:
+        if is_name_forbidden(name):
             raise IncorrectConfigurationError(
                 f"El nombre de atributo {name} esta prohibido")
 
@@ -307,6 +323,9 @@ class Compiler:
                     link_to, on_delete=models.CASCADE, **data)
 
     def create_model(self, *, name, data, emodels, module_spec):
+        if is_name_forbidden(name):
+            raise IncorrectConfigurationError(
+                f"El nombre de modelo {name} esta prohibido")
 
         basemodel = emodels["TimeStampedModel"]
 
