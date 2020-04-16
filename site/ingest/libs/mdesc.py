@@ -379,7 +379,7 @@ class Compiler:
         def __str__(self):
             identifier = self.DMeta.identifier
             ivalue = getattr(self, identifier)
-            return ivalue
+            return str(ivalue)
 
         attrs["__str__"] = __str__
 
