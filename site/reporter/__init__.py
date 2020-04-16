@@ -15,6 +15,6 @@
 
 
 """The objective of this unimplemented app is to generate reports based on
-the data adquired from the ingest app.
+the data acquired from the ingest app.
 
 """
