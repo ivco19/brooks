@@ -13,6 +13,6 @@
 # DOCS
 # =============================================================================
 
-"""Automatically created files for brooks.
+"""Automatically created files for brooks migrations.
 
 """
