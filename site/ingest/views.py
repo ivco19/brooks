@@ -18,7 +18,7 @@ import random
 import os
 import itertools as it
 
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DetailView
 from django.urls import reverse_lazy, reverse
 
 from django_tables2.views import SingleTableView
@@ -28,6 +28,7 @@ from django_pandas.io import read_frame
 from brooks.views_mixins import LogginRequired
 from brooks.libs.dmatplotlib import MatplotlibView
 
+from ingest.libs.mdesc import DModelViewMixin
 from ingest import apps, models, forms, tables
 
 
@@ -110,18 +111,21 @@ class ListRawFileView(LogginRequired, SingleTableView):
 # THE DYNAMIC VIEWS HERE
 # =============================================================================
 
-class ListDmodelView(LogginRequired, SingleTableView):
+class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
 
     model = None
     table_class = None
     template_name = "ingest/ListDModelView.html"
+    dmodels = apps.IngestConfig.dmodels
 
     def get_table_class(self, *args, **kwargs):
         dmodel = self.get_dmodel()
 
         # columna de abrir
         def open_linkify(record):
-            return reverse('ingest:check_file', args=[record.pk])
+            return reverse(
+                'ingest:dmodel_details',
+                args=[dmodel.DMeta.desc_name, record.pk])
 
         open_column = tables.Column(
             accessor="pk", verbose_name="Abrir", linkify=open_linkify)
@@ -171,36 +175,25 @@ class ListDmodelView(LogginRequired, SingleTableView):
         table_cls = type(table_name, bases, attrs)
         return table_cls
 
-    def get_dmodel(self):
-        dmodel_name = self.kwargs["dmodel"]
-        return apps.IngestConfig.dmodels.get_dmodel(dmodel_name)
-
-    def get_queryset(self, *args, **kwargs):
-        dmodel = self.get_dmodel()
-        return dmodel.objects.all()
-
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context["dmodel"] = self.get_dmodel()
         return context
 
 
-class PlotDmodelView(LogginRequired, MatplotlibView):
+class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
 
     template_name = "ingest/PlotDModelView.html"
     draw_methods = [
         "draw_creation_time"]
     plot_format = "png"
     tight_layout = True
+    dmodels = apps.IngestConfig.dmodels
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context["dmodel"] = self.get_dmodel()
         return context
-
-    def get_dmodel(self):
-        dmodel_name = self.kwargs["dmodel"]
-        return apps.IngestConfig.dmodels.get_dmodel(dmodel_name)
 
     def get_draw_context(self):
         dmodel = self.get_dmodel()
@@ -265,17 +258,44 @@ class PlotDmodelView(LogginRequired, MatplotlibView):
         ax.legend()
 
 
-# class PatientDetailView(LogginRequired, UpdateView):
+class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
 
-#     template_name = "ingest/PatientDetailView.html"
-#     form_class = forms.PatientDetailForm
-#     model = models.Patient
+    template_name = "ingest/DetailDModelView.html"
+    dmodels = apps.IngestConfig.dmodels
 
-#     def get_success_url(self):
-#         patient = self.object
-#         return reverse_lazy('ingest:patient_detail', args=[patient.pk])
+    CUSTOM_LABELS = {
+        "created": "Fecha de creación",
+        "modified": "Fecha de modificación",
+    }
 
-#     def get_context_data(self):
-#         context_data = super().get_context_data()
-#         context_data["pp_patient"] = pprinter.PatientPrinter(self.object)
-#         return context_data
+    def get_label(self, fname, dj_field):
+        label = dj_field.verbose_name
+        label = self.CUSTOM_LABELS.get(label, label)
+        return label.title()
+
+    def split_dminstance(self, instance):
+        ForeignKey = models.models.ForeignKey
+
+        is_principal = instance.DMeta.principal
+        desc = instance.DMeta.desc
+        dmodels_fields = instance.DMeta.field_names
+        dj_fields = {f.name: f for f in instance._meta.fields}
+
+        props, lou, lin = {}, {}, {}
+        for fname, dj_field in dj_fields.items():
+            vname =  self.get_label(fname, dj_field)
+            if isinstance(dj_field, ForeignKey):
+                continue # lin
+            if dj_field:
+                value = getattr(instance, fname)
+                props[fname] = {"label": vname, "value": value or "--"}
+        identifier = props[instance.DMeta.identifier]
+        return {"idf": identifier, "props": props}
+
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        context_data["dmodel"] = self.get_dmodel()
+        context_data["objd"] = self.split_dminstance(
+            instance=context_data["object"])
+        return context_data

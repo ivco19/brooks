@@ -793,3 +793,22 @@ class DynamicModels:
 
     def get_principal_dmodel(self):
         return self.cache.principal
+
+
+# =============================================================================
+# VIEW CLASSES
+# =============================================================================
+
+class DModelViewMixin:
+
+    def get_dmodel_conf(self):
+        return self.dmodels
+
+    def get_dmodel(self):
+        dmodels_conf = self.get_dmodel_conf()
+        dmodel_name = self.kwargs["dmodel"]
+        return dmodels_conf.get_dmodel(dmodel_name)
+
+    def get_queryset(self, *args, **kwargs):
+        dmodel = self.get_dmodel()
+        return dmodel.objects.all()

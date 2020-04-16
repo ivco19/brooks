@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% comment %}
+This file is part of Arcovid-19 Brooks.
+Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
+                    Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
+                    Bruno Sanchez, Federico Stasyszyn.
+License: BSD-3-Clause
+  Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
+{% endcomment %}
+
+{% block page_title %}
+    {{dmodel.DMeta.desc_name}}
+    (#{{object.id}})
+{% endblock %}
+{% block title %}
+    {{dmodel.DMeta.desc_name}} -
+    <span class="text-info">
+        {{objd.idf.label}}
+        {{objd.idf.value}}
+    </span> -
+    <small>
+        <span class="badge badge-info badge-sm">ID #{{object.id}}</span>
+    </small>
+{%endblock %}
+
+{% block page_css %}
+<style>
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col col-14">
+            <h3 class=" alert alert-info">Datos principales</h3>
+            <table class="table table-stripped table-hover">
+                {% for n, d in objd.props.items %}
+                <tr class="prop" id="prop-{{n}}">
+                    <th class="prop-label">
+                        {{d.label}}
+                        {% if d == objd.idf %}
+                            <small class="text-info">(Identificador)</small>
+                        {% endif %}
+                    </th>
+                    <td class="prop-value">
+                        {{d.value}}
+                    </td>
+                <tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block page_js %}
+<script>
+$(document).ready(function(){
+    $("table#dtable td a").addClass("btn btn-info btn-sm")
+});
+</script>
+{% endblock %}

@@ -95,7 +95,7 @@ def subplots(plot_format="png", *args, **kwargs):
 # VIEWS
 # =============================================================================
 
-class MatplotlibMixin:
+class MatplotlibViewMixin:
 
     subplots_kwargs = None
     draw_methods = None
@@ -154,5 +154,5 @@ class MatplotlibMixin:
         return context
 
 
-class MatplotlibView(MatplotlibMixin, TemplateView):
+class MatplotlibView(MatplotlibViewMixin, TemplateView):
     pass
