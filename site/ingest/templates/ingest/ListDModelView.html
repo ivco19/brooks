@@ -14,6 +14,11 @@ License: BSD-3-Clause
 {% block page_title %}{{dmodel.DMeta.verbose_name_title}}{% endblock %}
 {% block title %}
     {{dmodel.DMeta.verbose_name_title}}
+    {% if dmodel.DMeta.principal %}
+    <small>
+        <span class="badge badge-primary">Principal</span>
+    </small>
+    {% endif %}
     <small class="float-right">
         <a class="btn btn-primary btn-sm" href="{% url 'ingest:plot_dmodel' dmodel=dmodel.DMeta.desc_name%}">
             <i class="fas fa-chart-bar"></i>

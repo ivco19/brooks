@@ -15,16 +15,25 @@ License: BSD-3-Clause
 
 
 {% block content %}
+<span id="loging-group">
     {% crispy form %}
     <input type="submit" class="btn btn-primary" value="Login" id="submit-login">
+</span>
 {% endblock %}
 
 {% block page_js %}
 <script>
 $(document).ready(function(){
-    $("#submit-login").click(function(){
-        $("form").submit();
+    $("#loging-group #submit-login").click(function(){
+        $("#loging-group form").submit();
     });
+
+    $("#loging-group input").on('keypress',function(e) {
+        if(e.which == 13) {
+            $("#loging-group form").submit();
+        }
+    });
+
 });
 </script>
 {% endblock %}

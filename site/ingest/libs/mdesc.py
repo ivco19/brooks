@@ -362,7 +362,7 @@ class Compiler:
             emodels["User"], on_delete=models.CASCADE,
             related_name=f"{name}_generated_set",
             verbose_name="Creado por")
-        attrs["modifed_by"] = models.ForeignKey(
+        attrs["modified_by"] = models.ForeignKey(
             emodels["User"], on_delete=models.CASCADE,
             related_name=f"{name}_modified_set",
             verbose_name="Modificado por")
@@ -576,7 +576,7 @@ class FileParser:
             defaults.update(raw_file=raw_file)
 
         instance, created = model.objects.get_or_create(
-            default=default, **query)
+            defaults=defaults, **query)
         if created:
             for k, v in s_data.items():
                 setattr(instance, k, v)
