@@ -790,3 +790,6 @@ class DynamicModels:
         return self.cache.models[model]
         if query:
             return model.objects.filter(**query)
+
+    def get_principal_dmodel(self):
+        return self.cache.principal

@@ -17,6 +17,11 @@ License: BSD-3-Clause
         <a class="dropdown-item" href="{% url 'ingest:list_dmodel' dmodel=dmodel_dname%}">
             <i class="fas fa-table"></i>
             {{dmname}}
+            {% if dmodel_dname == dmodel_principal %}
+            <small>
+                <span class="badge badge-primary">Principal</span>
+            </small>
+            {% endif %}
         </a>
         {% endfor %}
         <a class="dropdown-item" href=""><hr></a>

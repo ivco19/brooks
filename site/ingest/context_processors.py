@@ -25,6 +25,9 @@ def export_available_models(request):
     model descriptor file into the templates engine.
 
     """
+    dmodels = apps.IngestConfig.dmodels.list_models()
+    principal = apps.IngestConfig.dmodels.get_principal_dmodel()
     context = {
-        "dmodels": apps.IngestConfig.dmodels.list_models()}
+        "dmodels": dmodels,
+        "dmodel_principal": principal.DMeta.desc_name}
     return context
