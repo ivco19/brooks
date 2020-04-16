@@ -1,3 +1,29 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# This file is part of Arcovid-19 Brooks.
+# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
+#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
+#                     Bruno Sanchez, Federico Stasyszyn.
+# License: BSD-3-Clause
+#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
+
+
+# =============================================================================
+# DOCS
+# =============================================================================
+
+"""This modules aim to write some HTML easy. For example if you want to
+write a query as an UL you can use the ULPPrinter.
+
+A lot of documentation is needed here.
+
+"""
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
 import datetime as dt
 
 from django.utils.html import format_html

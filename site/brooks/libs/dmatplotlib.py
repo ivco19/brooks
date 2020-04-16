@@ -1,6 +1,30 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# This file is part of Arcovid-19 Brooks.
+# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
+#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
+#                     Bruno Sanchez, Federico Stasyszyn.
+# License: BSD-3-Clause
+#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
+
+
+# =============================================================================
+# DOCS
+# =============================================================================
+
+"""Wrapper around the matplotlib functionalities to write plots into a
+django templates.
+
+"""
+
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
 import io
 import base64
-import functools
 
 import matplotlib.pyplot as plt
 
@@ -16,6 +40,10 @@ import attr
 
 @attr.s(frozen=True)
 class DjangoMatplotlibWrapper:
+    """This class are in charge of contain a figure and axes and write it
+    to an HTML format.
+
+    """
 
     fig = attr.ib()
     axes = attr.ib()
@@ -46,8 +74,19 @@ class DjangoMatplotlibWrapper:
         return self.fig, self.axes
 
 
-@functools.wraps(plt.subplots)
+# =============================================================================
+# FUNCTIONS
+# =============================================================================
+
 def subplots(plot_format="png", *args, **kwargs):
+    """This functions tries to mimic the behavior of
+    matplotlib.pyplot.subplots but return a DjangoMatplotlibWrapper instead
+    figure and axes.
+
+    Also this functions receive in which format you want to write your plot
+    in the HTML page.
+
+    """
     fig, axes = plt.subplots(*args, **kwargs)
     return DjangoMatplotlibWrapper(plot_format=plot_format, fig=fig, axes=axes)
 

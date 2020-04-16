@@ -1,7 +1,7 @@
 # Brooks
 
-Sistema de carga rápida de datos diseñado para de COVID-19 en la provincia
-en Argentina
+Sistema de carga rápida de datos diseñado para la pandemia de COVID-19 en la
+en Argentina.
 
 Este proyecto esta distribuido con
 licencia [BSD-3](https://github.com/ivco19/brooks/blob/master/LICENSE), y
