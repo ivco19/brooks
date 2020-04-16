@@ -23,7 +23,18 @@ import attr
 # DOCS
 # =============================================================================
 
-"""Some insights about the code:
+"""First wellcome to the thunderdome-bitch, this module understand, parses
+and compile the model-description file (model.yml/model.json) files.
+
+This code is clean but complex. Its use a lot of:
+
+- Django internals.
+- Python meta-programming.
+- Recursion.
+
+This module is fun but take care heare.
+
+Some insights about the code:
    https://dynamic-models.readthedocs.io/
 
 """
@@ -34,6 +45,10 @@ import attr
 # =============================================================================
 
 class MultiKeyDict(dict):
+    """Receives another dictionay as a contructor, and split the keys
+    internally. Also explodes if a key es repeated.
+
+    """
     def __init__(self, data):
         for keys, v in data.items():
             for k in keys:
@@ -44,6 +59,7 @@ class MultiKeyDict(dict):
 
 
 class Bunch(dict):
+    """A dict but a "." attribute accesor (mostly copyed from sklearn)."""
     def __getattr__(self, a):
         return self[a]
 
@@ -62,14 +78,17 @@ class Bunch(dict):
 # =============================================================================
 
 class MethodsCallOrderError(RuntimeError):
+    """You call the methods in the wrong order."""
     pass
 
 
 class IncorrectConfigurationError(ValueError):
+    """The model.yml/json file is bad defined."""
     pass
 
 
 class ParseError(RuntimeError):
+    """We can't parse the spreadsheet with data"""
     pass
 
 
@@ -212,6 +231,7 @@ FORBIDEN_FIELDS = ["user", "created_by", "created", "modified"]
 # =============================================================================
 
 class Compiler:
+    """Interpret and create modules based on the model description file."""
 
     def translate(self, data):
         """Traduce todo lo que tiene el diccionario de datos
@@ -432,6 +452,7 @@ class Compiler:
 # =============================================================================
 
 class AdminRegister:
+    """Vanagloried class to register the models into the django admin."""
 
     def register(self, models):
         regs = []
@@ -446,6 +467,10 @@ class AdminRegister:
 # =============================================================================
 
 class FileParser:
+    """Validate the data-spreadsheet with the description file and
+    created model-instances of their values.
+
+    """
 
     def make_minfo(self):
         return Bunch(info=[], warning=[], error=[])
@@ -605,6 +630,11 @@ class FileParser:
 
 @attr.s(frozen=True, repr=False)
 class DynamicModels:
+    """The public api here. This class must be instantiated in the
+    AppConfig and then you must call first the create_models method in the
+    ready method.
+
+    """
 
     descfile = attr.ib()
     cache = attr.ib(init=False, factory=Bunch)

@@ -1,3 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# This file is part of Arcovid-19 Brooks.
+# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
+#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
+#                     Bruno Sanchez, Federico Stasyszyn.
+# License: BSD-3-Clause
+#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
+
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
 import string
 import random
 import os
@@ -14,6 +29,7 @@ from brooks.views_mixins import LogginRequired
 from brooks.libs.dmatplotlib import MatplotlibView
 
 from ingest import apps, models, forms, tables
+
 
 # =============================================================================
 # CONSTANTS
@@ -89,6 +105,10 @@ class ListRawFileView(LogginRequired, SingleTableView):
     table_class = tables.RawFileTable
     template_name = "ingest/ListRawFileView.html"
 
+
+# =============================================================================
+# THE DYNAMIC VIEWS HERE
+# =============================================================================
 
 class ListDmodelView(LogginRequired, SingleTableView):
 
