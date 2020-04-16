@@ -223,7 +223,7 @@ class FIELD_PARSERS:
 FIELD_PARSERS = FIELD_PARSERS()
 
 
-FORBIDEN_FIELDS = ["user", "created_by", "created", "modified"]
+FORBIDEN_FIELDS = ["user", "created_by", "modified_by", "created", "modified"]
 
 
 # =============================================================================
@@ -358,14 +358,20 @@ class Compiler:
             "verbose_name_plural", name).title()
         attrs["DMeta"] = type("DMeta", (object,), dmeta_attrs)
 
+        attrs["created_by"] = models.ForeignKey(
+            emodels["User"], on_delete=models.CASCADE,
+            related_name=f"{name}_generated_set",
+            verbose_name="Creado por")
+        attrs["modifed_by"] = models.ForeignKey(
+            emodels["User"], on_delete=models.CASCADE,
+            related_name=f"{name}_modified_set",
+            verbose_name="Modificado por")
+
         # si es el principal necesitamos linkerarlo a rawfile
         if dmeta_attrs["principal"]:
             attrs["raw_file"] = models.ForeignKey(
                 emodels["RawFile"], on_delete=models.CASCADE,
                 related_name="generated", verbose_name="Archivo")
-            attrs["created_by"] = models.ForeignKey(
-                emodels["User"], on_delete=models.CASCADE,
-                related_name="generated", verbose_name="Creado por")
 
         # creamos un repr aceptable
         def __repr__(self):
@@ -563,10 +569,14 @@ class FileParser:
 
         identf_value = s_data[identifier]
         query = {identifier: identf_value}
-        if is_principal:
-            query.update(created_by=created_by, raw_file=raw_file)
 
-        instance, created = model.objects.get_or_create(**query)
+        # si se crea uno nuevo se crea con esto
+        defaults = {"created_by": created_by, "modified_by": created_by}
+        if is_principal:
+            defaults.update(raw_file=raw_file)
+
+        instance, created = model.objects.get_or_create(
+            default=default, **query)
         if created:
             for k, v in s_data.items():
                 setattr(instance, k, v)
