@@ -27,7 +27,7 @@ from brooks.views_mixins import LogginRequired
 
 
 # =============================================================================
-# MISC
+# CLASSES
 # =============================================================================
 
 class ChangesView(LogginRequired, TemplateView):
