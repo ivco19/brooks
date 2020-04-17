@@ -232,7 +232,7 @@ WEBTOOLS = {
 
 
 # dynamic model description
-MODELS_DESCRIPTION = os.environ.get("BROOKS_MODELS_DECRTIPTION", "")
+MODELS_DESCRIPTION = os.environ.get("BROOKS_MODELS_DECRIPTION", "")
 
 
 # the list of configurations to export to the template view
