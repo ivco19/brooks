@@ -78,37 +78,38 @@ License: BSD-3-Clause
                 {% include "ingest/nav.html" %}
                 {% include "webtools/nav.html" %}
             </ul>
-        </div>
 
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-user fa-fw"></i>
-                    {% if user.last_name and user.first_name %}
-                    {{ user.last_name }}, {{ user.first_name }} &ThinSpace;
-                    ({{ user.username }})
-                    {% else %}
-                    {{ user.username }}
-                    {% endif %}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                {% if request.user.is_staff %}
-                <a class="dropdown-item" href=""><hr/></a>
-                <a class="dropdown-item text-warning" href="/admin">
-                    <i class="fa fa-wrench fa-fw "></i> Admin
-                </a>
-                {% endif %}
-                <a class="dropdown-item" href=""><hr/></a>
-                <a class="dropdown-item" href="{% url 'changes' %}">
-                    <i class="fa fa-sign-out-alt fa-fw"></i> Cambios
-                </a>
-                <a class="dropdown-item" href="{% url 'about' %}">
-                    <i class="fa fa-sign-out-alt fa-fw"></i> Acerca de...
-                </a>
-                <a class="dropdown-item" href=""><hr/></a>
-                <a class="dropdown-item" href="/logout">
-                    <i class="fa fa-sign-out-alt fa-fw"></i>Salir
-                </a>
-            </div>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        <i class="fa fa-user fa-fw"></i>
+                        {% if user.last_name and user.first_name %}
+                            {{ user.last_name }}, {{ user.first_name }} &ThinSpace;
+                            ({{ user.username }})
+                            {% else %}
+                            {{ user.username }}
+                        {% endif %}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        {% if request.user.is_staff %}
+                        <a class="dropdown-item" href="/admin">
+                            <i class="fa fa-wrench fa-fw "></i> Admin
+                        </a>
+                        {% endif %}
+                        <a class="dropdown-item" href=""><hr/></a>
+                        <a class="dropdown-item" href="{% url 'changes' %}">
+                            <i class="fa fa-sign-out-alt fa-fw"></i> Cambios
+                        </a>
+                        <a class="dropdown-item" href="{% url 'about' %}">
+                            <i class="fa fa-sign-out-alt fa-fw"></i> Acerca de...
+                        </a>
+                        <a class="dropdown-item" href=""><hr/></a>
+                        <a class="dropdown-item" href="/logout">
+                            <i class="fa fa-sign-out-alt fa-fw"></i>Salir
+                        </a>
+                    </div>
+                </li>
+            </ul>
         </div>
         {% endif %}
     </nav>
