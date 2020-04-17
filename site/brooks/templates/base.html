@@ -64,7 +64,9 @@ License: BSD-3-Clause
 <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-md bg-dark navbar-dark">
         <!-- Brand -->
-        <a class="navbar-brand" href="{% url 'home' %}">Brooks</a>
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'icon.png' %}" width="30"  alt="30">
+        </a>
 
         <!-- Toggler/collapsibe Button -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
