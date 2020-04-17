@@ -31,11 +31,20 @@ License: BSD-3-Clause
     #content-title h2 {
         font-size: 1rem;
     }
+
+    .footer {
+        position: relative !important;
+
+    }
 </style>
 {% endblock %}
 
 
 {% block content %}
-<iframe id="tool" src="{{ tool_url }}">
-</iframe>
+<div class="container-fluid">
+    <div class="row">
+        <iframe id="tool" src="{{ tool_url }}">
+        </iframe>
+    </div>
+</div>
 {% endblock %}
