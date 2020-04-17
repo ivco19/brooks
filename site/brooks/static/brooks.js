@@ -4,3 +4,7 @@ Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
                     Bruno Sanchez, Federico Stasyszyn.
 License: BSD-3-Clause
   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE */
+
+  $(document).ready(function(evt){
+
+  });

@@ -3,12 +3,15 @@ import os
 import json
 import inspect
 import datetime as dt
+import traceback
 
 import yaml
 
 from django.db import models, transaction
 from django.core import validators
 from django.contrib import admin
+
+from django.db.utils import IntegrityError
 
 import dateutil.parser
 
@@ -613,12 +616,18 @@ class FileParser:
                     f"Cambio valor de {model_name} con "
                     f"{identifier}={identf_value} en el valor de {k}")
 
-        instance.save()
+        try:
+            instance.save()
+        except IntegrityError as err:
+            raise ParseError(
+                f"Los datos rompen el esquema con respecto a "
+                f"cargas anteriores ({str(err)})")
+
         for k, links in m2m_data.items():
             manager = getattr(instance, k)
             for v in links:
                 manager.add(v)
-
+        raise exception
         return mm_info, instance
 
     def parse(
@@ -627,24 +636,32 @@ class FileParser:
     ):
         merge_info = self.make_minfo()
         new_instances = []
-        for row_idx, row in df.iterrows():
-            prefix = f"[Fila.{row_idx+1}]"
+        try:
+            new_instances = []
+            for row_idx, row in df.iterrows():
+                prefix = f"[Fila.{row_idx+1}]"
 
-            if np.all(row.isnull().values):
-                merge_info.warning.append(f"{prefix} vacia")
-                continue
+                if np.all(row.isnull().values):
+                    merge_info.warning.append(f"{prefix} vacia")
+                    continue
 
-            data = row.where(pd.notnull(row), None).to_dict()
-            try:
-                mminfo, instance = self.create_model_instance(
-                    model=principal, data=data, created_by=created_by,
-                    raw_file=raw_file, models=models, is_principal=True)
-                new_instances.append(instance)
-            except ParseError as err:
-                merge_info.warning.append(f"{prefix} {str(err)}")
-            else:
-                merge_info = self.merge_minfo(
-                    merge_info, mminfo, prefix=prefix)
+                data = row.where(pd.notnull(row), None).to_dict()
+                try:
+                    mminfo, instance = self.create_model_instance(
+                        model=principal, data=data, created_by=created_by,
+                        raw_file=raw_file, models=models, is_principal=True)
+                    new_instances.append(instance)
+                except ParseError as err:
+                    merge_info.warning.append(f"{prefix} {str(err)}")
+                else:
+                    merge_info = self.merge_minfo(
+                        merge_info, mminfo, prefix=prefix)
+        except Exception as err:
+            merge_info.error.append(
+                "Algo no salió como lo planeábamos,"
+                "por favor envia este mensaje junto con el archivo que lo"
+                "generó a los desarrolladores. \n\n"
+                f"{traceback.format_exc()}")
 
         return Bunch(
             merge_info=merge_info, new_instances=new_instances, df=df)

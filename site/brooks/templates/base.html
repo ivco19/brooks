@@ -22,7 +22,6 @@ License: BSD-3-Clause
 
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
     <link rel="stylesheet" href="{% static 'brooks.css' %}" />
-    <link rel="stylesheet" href="{% static 'brooks.js' %}" />
 
     {% block page_css %}{% endblock %}
     <title>Brooks - {% block page_title %}{% endblock page_title %}</title>
@@ -97,7 +96,7 @@ License: BSD-3-Clause
                 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
                 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
-
+                <script src="{% static 'brooks.js' %}"></script>
                 <script>
                 $(document).ready(function(){
                     $('.datetimeinput').datetimepicker({
@@ -133,6 +132,14 @@ License: BSD-3-Clause
                 {% block content %}
                 {% endblock %}
             </main>
+            <footer>
+                <div class="footer-copyright text-center py-3">
+                    © 2020 Copyright:
+                    <a target="_new" href="https://ivco19.github.io/"> Arcovid19</a>
+                    <br>
+                    <a href="{% url 'about' %}">More info</a>
+                </div>
+            </footer>
 
         </div>
     </div>

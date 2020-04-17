@@ -22,7 +22,7 @@ import datetime as dt
 from django.views.generic import CreateView, UpdateView, DetailView
 from django.urls import reverse_lazy, reverse
 from django.db.models import (
-    ForeignKey, TextField, ManyToManyField, ManyToOneRel)
+    ForeignKey, TextField, ManyToManyField, ManyToOneRel, ManyToManyRel)
 from django.utils.html import format_html
 from django.db.models.fields.files  import FieldFile
 
@@ -284,7 +284,7 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
     }
 
     def get_label(self, fname, dj_field):
-        if isinstance(dj_field, ManyToOneRel):
+        if isinstance(dj_field, (ManyToOneRel, ManyToManyRel)):
             return dj_field.related_model._meta.verbose_name_plural.title()
         label = dj_field.verbose_name
         label = self.CUSTOM_LABELS.get(label, label)
@@ -354,9 +354,10 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
                         "label": vname,
                         "value": values}
 
-            elif isinstance(dj_field, ManyToOneRel):
+            elif isinstance(dj_field, (ManyToOneRel, ManyToManyRel)):
                 if not related:
                     continue
+
                 values = []
                 accessor_name = dj_field.get_accessor_name()
                 accessor = getattr(instance, accessor_name)
@@ -369,9 +370,12 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
                         "value": values}
 
             elif dj_field:
-                value = getattr(instance, fname)
-                value = self.format_value(value=value, dj_type=dj_field)
-                props[fname] = {"label": vname, "value": value or "--"}
+                try:
+                    value = getattr(instance, fname)
+                    value = self.format_value(value=value, dj_type=dj_field)
+                    props[fname] = {"label": vname, "value": value or "--"}
+                except:
+                    import ipdb; ipdb.set_trace()
 
         identifier = props.get(identifier)
         desc_name = instance.DMeta.desc_name if is_dmodel else None
