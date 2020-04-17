@@ -627,7 +627,7 @@ class FileParser:
             manager = getattr(instance, k)
             for v in links:
                 manager.add(v)
-        raise exception
+
         return mm_info, instance
 
     def parse(
@@ -656,7 +656,7 @@ class FileParser:
                 else:
                     merge_info = self.merge_minfo(
                         merge_info, mminfo, prefix=prefix)
-        except Exception as err:
+        except Exception:
             merge_info.error.append(
                 "Algo no salió como lo planeábamos,"
                 "por favor envia este mensaje junto con el archivo que lo"

@@ -101,7 +101,7 @@ class CheckRawFileView(LogginRequired, UpdateView):
                     created_by=self.request.user, raw_file=self.object)
                 context_data["merge_info"] = mmd.merge_info
                 context_data["df"] = mmd.df
-            except Exception as err:
+            except Exception:
                 self.object.broken = True
                 self.object.save()
                 context_data.update(**self.get_broken_context())
@@ -276,7 +276,6 @@ class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
         ax.legend()
 
 
-
 class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
 
     template_name = "ingest/DetailDModelView.html"
@@ -324,11 +323,9 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
 
         if hasattr(instance, "DMeta"):
             is_dmodel = True
-            is_principal = instance.DMeta.principal
             identifier = instance.DMeta.identifier
         else:
             is_dmodel = False
-            is_principal = False
             identifier = None
 
         dj_fields = {f.name: f for f in instance._meta.get_fields()}
@@ -361,9 +358,7 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
                     value = self.split_dminstance(
                         sinstance, check_forbidden=True, related=False)
                     values.append(value)
-                lin[fname] = {
-                        "label": vname,
-                        "value": values}
+                lin[fname] = {"label": vname, "value": values}
 
             elif isinstance(dj_field, (ManyToOneRel, ManyToManyRel)):
                 if not related:
@@ -376,17 +371,12 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
                     value = self.split_dminstance(
                         sinstance, check_forbidden=True, related=False)
                     values.append(value)
-                lin[fname] = {
-                        "label": vname,
-                        "value": values}
+                lin[fname] = {"label": vname, "value": values}
 
             elif dj_field:
-                try:
-                    value = getattr(instance, fname)
-                    value = self.format_value(value=value, dj_type=dj_field)
-                    props[fname] = {"label": vname, "value": value or "--"}
-                except:
-                    import ipdb; ipdb.set_trace()
+                value = getattr(instance, fname)
+                value = self.format_value(value=value, dj_type=dj_field)
+                props[fname] = {"label": vname, "value": value or "--"}
 
         identifier = props.get(identifier)
         desc_name = instance.DMeta.desc_name if is_dmodel else None
@@ -403,7 +393,7 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
             "pk": instance.pk,
             "props": props,
             "lin": lin,
-            "lout": lout }
+            "lout": lout}
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
