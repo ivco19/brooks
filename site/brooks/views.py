@@ -23,7 +23,7 @@ import arcovid19
 
 from brooks.libs.dmatplotlib import MatplotlibView
 
-from brooks.views_mixins import LogginRequired
+from brooks.views_mixins import LogginRequired, CacheMixin
 
 
 # =============================================================================
@@ -56,41 +56,42 @@ class AboutView(LogginRequired, TemplateView):
         return context
 
 
-class DashboardView(LogginRequired, MatplotlibView):
+class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
 
     template_name = "Dashboard.html"
     draw_methods = [
         "draw_grate_full_period_ar",
-        "draw_grate_full_period_bs",
-        "draw_time_serie_all",
-        "draw_time_serie_ar",
-        "draw_barplot",
-        "draw_boxplot"]
+        "draw_grate_full_period_cba",
+        "draw_barplot_arg",
+        "draw_barplot_cba",
+        "draw_boxplot",
+        "draw_boxplot_cba"]
     plot_format = "png"
     tight_layout = True
+
+    cache_timeout = 60 * 60
 
     def get_draw_context(self):
         return {"cases": arcovid19.load_cases()}
 
     def draw_grate_full_period_ar(self, cases, fig, ax, **kwargs):
         cases.plot.grate_full_period(
-            ax=ax, confirmed=False, active=True,
-            recovered=False, deceased=False)
+            ax=ax)
         ax.legend(loc=2)
 
-    def draw_grate_full_period_bs(self, cases, fig, ax, **kwargs):
+    def draw_grate_full_period_cba(self, cases, fig, ax, **kwargs):
         cases.plot.grate_full_period(
-            'Bs As', ax=ax, confirmed=True, active=True,
+            'cordoba', ax=ax, confirmed=True, active=True,
             recovered=True, deceased=True)
 
-    def draw_time_serie_all(self, cases, fig, ax, **kwargs):
-        cases.plot.time_serie_all(ax=ax)
-
-    def draw_time_serie_ar(self, cases, fig, ax, **kwargs):
-        cases.plot.time_serie(ax=ax)
-
-    def draw_barplot(self, cases, fig, ax, **kwargs):
+    def draw_barplot_arg(self, cases, fig, ax, **kwargs):
         cases.plot.barplot(ax=ax)
+
+    def draw_barplot_cba(self, cases, fig, ax, **kwargs):
+        cases.plot.barplot("cordoba", ax=ax)
 
     def draw_boxplot(self, cases, fig, ax, **kwargs):
         cases.plot.boxplot(showfliers=False, ax=ax)
+
+    def draw_boxplot_cba(self, cases, fig, ax, **kwargs):
+        cases.plot.boxplot("cordoba", showfliers=False, ax=ax)

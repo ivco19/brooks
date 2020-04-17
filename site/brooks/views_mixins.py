@@ -13,6 +13,8 @@
 # IMPORTS
 # =============================================================================
 
+from django.views.decorators.cache import cache_page
+
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 
@@ -30,3 +32,18 @@ class LogginRequired(UserPassesTestMixin):
     def test_func(self):
         user = self.request.user
         return user.is_authenticated and user.is_active
+
+
+class CacheMixin(object):
+    # https://stackoverflow.com/a/26858638
+    cache_timeout = 60
+
+    def get_cache_timeout(self):
+        return self.cache_timeout
+
+    def dispatch(self, *args, **kwargs):
+        timeout = self.get_cache_timeout()
+        original_dispatch = super(CacheMixin, self).dispatch
+        decorator = cache_page(timeout)
+        cached_dispatch = decorator(original_dispatch)
+        return cached_dispatch(*args, **kwargs)

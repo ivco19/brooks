@@ -191,7 +191,9 @@ LOGOUT_REDIRECT_URL = '/'
 CACHES = {
     'default': {
         'BACKEND': 'diskcache.DjangoCache',
-        'LOCATION': os.path.join(BASE_DIR, "_cache"),
+        'LOCATION': os.environ.get(
+            "BROOKS_DISK_CACHE_LOCATION",
+            os.path.join(BASE_DIR, "_cache")),
         'TIMEOUT': 300,
         # ^-- Django setting for default timeout of each key.
         'SHARDS': 8,
