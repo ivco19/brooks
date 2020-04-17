@@ -57,19 +57,27 @@ License: BSD-3-Clause
 </div>
 
 <div class="container-fluid">
-    {% for slabel, sdata in objd.lout.items %}
-    <div class="row justify-content-md-center">
-        <div class="col col-14">
-            <h3 class=" alert alert-secondary">
-                {{sdata.label}}
+<div id="accordion-lout">
+    {% for skey, sdata in objd.lout.items %}
+    <div class="card">
+        <div class="card-header" id="heading{{forloop.counter}}">
+        <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                {{sdata.label}} -
+                <code class="text-secondary">{{sdata.value.resume}}</code>
+            </button>
+
+            <small class="float-right text-info">
                 {% if sdata.value.is_dmodel %}
-                <small class="float-right">
-                    <a href="{% url 'ingest:dmodel_details' sdata.value.desc_name sdata.value.pk %}" class="btn btn-dark" href="#">
-                        <i class="fas fa-share"></i>
-                    </a>
-                </small>
+                <a href="{% url 'ingest:dmodel_details' sdata.value.desc_name sdata.value.pk %}" class="btn btn-info btn-sm" href="#">
+                    <i class="fas fa-share"></i>
+                </a>
                 {% endif %}
-            </h3>
+            </small>
+        </h5>
+        </div>
+        <div id="collapse{{forloop.counter}}" class="collapse" aria-labelledby="heading{{forloop.counter}}" data-parent="">
+        <div class="card-body">
             <table class="table table-stripped table-hover table-sm ">
                 {% for n, d in sdata.value.props.items %}
                 <tr class="prop" id="prop-{{n}}">
@@ -86,9 +94,66 @@ License: BSD-3-Clause
                 {% endfor %}
             </table>
         </div>
+        </div>
     </div>
     {% endfor %}
 </div>
+</div>
+
+{% if objd.lin %}
+<hr>
+{% endif %}
+
+<div class="container-fluid">
+    {% for ckey, cdata in objd.lin.items %}
+    <div class="lin-container" id="lin-{{ckey}}">
+        <h3>{{cdata.label}}</h3>
+
+        <div id="accordion-lin-{{ckey}}">
+            {% for skey, sdata in objd.lout.items %}
+            <div class="card">
+                <div class="card-header" id="heading{{forloop.counter}}">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                        {{sdata.label}} -
+                        <code class="text-secondary">{{sdata.value.resume}}</code>
+                    </button>
+
+                    <small class="float-right text-info">
+                        {% if sdata.value.is_dmodel %}
+                        <a href="{% url 'ingest:dmodel_details' sdata.value.desc_name sdata.value.pk %}" class="btn btn-info btn-sm" href="#">
+                            <i class="fas fa-share"></i>
+                        </a>
+                        {% endif %}
+                    </small>
+                </h5>
+                </div>
+                <div id="collapse{{forloop.counter}}" class="collapse" aria-labelledby="heading{{forloop.counter}}" data-parent="">
+                <div class="card-body">
+                    <table class="table table-stripped table-hover table-sm ">
+                        {% for n, d in sdata.value.props.items %}
+                        <tr class="prop" id="prop-{{n}}">
+                            <th class="prop-label">
+                                {{d.label}}
+                                {% if d == sdata.value.idf %}
+                                    <small class="text-info">(Identificador)</small>
+                                {% endif %}
+                            </th>
+                            <td class="prop-value">
+                                {{d.value}}
+                            </td>
+                        <tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
 
 

@@ -21,7 +21,9 @@ import datetime as dt
 
 from django.views.generic import CreateView, UpdateView, DetailView
 from django.urls import reverse_lazy, reverse
-from django.db.models import ForeignKey, TextField
+from django.db.models import (
+    ForeignKey, TextField, ManyToManyField, ManyToOneRel)
+from django.utils.html import format_html
 from django.db.models.fields.files  import FieldFile
 
 from django_tables2.views import SingleTableView
@@ -262,7 +264,7 @@ class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
 
         ax.legend()
 
-from django.utils.html import format_html
+
 
 class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
 
@@ -282,6 +284,8 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
     }
 
     def get_label(self, fname, dj_field):
+        if isinstance(dj_field, ManyToOneRel):
+            return dj_field.related_model._meta.verbose_name_plural.title()
         label = dj_field.verbose_name
         label = self.CUSTOM_LABELS.get(label, label)
         return label.title()
@@ -295,7 +299,17 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
             fvalue = format_html(fvalue)
         return fvalue
 
-    def split_dminstance(self, instance, check_forbidden=False):
+    def make_resume(self, instance, idf, is_dmodel, props):
+        if is_dmodel:
+            return f"{idf['value'].title()} (# {instance.pk})"
+        if isinstance(instance, models.User):
+            return f"@{instance.username} (# {instance.pk}))"
+        elif isinstance(instance, models.RawFile):
+            filename = os.path.basename(instance.file.name)
+            return f"{filename} (# {instance.pk})"
+        return f"(# {instance.pk})"
+
+    def split_dminstance(self, instance, check_forbidden=False, related=True):
 
         if hasattr(instance, "DMeta"):
             is_dmodel = True
@@ -306,19 +320,53 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
             is_principal = False
             identifier = None
 
-        dj_fields = {f.name: f for f in instance._meta.fields}
+        dj_fields = {f.name: f for f in instance._meta.get_fields()}
 
         props, lout, lin = {}, {}, {}
         for fname, dj_field in dj_fields.items():
             if check_forbidden and is_name_forbidden(fname):
                 continue
+
             vname = self.get_label(fname, dj_field)
+
             if isinstance(dj_field, ForeignKey):
+                if not related:
+                    continue
+
                 sinstance = getattr(instance, fname)
-                value = self.split_dminstance(sinstance, check_forbidden=True)
+                value = self.split_dminstance(
+                    sinstance, check_forbidden=True, related=False)
                 lout[fname] = {
                     "label": vname,
                     "value": value}
+
+            elif isinstance(dj_field, ManyToManyField):
+                if not related:
+                    continue
+
+                values = []
+                accessor = getattr(instance, fname)
+                for sinstance in accessor.all():
+                    value = self.split_dminstance(
+                        sinstance, check_forbidden=True, related=False)
+                    values.append(value)
+                lin[fname] = {
+                        "label": vname,
+                        "value": values}
+
+            elif isinstance(dj_field, ManyToOneRel):
+                if not related:
+                    continue
+                values = []
+                accessor = getattr(instance, fname)
+                for sinstance in accessor.all():
+                    value = self.split_dminstance(
+                        sinstance, check_forbidden=True, related=False)
+                    values.append(value)
+                lin[fname] = {
+                        "label": vname,
+                        "value": values}
+
             elif dj_field:
                 value = getattr(instance, fname)
                 value = self.format_value(value=value, dj_type=dj_field)
@@ -327,12 +375,18 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
         identifier = props.get(identifier)
         desc_name = instance.DMeta.desc_name if is_dmodel else None
 
+        resume = self.make_resume(
+            instance=instance, is_dmodel=is_dmodel,
+            idf=identifier, props=props)
+
         return {
+            "resume": resume,
             "is_dmodel": is_dmodel,
             "desc_name": desc_name,
             "idf": identifier,
             "pk": instance.pk,
             "props": props,
+            "lin": lin,
             "lout": lout}
 
     def get_context_data(self, *args, **kwargs):
