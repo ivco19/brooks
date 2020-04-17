@@ -358,7 +358,8 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
                 if not related:
                     continue
                 values = []
-                accessor = getattr(instance, fname)
+                accessor_name = dj_field.get_accessor_name()
+                accessor = getattr(instance, accessor_name)
                 for sinstance in accessor.all():
                     value = self.split_dminstance(
                         sinstance, check_forbidden=True, related=False)
