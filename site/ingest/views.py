@@ -24,7 +24,7 @@ from django.urls import reverse_lazy, reverse
 from django.db.models import (
     ForeignKey, TextField, ManyToManyField, ManyToOneRel, ManyToManyRel)
 from django.utils.html import format_html
-from django.db.models.fields.files  import FieldFile
+from django.db.models.fields.files import FieldFile
 
 from django_tables2.views import SingleTableView
 
@@ -86,14 +86,25 @@ class CheckRawFileView(LogginRequired, UpdateView):
     model = models.RawFile
     success_url = reverse_lazy("ingest:list_files")
 
+    def get_broken_context(self):
+        import pandas as pd
+        return {"df": pd.DataFrame(), "merge_info": None}
+
     def get_context_data(self):
         context_data = super().get_context_data()
         dmodels = apps.IngestConfig.dmodels
+        if self.object.broken:
+            context_data.update(**self.get_broken_context())
         if not self.object.merged:
-            mmd = dmodels.merge_info(
-                created_by=self.request.user, raw_file=self.object)
-            context_data["merge_info"] = mmd.merge_info
-            context_data["df"] = mmd.df
+            try:
+                mmd = dmodels.merge_info(
+                    created_by=self.request.user, raw_file=self.object)
+                context_data["merge_info"] = mmd.merge_info
+                context_data["df"] = mmd.df
+            except Exception as err:
+                self.object.broken = True
+                self.object.save()
+                context_data.update(**self.get_broken_context())
         else:
             filepath = self.object.file.path
             context_data["df"] = dmodels.load_data_file(filepath)

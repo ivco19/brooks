@@ -51,6 +51,9 @@ class RawFile(TimeStampedModel):
     merged = models.BooleanField(default=False, verbose_name="integrado")
     size = models.IntegerField(null=True)
 
+    broken = models.BooleanField(
+        default=False, verbose_name="Roto")
+
     created_by = models.ForeignKey(
         User, related_name="raw_files",
         on_delete=models.CASCADE, verbose_name="creado por")

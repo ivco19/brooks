@@ -6,11 +6,3 @@ License: BSD-3-Clause
   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE */
 
 
-footer{
-    position: absolute;
-    bottom: 0;
-    color: white !important;
-    width: 100%;
-    /* Set the fixed height of the footer here */
-    background-color: #222222 !important;
-}

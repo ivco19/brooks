@@ -37,6 +37,8 @@ def compile_file(sender, instance, created, **kwargs):
     """Check if a raw file must be merged or deleted from the database.
 
     """
+    if instance.broken:
+        return
     if instance.merged and not instance.is_parsed:
         apps.IngestConfig.dmodels.merge(
             created_by=instance.modify_by, raw_file=instance)
