@@ -10,8 +10,8 @@ import yaml
 from django.db import models, transaction
 from django.core import validators
 from django.contrib import admin
-
 from django.db.utils import IntegrityError
+from django.db.transaction import TransactionManagementError
 
 import dateutil.parser
 
@@ -513,6 +513,21 @@ class FileParser:
                     v.append(msg)
         return merged
 
+    def get_or_create(self, *, model, query, cache, defaults):
+        # esta porqueria es un workarround para no hacer queries en una
+        # transaccion
+        mcache = cache[model]
+        for e in mcache:
+            ed = {qk: getattr(e, qk) for qk in query}
+            if ed == query:
+                return e, False
+
+        full_data = query.copy()
+        full_data.update(defaults)
+        inst = model(**full_data)
+        mcache.append(inst)
+        return inst, True
+
     def m2m_split_data(self, model, sep, data):
         field_names = model.DMeta.field_names
         no_model_data = {k: v for k, v in data.items() if k not in field_names}
@@ -535,7 +550,8 @@ class FileParser:
                 yield k, v
 
     def create_model_instance(
-        self, model, data, models, is_principal, created_by, raw_file,
+        self, *, cache, model, data, models,
+        is_principal, created_by, raw_file,
     ):
         mm_info = self.make_minfo()
         model_name = model.DMeta.desc_name
@@ -576,7 +592,7 @@ class FileParser:
                     for m2md in m2m_splited_data:
                         rel_mminfo, rel_instance = self.create_model_instance(
                             model=rel_model, data=m2md, created_by=created_by,
-                            raw_file=raw_file, models=models,
+                            raw_file=raw_file, models=models, cache=cache,
                             is_principal=False)
                         m2m_instances.append(rel_instance)
                         mm_info = self.merge_minfo(mm_info, rel_mminfo)
@@ -585,7 +601,8 @@ class FileParser:
                     rel_model = models[field_type]
                     rel_mminfo, rel_instance = self.create_model_instance(
                         model=rel_model, data=data, created_by=created_by,
-                        raw_file=raw_file, models=models, is_principal=False)
+                        raw_file=raw_file, models=models,
+                        is_principal=False, cache=cache)
                     s_data[fname] = rel_instance
                     mm_info = self.merge_minfo(mm_info, rel_mminfo)
 
@@ -597,8 +614,9 @@ class FileParser:
         if is_principal:
             defaults.update(raw_file=raw_file)
 
-        instance, created = model.objects.get_or_create(
-            defaults=defaults, **query)
+        instance, created = self.get_or_create(
+            model=model, defaults=defaults, query=query, cache=cache)
+
         if created:
             for k, v in s_data.items():
                 setattr(instance, k, v)
@@ -622,21 +640,31 @@ class FileParser:
             raise ParseError(
                 f"Los datos rompen el esquema con respecto a "
                 f"cargas anteriores ({str(err)})")
+            return mm_info, instance
 
         for k, links in m2m_data.items():
             manager = getattr(instance, k)
             for v in links:
-                manager.add(v)
+                try:
+                    manager.add(v)
+                except Exception as err:
+                    mm_info.error.append(str(err))
+                    return mm_info, instance
 
         return mm_info, instance
 
     def parse(
-        self, df, models, principal,
+        self, *, df, models, principal, rollback,
         fields_to_model, created_by, raw_file
     ):
         merge_info = self.make_minfo()
         new_instances = []
-        try:
+
+        cache = {
+            m: list(m.objects.all())
+            for m in models.values()}
+        with transaction.atomic():
+            # try:
             new_instances = []
             for row_idx, row in df.iterrows():
                 prefix = f"[Fila.{row_idx+1}]"
@@ -648,20 +676,23 @@ class FileParser:
                 data = row.where(pd.notnull(row), None).to_dict()
                 try:
                     mminfo, instance = self.create_model_instance(
-                        model=principal, data=data, created_by=created_by,
-                        raw_file=raw_file, models=models, is_principal=True)
+                        cache=cache, model=principal, data=data,
+                        created_by=created_by, raw_file=raw_file,
+                        models=models, is_principal=True)
                     new_instances.append(instance)
                 except ParseError as err:
                     merge_info.warning.append(f"{prefix} {str(err)}")
                 else:
                     merge_info = self.merge_minfo(
                         merge_info, mminfo, prefix=prefix)
-        except Exception:
-            merge_info.error.append(
-                "Algo no salió como lo planeábamos,"
-                "por favor envia este mensaje junto con el archivo que lo"
-                "generó a los desarrolladores. \n\n"
-                f"{traceback.format_exc()}")
+            # except Exception as err:
+            #     merge_info.error.append(
+            #         "Algo no salió como lo planeábamos,"
+            #         "por favor envia este mensaje junto con el archivo que lo"
+            #         "generó a los desarrolladores. \n\n"
+            #         f"{traceback.format_exc()}")
+            if rollback:
+                transaction.set_rollback(True)
 
         return Bunch(
             merge_info=merge_info, new_instances=new_instances, df=df)
@@ -773,13 +804,11 @@ class DynamicModels:
         filepath = raw_file.file.path
         df = self.load_data_file(filepath)
 
-        with transaction.atomic():
-            merge_info = self.fileparser.parse(
-                created_by=created_by, raw_file=raw_file,
-                df=df, models=self.cache.models,
-                principal=self.cache.principal,
-                fields_to_model=self.cache.fields_to_model)
-            transaction.set_rollback(True)
+        merge_info = self.fileparser.parse(
+            created_by=created_by, raw_file=raw_file,
+            df=df, models=self.cache.models, rollback=True,
+            principal=self.cache.principal,
+            fields_to_model=self.cache.fields_to_model)
 
         return merge_info
 
@@ -790,12 +819,11 @@ class DynamicModels:
         filepath = raw_file.file.path
         df = self.load_data_file(filepath)
 
-        with transaction.atomic():
-            merge_info = self.fileparser.parse(
-                created_by=created_by, raw_file=raw_file,
-                df=df, models=self.cache.models,
-                principal=self.cache.principal,
-                fields_to_model=self.cache.fields_to_model)
+        merge_info = self.fileparser.parse(
+            created_by=created_by, raw_file=raw_file,
+            df=df, models=self.cache.models,
+            principal=self.cache.principal, rollback=False,
+            fields_to_model=self.cache.fields_to_model)
 
         return merge_info
 
@@ -805,7 +833,6 @@ class DynamicModels:
         with transaction.atomic():
             merge_info = self.fileparser.remove(
                 raw_file=raw_file)
-
         return merge_info
 
     # =========================================================================

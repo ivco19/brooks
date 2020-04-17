@@ -16,18 +16,16 @@ Pais:
   atributos:
     id_pais:
       tipo: entero
-      unico: si
+      identificador: si
     nombre_pais:
       tipo: texto
       largo: 255
-      identificador: si
 
 
 Provincia:
   atributos:
     id_provincia:
       tipo: entero
-      unico: si
       identificador: si
     nombre_provincia:
       tipo: texto
@@ -42,10 +40,9 @@ Departamento:
     nombre_departamento:
       tipo: texto
       largo: 255
-      identificador: si
     id_departamento:
       tipo: entero
-      unico: si
+      identificador: si
     provincia:
       tipo: Provincia
       relacion: departamentos
@@ -59,10 +56,9 @@ Localidad:
     nombre_localidad:
       tipo: texto
       largo: 255
-      identificador: si
     id_localidad:
       tipo: entero
-      unico: si
+      identificador: si
     departamento:
       tipo: Departamento
       relacion: localidades
@@ -91,7 +87,6 @@ Paciente:
     sepi_apertura:
       tipo: entero
       min: 0
-      unico: si
     edad_actual:
       tipo: entero
       max: 200
