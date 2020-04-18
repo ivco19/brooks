@@ -244,7 +244,7 @@ DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 if DEBUG:
     try:
-        from local_settings import *  # noqa
+        from .local_settings import *  # noqa
     except ImportError:
         import shutil
         import sys
