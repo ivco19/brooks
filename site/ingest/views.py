@@ -19,8 +19,9 @@ import os
 import itertools as it
 import datetime as dt
 
-from django.views.generic import CreateView, UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView, View
 from django.urls import reverse_lazy, reverse
+from django.http import HttpResponse
 from django.db.models import (
     ForeignKey, TextField, ManyToManyField, ManyToOneRel, ManyToManyRel)
 from django.utils.html import format_html
@@ -32,7 +33,7 @@ from django_pandas.io import read_frame
 
 import humanize
 
-from brooks.views_mixins import LogginRequired
+from brooks.views_mixins import LogginRequired, CacheMixin
 from brooks.libs.dmatplotlib import MatplotlibView
 
 from ingest.libs.mdesc import DModelViewMixin, is_name_forbidden
@@ -72,6 +73,26 @@ class UploadRawFileView(LogginRequired, CreateView):
         rawfile.save()
 
         return super().form_valid(form)
+
+
+class DownloadEmptyView(LogginRequired, CacheMixin, View):
+    dmodels = apps.IngestConfig.dmodels
+    content_type = (
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    cache_timeout = 60 * 2
+
+    def get(self, *args, **kwargs):
+
+        today = dt.datetime.now().date()
+
+        response = HttpResponse(content_type=self.content_type)
+        fname = f"planilla_brooks_{today.isoformat()}.xlsx"
+        response['Content-Disposition'] = f'attachment; filename={fname}'
+
+        df = self.dmodels.make_empty_df()
+        df.to_excel(response)
+
+        return response
 
 
 class CheckRawFileView(LogginRequired, UpdateView):

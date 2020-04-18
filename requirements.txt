@@ -17,7 +17,6 @@ openpyxl==3.0.3
 pandas-interactive-html==0.1.0
 pipdeptree==0.13.2
 psycopg2-binary==2.8.5
-requests==2.23.0
 scikit-learn==0.22.2.post1
 sh==1.12.14
 tox==3.14.6

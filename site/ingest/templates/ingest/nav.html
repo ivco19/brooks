@@ -30,6 +30,11 @@ License: BSD-3-Clause
             Cargar nuevos datos
         </a>
         <a class="dropdown-item" href=""><hr></a>
+        <a class="dropdown-item" href="{% url 'ingest:download_empty' %}">
+            <i class="fas fa-file-excel"></i>
+            Descargar planilla vacía
+        </a>
+        <a class="dropdown-item" href=""><hr></a>
         <a class="dropdown-item" href="{% url 'ingest:list_files' %}">
             <i class="fas fa-list"></i>
             Ver todos los archivos
