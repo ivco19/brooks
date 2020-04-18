@@ -1,5 +1,7 @@
 # Brooks
 
+![logo](https://raw.githubusercontent.com/ivco19/brooks/master/site/brooks/static/logo.png)
+
 Sistema de carga rápida de datos diseñado para la pandemia de COVID-19 en la
 en Argentina.
 
