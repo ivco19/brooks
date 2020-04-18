@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## ver. 2020-04-17 (DGL)
+
+- Entire redesign of the app.
+- Navigation between instances.
+- Cache in some plots.
+
 ## ver. 2020-04-16
 
 - Moved folders *lib* and *contrib* into *brooks/*.
