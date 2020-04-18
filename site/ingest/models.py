@@ -76,16 +76,26 @@ class RawFile(TimeStampedModel, Tracked):
 class ClasificacionEpidemiologica(TimeStampedModel, Tracked):
     nombre_ce = models.CharField(unique=True, max_length=255)
 
-    class Meta:
-        db_table = "ingest_clasificacionepidemiologica"
+
+class Pais(TimeStampedModel, Tracked):
+    id_pais = models.IntegerField(unique=True)
+    nombre_pais = models.CharField(max_length=255, blank=True, null=True)
+
+
+class Provincia(TimeStampedModel, Tracked):
+    id_provincia = models.IntegerField(unique=True)
+    nombre_provincia = models.CharField(max_length=255, blank=True, null=True)
+    pais = models.ForeignKey(Pais, models.DO_NOTHING, blank=True, null=True)
 
 
 class Departamento(TimeStampedModel, Tracked):
+    id_departamento = models.IntegerField(unique=True)
     nombre_departamento = models.CharField(max_length=255, blank=True, null=True)
     provincia = models.ForeignKey("Provincia", models.DO_NOTHING, blank=True, null=True)
 
 
 class Localidad(TimeStampedModel, Tracked):
+    id_localidad = models.IntegerField(unique=True)
     nombre_localidad = models.CharField(max_length=255, blank=True, null=True)
     departamento = models.ForeignKey(Departamento, models.DO_NOTHING, blank=True, null=True)
 
@@ -96,14 +106,6 @@ class Paciente(TimeStampedModel, Tracked):
     sepi_apertura = models.IntegerField(blank=True, null=True)
     edad_actual = models.IntegerField(blank=True, null=True)
     localidad_residencia = models.ForeignKey(Localidad, models.DO_NOTHING, blank=True, null=True)
-
-
-class Pais(TimeStampedModel, Tracked):
-    nombre_pais = models.CharField(max_length=255, blank=True, null=True)
-
-class Provincia(TimeStampedModel, Tracked):
-    nombre_provincia = models.CharField(max_length=255, blank=True, null=True)
-    pais = models.ForeignKey(Pais, models.DO_NOTHING, blank=True, null=True)
 
 
 class Sintoma(TimeStampedModel, Tracked):
@@ -126,8 +128,10 @@ class EventoSignoSintoma(TimeStampedModel, Tracked):
 
 
 class Evento(TimeStampedModel, Tracked):
+    id_evento = models.IntegerField(unique=True)
+    paciente = models.ForeignKey("Paciente", models.CASCADE, related_name="eventos", blank=True, null=True)
     fecha_internacion = models.DateField(blank=True, null=True)
+    tipo_evento = models.ForeignKey("TipoEvento", models.CASCADE, blank=True, null=True)
     notas_evento = models.TextField(blank=True, null=True)
-    paciente = models.ForeignKey("Paciente", related_name="eventos", models.DO_NOTHING, blank=True, null=True)
     raw_file = models.ForeignKey("RawFile", models.DO_NOTHING)
-    tipo_evento = models.ForeignKey("Tipoevento", models.DO_NOTHING, blank=True, null=True)
+    sintomas = models.ManyToManyField("Sintoma", through=EventoSignoSintoma)
