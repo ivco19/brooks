@@ -1,6 +1,11 @@
 # Brooks
 
+
 ![logo](https://raw.githubusercontent.com/ivco19/brooks/master/site/brooks/static/logo.png)
+
+
+[![DOI](https://zenodo.org/badge/248792455.svg)](https://zenodo.org/badge/latestdoi/248792455)
+
 
 **Sistema de carga rápida de datos diseñado para la pandemia de COVID-19 en la
 en Argentina.**
