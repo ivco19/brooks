@@ -2,8 +2,17 @@
 
 ![logo](https://raw.githubusercontent.com/ivco19/brooks/master/site/brooks/static/logo.png)
 
-Sistema de carga rápida de datos diseñado para la pandemia de COVID-19 en la
-en Argentina.
+**Sistema de carga rápida de datos diseñado para la pandemia de COVID-19 en la
+en Argentina.**
+
+## Objetivos
+
+-   Brooks pretende separar la definición y validación de los datos del la
+    funcionalidades en su totalidad.
+-   El proyecto entradas de bitácoras. Asi registro nuevo (una fila de una planilla de cálculos)
+    es validado y vinculado a otras entidades existentes o nuevas
+    (creadas por este registro) para luego ser exploradas en una aplicación web.
+
 
 Este proyecto esta distribuido con
 licencia [BSD-3](https://github.com/ivco19/brooks/blob/master/LICENSE), y
