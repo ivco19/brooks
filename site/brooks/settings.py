@@ -244,20 +244,22 @@ DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 if DEBUG:
     try:
-        from .local_settings import *  # noqa
-    except ImportError:
+        from local_settings import *  # noqa
+    except ImportError as err:
         import shutil
         import sys
 
-        print("[ALERT] 'local_settings.py' not found.")
+        org = os.path.join(BASE_DIR, "brooks", "local_settings.template")
+        dest = os.path.join(BASE_DIR, "local_settings.py")
+
+        print(f"[ALERT] '{dest}' not found.")
 
         print("[ALERT] Creating an empty one")
 
-        org = os.path.join(BASE_DIR, "brooks", "local_settings.template")
-        dest = os.path.join(BASE_DIR, "local_settings.py")
+
         shutil.copy(org, dest)
 
-        print("[ALERT] Please edit 'local_settings.py'")
+        print(f"[ALERT] Please edit '{dest}'")
         print("")
 
         sys.exit(1)
