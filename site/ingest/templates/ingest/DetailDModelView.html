@@ -12,11 +12,11 @@ License: BSD-3-Clause
 {% endcomment %}
 
 {% block page_title %}
-    {{dmodel.DMeta.desc_name}}
+    {{dmodel.model_name }}
     (#{{object.id}})
 {% endblock %}
 {% block title %}
-    {{dmodel.DMeta.desc_name}} -
+    {{dmodel.model_name }} -
     <span class="text-info">
         {{objd.idf.label}}
         {{objd.idf.value}}

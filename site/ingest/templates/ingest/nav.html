@@ -13,11 +13,11 @@ License: BSD-3-Clause
         Datos
     </a>
     <div class="dropdown-menu">
-        {% for dmname, dmodel_dname in dmodels.items %}
-        <a class="dropdown-item" href="{% url 'ingest:list_dmodel' dmodel=dmodel_dname%}">
+        {% for dmodel in dmodels %}
+        <a class="dropdown-item" href="{% url 'ingest:list_dmodel' dmodel=dmodel.model_name %}">
             <i class="fas fa-table"></i>
-            {{dmname}}
-            {% if dmodel_dname == dmodel_principal %}
+            {{dmodel.verbose_name_plural }}
+            {% if dmodel.model_name == dmodel_principal %}
             <small>
                 <span class="badge badge-primary">Principal</span>
             </small>

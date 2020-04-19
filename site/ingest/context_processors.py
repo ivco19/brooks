@@ -13,21 +13,20 @@
 # IMPORTS
 # =============================================================================
 
-from ingest import apps
-
+from django.apps import apps
 
 # =============================================================================
 # FUNCTIONS
 # =============================================================================
+
 
 def export_available_models(request):
     """Add the entire dictionary of dynamic models defined in the
     model descriptor file into the templates engine.
 
     """
-    dmodels = apps.IngestConfig.dmodels.list_models()
-    principal = apps.IngestConfig.dmodels.get_principal_dmodel()
     context = {
-        "dmodels": dmodels,
-        "dmodel_principal": principal.DMeta.desc_name}
+        "dmodels": list(sorted(apps.get_app_config("ingest").get_models(), key=lambda m: m.__name__)),
+        "dmodel_principal": "Evento",
+    }
     return context

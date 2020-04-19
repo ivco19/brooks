@@ -8,7 +8,6 @@
 # License: BSD-3-Clause
 #   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
 
-
 # =============================================================================
 # IMPORTS
 # =============================================================================
@@ -18,7 +17,7 @@ import random
 import os
 import itertools as it
 import datetime as dt
-
+from django.conf import settings
 from django.views.generic import CreateView, UpdateView, DetailView, View
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
@@ -26,9 +25,9 @@ from django.db.models import (
     ForeignKey, TextField, ManyToManyField, ManyToOneRel, ManyToManyRel)
 from django.utils.html import format_html
 from django.db.models.fields.files import FieldFile
-
 from django_tables2.views import SingleTableView
-
+from django.contrib.auth.models import User
+from django.apps import apps as apps_
 from django_pandas.io import read_frame
 
 import humanize
@@ -36,7 +35,7 @@ import humanize
 from brooks.views_mixins import LogginRequired, CacheMixin
 from brooks.libs.dmatplotlib import MatplotlibView
 
-from ingest.libs.mdesc import DModelViewMixin, is_name_forbidden
+from ingest.libs.mdesc import Ingestor, is_name_forbidden
 from ingest import apps, models, forms, tables
 
 
@@ -76,7 +75,6 @@ class UploadRawFileView(LogginRequired, CreateView):
 
 
 class DownloadEmptyView(LogginRequired, CacheMixin, View):
-    dmodels = apps.IngestConfig.dmodels
     content_type = (
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     cache_timeout = 60 * 2
@@ -89,7 +87,7 @@ class DownloadEmptyView(LogginRequired, CacheMixin, View):
         fname = f"planilla_brooks_{today.isoformat()}.xlsx"
         response['Content-Disposition'] = f'attachment; filename={fname}'
 
-        df = self.dmodels.make_empty_df()
+        df = apps.IngestConfig.ingestor.make_empty_df()
         df.to_excel(response)
 
         return response
@@ -108,20 +106,19 @@ class CheckRawFileView(LogginRequired, UpdateView):
 
     def get_context_data(self):
         context_data = super().get_context_data()
-        dmodels = apps.IngestConfig.dmodels
 
         filepath = self.object.file.path
 
         if self.object.broken:
             context_data.update(**self.get_broken_context())
         elif not self.object.merged:
-            mmd = dmodels.merge_info(
+            mmd = apps.IngestConfig.ingestor.merge_info(
                 created_by=self.request.user, raw_file=self.object)
             context_data["merge_info"] = mmd.merge_info
             context_data["df"] = mmd.df
         else:
             filepath = self.object.file.path
-            context_data["df"] = dmodels.load_data_file(filepath)
+            context_data["df"] = apps.IngestConfig.ingestor.load_data_file(filepath)
 
         context_data["conf_code"] = "".join(random.sample(LETTERS, 6))
         return context_data
@@ -144,12 +141,20 @@ class ListRawFileView(LogginRequired, SingleTableView):
 # THE DYNAMIC VIEWS HERE
 # =============================================================================
 
-class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
+class IngestViewMixin:
 
-    model = None
+    def get_dmodel(self):
+        model_name = self.kwargs["dmodel"]
+        return apps_.get_model(app_label='ingest', model_name=model_name)
+
+
+class ListDModelView(LogginRequired, IngestViewMixin, SingleTableView):
     table_class = None
     template_name = "ingest/ListDModelView.html"
-    dmodels = apps.IngestConfig.dmodels
+
+
+    def get_queryset(self, *args, **kwargs):
+        return self.get_dmodel().objects.all()
 
     def get_table_class(self, *args, **kwargs):
         dmodel = self.get_dmodel()
@@ -158,13 +163,13 @@ class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
         def open_linkify(record):
             return reverse(
                 'ingest:dmodel_details',
-                args=[dmodel.DMeta.desc_name, record.pk])
+                args=[dmodel.__name__, record.pk])
 
         open_column = tables.Column(
             accessor="pk", verbose_name="Abrir", linkify=open_linkify)
 
         def render_open(self, value):
-            return f"Ver {dmodel.DMeta.desc_name}"
+            return f"Ver {dmodel._meta.verbose_name_plural.title()}"
 
         # columnas de creacion y modificacion
         created = tables.Column(verbose_name="Fecha de creación")
@@ -180,7 +185,7 @@ class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
             sequence = ('id', "...", "open")
 
         # creamos la clase
-        table_name = f"{dmodel.DMeta.desc_name}Table"
+        table_name = f"{dmodel.__name__}Table"
         bases = (tables.Table,)
         attrs = {
             "open": open_column,
@@ -190,7 +195,7 @@ class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
             "Meta": Meta}
 
         # si la clase es principal hay que agregarle un par de renders
-        if dmodel.DMeta.principal:
+        if dmodel.principal:
             def render_created_by(self, value):
                 if value.last_name and value.first_name:
                     return (
@@ -214,14 +219,13 @@ class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
         return context
 
 
-class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
+class PlotDModelView(LogginRequired, IngestViewMixin, MatplotlibView):
 
     template_name = "ingest/PlotDModelView.html"
     draw_methods = [
         "draw_creation_time"]
     plot_format = "png"
     tight_layout = True
-    dmodels = apps.IngestConfig.dmodels
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -252,7 +256,7 @@ class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
         ax.set_xticks([])
 
     def draw_creation_time(self, dmodel, df, queryset, fig, ax, **kwargs):
-        dmodel_name = dmodel.DMeta.verbose_name_title
+        dmodel_name = dmodel.verbose_name_plural()
 
         ax.set_title(f"{dmodel_name} creados y modificados por fecha")
         ax.set_ylabel(f"Número de {dmodel_name}")
@@ -291,10 +295,9 @@ class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
         ax.legend()
 
 
-class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
+class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
 
     template_name = "ingest/DetailDModelView.html"
-    dmodels = apps.IngestConfig.dmodels
 
     CUSTOM_LABELS = {
         "created": "Fecha de creación",
@@ -307,6 +310,9 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
         dt.datetime: humanize.naturaldate,
         bool: lambda v: "Sí" if v else "No"
     }
+
+    def get_queryset(self, *args, **kwargs):
+        return self.get_dmodel().objects.all()
 
     def get_label(self, fname, dj_field):
         if isinstance(dj_field, (ManyToOneRel, ManyToManyRel)):
@@ -325,23 +331,19 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
         return fvalue
 
     def make_resume(self, instance, idf, is_dmodel, props):
-        if is_dmodel:
-            return f"{idf['value'].title()} (# {instance.pk})"
-        if isinstance(instance, models.User):
+        if isinstance(instance, User):
             return f"@{instance.username} (# {instance.pk}))"
         elif isinstance(instance, models.RawFile):
             filename = os.path.basename(instance.file.name)
             return f"{filename} (# {instance.pk})"
+        if is_dmodel and idf:
+            return f"{getattr(instance, idf)} (# {instance.pk})"
         return f"(# {instance.pk})"
 
     def split_dminstance(self, instance, check_forbidden=False, related=True):
 
-        if hasattr(instance, "DMeta"):
-            is_dmodel = True
-            identifier = instance.DMeta.identifier
-        else:
-            is_dmodel = False
-            identifier = None
+        identifier = getattr(instance, "identifier", None)
+        is_dmodel = True
 
         dj_fields = {f.name: f for f in instance._meta.get_fields()}
 
@@ -394,7 +396,7 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
                 props[fname] = {"label": vname, "value": value or "--"}
 
         identifier = props.get(identifier)
-        desc_name = instance.DMeta.desc_name if is_dmodel else None
+        desc_name = instance.__class__.__name__
 
         resume = self.make_resume(
             instance=instance, is_dmodel=is_dmodel,
@@ -404,7 +406,7 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
             "resume": resume,
             "is_dmodel": is_dmodel,
             "desc_name": desc_name,
-            "idf": identifier,
+            "idf": {"label": identifier or "", "value": getattr(instance, identifier) if identifier else ""},
             "pk": instance.pk,
             "props": props,
             "lin": lin,

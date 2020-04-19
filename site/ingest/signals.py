@@ -40,13 +40,13 @@ def compile_file(sender, instance, created, **kwargs):
     if created:
         try:
             filepath = instance.file.path
-            apps.IngestConfig.dmodels.load_data_file(filepath)
+            apps.IngestConfig.ingestor.load_data_file(filepath)
         except:
             instance.broken = True
     if instance.broken:
         return
     if instance.merged and not instance.is_parsed:
-        apps.IngestConfig.dmodels.merge(
+        apps.IngestConfig.ingestor.merge(
             created_by=instance.modify_by, raw_file=instance)
     if not instance.merged and instance.is_parsed:
-        apps.IngestConfig.dmodels.remove(raw_file=instance)
+        apps.IngestConfig.ingestor.remove(raw_file=instance)
