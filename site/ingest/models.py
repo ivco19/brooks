@@ -147,5 +147,5 @@ class Evento(BaseIngestModel):
     fecha_internacion = models.DateField(blank=True, null=True)
     tipo_evento = models.ForeignKey("TipoEvento", models.CASCADE, blank=True, null=True)
     notas_evento = models.TextField(blank=True, null=True)
-    raw_file = models.ForeignKey("RawFile", models.DO_NOTHING)
+    raw_file = models.ForeignKey("RawFile", models.DO_NOTHING, related_name="generated")
     sintomas = models.ManyToManyField("Sintoma", through=EventoSignoSintoma)

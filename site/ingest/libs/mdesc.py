@@ -245,250 +245,6 @@ def is_name_forbidden(fname):
     return False
 
 
-# =============================================================================
-# CLASSES
-# =============================================================================
-
-class Compiler:
-    """Interpret and create modules based on the model description file."""
-
-    def translate(self, data):
-        """Traduce todo lo que tiene el diccionario de datos
-        si la llave traducida esta incluida en NO_TRANSLATE.
-
-        """
-        if isinstance(data, list):
-            return [self.translate(e) for e in data]
-        elif isinstance(data, dict):
-            tdict = {}
-            for k, v in data.items():
-                tk = self.translate(k)
-                tv = v if tk in NO_TRANSLATE else self.translate(v)
-                tdict[tk] = tv
-            return tdict
-        return DATA_TRANSLATIONS.get(data, data)
-
-    def create_field(self, *, name, data, emodels):
-        if is_name_forbidden(name):
-            raise IncorrectConfigurationError(
-                f"El nombre de atributo {name} esta prohibido")
-
-        # copiamos los datos para manipular tranquilos
-        data = copy.deepcopy(data)
-
-        # primero sacamos el tipo
-        ftype = data.pop("type")
-        dj_ftype = FIELD_TYPES.get(ftype, ftype)
-
-        # aca saco todos las configuraciones que se usaran vara parsear y no
-        # para crear cosas
-        for tr in KEYS_TO_REMOVE:
-            data.pop(tr, None)
-
-        # add the default fields if not present
-        for k, v in ATTRS_DEFAULT.items():
-            if k not in data:
-                data[k] = v
-
-        # ahora el tipo puede ser uno nativo o un foreign key
-        if inspect.isclass(dj_ftype) and issubclass(dj_ftype, models.Field):
-
-            if "sep" in data:
-                raise IncorrectConfigurationError(
-                    "sep solo puede ser definida con una referencia")
-
-            if "choices" in data:
-                data["choices"] = [(e, e) for e in data["choices"]]
-
-            fvalidators = []
-            if "min" in data:
-                min_value = data.pop("min")
-                fvalidators.append(validators.MinValueValidator(min_value))
-            if "max" in data:
-                max_value = data.pop("max")
-                fvalidators.append(validators.MaxValueValidator(max_value))
-            if fvalidators:
-                data["validators"] = fvalidators
-
-            return dj_ftype(**data)
-
-        else:
-            # here we have some kind of FK
-            link_to = emodels[dj_ftype]
-
-            # if we have sep is a many to many
-            sep = data.pop("sep", None)
-            if sep:
-                data.pop("null", None)
-                return models.ManyToManyField(link_to, **data)
-            else:
-                return models.ForeignKey(
-                    link_to, on_delete=models.CASCADE, **data)
-
-    def create_model(self, *, name, data, emodels, module_spec):
-        if is_name_forbidden(name):
-            raise IncorrectConfigurationError(
-                f"El nombre de modelo {name} esta prohibido")
-
-        basemodel = emodels["TimeStampedModel"]
-
-        # copiamos los datos para manipular tranquilos
-        original_data = copy.deepcopy(data)
-        data = copy.deepcopy(data)
-
-        # creamos el contenedor de todos los atributos para el modelo
-        attrs = {'__module__': module_spec.name}
-
-        # iteramos sobre
-        attributes = data.pop("attributes", {})
-        field_names, identifier = [], None
-        for field_name, field_data in attributes.items():
-
-            if "identifier" in field_data:
-                if identifier:
-                    raise IncorrectConfigurationError(
-                        f"Model '{name}' has more than one identifier")
-                elif field_data["type"] not in FIELD_TYPES:
-                    raise IncorrectConfigurationError(
-                        f"Model '{name}' identifier cant be a reference")
-
-                identifier = field_name
-                field_data["unique"] = True
-                field_data["null"] = False
-
-            new_field = self.create_field(
-                name=field_name, data=field_data, emodels=emodels)
-            attrs[field_name] = new_field
-            field_names.append(field_name)
-
-        if identifier is None:
-            raise IncorrectConfigurationError(
-                f"Missing identifier for Model '{name}'")
-
-        # sacamos los meta
-        meta_attrs = data.pop("meta", {})
-
-        # aca sacamos todo lo meta que es exclusivo de esta app
-        dmeta_attrs = {
-            dma: meta_attrs.pop(dma, default)
-            for dma, default in DMETA_ATTRS.items()}
-        dmeta_attrs["desc_name"] = name
-        dmeta_attrs["field_names"] = tuple(field_names)
-        dmeta_attrs["desc"] = original_data
-        dmeta_attrs["identifier"] = identifier
-        dmeta_attrs["verbose_name_title"] = meta_attrs.get(
-            "verbose_name_plural", name).title()
-        attrs["DMeta"] = type("DMeta", (object,), dmeta_attrs)
-
-        attrs["created_by"] = models.ForeignKey(
-            emodels["User"], on_delete=models.CASCADE,
-            related_name=f"{name}_generated_set",
-            verbose_name="Creado por")
-        attrs["modified_by"] = models.ForeignKey(
-            emodels["User"], on_delete=models.CASCADE,
-            related_name=f"{name}_modified_set",
-            verbose_name="Modificado por")
-
-        # si es el principal necesitamos linkerarlo a rawfile
-        if dmeta_attrs["principal"]:
-            attrs["raw_file"] = models.ForeignKey(
-                emodels["RawFile"], on_delete=models.CASCADE,
-                related_name="generated", verbose_name="Archivo")
-
-        # creamos un repr aceptable
-        def __repr__(self):
-            desc_name = self.DMeta.desc_name
-            identifier = self.DMeta.identifier
-            ivalue = getattr(self, identifier)
-            return f"{desc_name}({identifier} => {ivalue})"
-
-        attrs["__repr__"] = __repr__
-
-        def __str__(self):
-            identifier = self.DMeta.identifier
-            ivalue = getattr(self, identifier)
-            return str(ivalue)
-
-        attrs["__str__"] = __str__
-
-        # creamos la django Meta
-        attrs["Meta"] = type("Meta", (object,), meta_attrs)
-
-        # creamos el modelo en si
-        modelcls = type(name, (basemodel,), attrs)
-
-        return modelcls
-
-    def mcompile(self, data, app_config):
-
-        # sacamos el contexto del app.models
-        context = vars(app_config.models_module)
-
-        # sacamos todos los modelos preexistentes en el contexto
-        emodels = {
-            k: v for k, v in context.items()
-            if inspect.isclass(v) and issubclass(v, models.Model)}
-        dmodels = {}
-
-        # buscamos en que modelo nos estan definiendo
-        module_spec = context["__spec__"]
-
-        # aca vamos a guardar el modelo dinamico principal que tiene que ser
-        # ser uno y tiene que ser uno
-        principal = None
-
-        # creamos los nuevos modelos y los vamos agregando al contexto de
-        # emodels pero ademas los separamos en su propio diccionario dmodels
-        for model_name, model_data in data.items():
-
-            # traducimos las llaves del dicionario de datos
-            tmodel_data = self.translate(model_data)
-
-            new_model = self.create_model(
-                name=model_name, data=tmodel_data,
-                emodels=emodels, module_spec=module_spec)
-
-            # here we orchestrate if the model is the principal one
-            if new_model.DMeta.principal and principal:
-                raise ValueError(
-                    "Duplicate principal model "
-                    f"'{principal.__name__}' and '{new_model.__name__}'")
-            elif new_model.DMeta.principal:
-                principal = new_model
-
-            dmodels[model_name] = new_model
-            emodels[model_name] = new_model
-
-        # if we process all the models and no one is principal
-        # we have a problem
-        if not principal:
-            raise IncorrectConfigurationError("No principal model")
-
-        # create a link inverted between name and model
-        fields_to_model = MultiKeyDict({
-            model.DMeta.field_names: model
-            for model in dmodels.values()})
-
-        # retornamos los nuevos modelos
-        return Bunch(
-            models=dmodels, principal=principal,
-            fields_to_model=fields_to_model)
-
-
-# =============================================================================
-# ADMIN REGISTER
-# =============================================================================
-
-class AdminRegister:
-    """Vanagloried class to register the models into the django admin."""
-
-    def register(self, models):
-        regs = []
-        for model_name, model in models.items():
-            reg = admin.site.register(model, admin.ModelAdmin)
-            regs.append(reg)
-        return regs
-
 
 # =============================================================================
 # FILE_PARSER
@@ -706,17 +462,13 @@ class FileParser:
 # =============================================================================
 
 @attr.s(frozen=True, repr=False)
-class DynamicModels:
+class Ingestor:
     """The public api here. This class must be instantiated in the
     AppConfig and then you must call first the create_models method in the
     ready method.
 
     """
-
-    descfile = attr.ib()
     cache = attr.ib(init=False, factory=Bunch)
-    compiler = attr.ib(init=False, factory=Compiler)
-    admin = attr.ib(init=False, factory=AdminRegister)
     fileparser = attr.ib(init=False, factory=FileParser)
 
     # =========================================================================
@@ -735,39 +487,6 @@ class DynamicModels:
         ext = os.path.splitext(filename)[-1].lower()
         parser = DATA_FILE_PARSERS[ext]
         return parser(filename)
-
-    # =========================================================================
-    # MODELS CREATION
-    # =========================================================================
-
-    def create_models(self, app_config):
-        if self.cache.get("compiled"):
-            module_spec = self.models_context["__spec__"]
-            raise MethodsCallOrderError(
-                f"models already defined in {module_spec.name}")
-
-        data = self.load_descriptor_file(self.descfile)
-        compile_info = self.compiler.mcompile(data, app_config)
-
-        self.cache.descfile_content = data
-        self.cache.compiled = True
-        self.cache.app_config = app_config
-        self.cache.update(compile_info)
-
-        # inject models into the context
-        context = vars(app_config.models_module)
-        context.update(compile_info.models)
-
-    def register_admin(self, exclude=None):
-        if not self.cache.compiled:
-            raise MethodsCallOrderError("models not yet defined")
-
-        exclude = [] if exclude is None else exclude
-        models = {
-            name: model
-            for name, model in self.cache.models.items()
-            if name not in exclude}
-        return self.admin.register(models)
 
     def make_empty_df(self):
         principal = self.cache.principal
@@ -798,8 +517,8 @@ class DynamicModels:
     # =========================================================================
 
     def merge_info(self, created_by, raw_file):
-        if not self.cache.compiled:
-            raise MethodsCallOrderError("models not yet defined")
+        # if not self.cache.compiled:
+        #    raise MethodsCallOrderError("models not yet defined")
 
         filepath = raw_file.file.path
         df = self.load_data_file(filepath)
@@ -834,44 +553,3 @@ class DynamicModels:
             merge_info = self.fileparser.remove(
                 raw_file=raw_file)
         return merge_info
-
-    # =========================================================================
-    # VIEWS HELPERS
-    # =========================================================================
-
-    def list_models(self):
-        principal_vn = self.cache.principal._meta.verbose_name_plural.title()
-        model_list = {
-            principal_vn: self.cache.principal.DMeta.desc_name
-        }
-        for name, model in sorted(self.cache.models.items()):
-            if model != self.cache.principal:
-                model_list[model.DMeta.verbose_name_title] = name
-        return model_list
-
-    def get_dmodel(self, model, **query):
-        return self.cache.models[model]
-        if query:
-            return model.objects.filter(**query)
-
-    def get_principal_dmodel(self):
-        return self.cache.principal
-
-
-# =============================================================================
-# VIEW CLASSES
-# =============================================================================
-
-class DModelViewMixin:
-
-    def get_dmodel_conf(self):
-        return self.dmodels
-
-    def get_dmodel(self):
-        dmodels_conf = self.get_dmodel_conf()
-        dmodel_name = self.kwargs["dmodel"]
-        return dmodels_conf.get_dmodel(dmodel_name)
-
-    def get_queryset(self, *args, **kwargs):
-        dmodel = self.get_dmodel()
-        return dmodel.objects.all()

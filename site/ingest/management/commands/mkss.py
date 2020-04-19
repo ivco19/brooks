@@ -43,7 +43,7 @@ class Command(BaseCommand):
         parser.add_argument('out', type=str)
 
     def handle(self, out, *args, **options):
-        dmodels = apps.IngestConfig.dmodels
+        dmodels = apps.IngestConfig.ingestor
         df = dmodels.make_empty_df()
         ext = os.path.splitext(out)[-1]
         parser = PARSERS.get(ext)

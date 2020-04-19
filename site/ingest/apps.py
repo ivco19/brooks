@@ -25,7 +25,7 @@ from ingest.libs import mdesc
 
 class IngestConfig(AppConfig):
     name = 'ingest'
-    dmodels = MagicMock()   # mdesc.DynamicModels(settings.MODELS_DESCRIPTION)
+    ingestor = mdesc.Ingestor()
 
     def ready(self):
         import ingest.signals  # noqa

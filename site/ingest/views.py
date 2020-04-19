@@ -35,7 +35,7 @@ import humanize
 from brooks.views_mixins import LogginRequired, CacheMixin
 from brooks.libs.dmatplotlib import MatplotlibView
 
-from ingest.libs.mdesc import DModelViewMixin, is_name_forbidden
+from ingest.libs.mdesc import Ingestor, is_name_forbidden
 from ingest import apps, models, forms, tables
 
 
@@ -75,7 +75,6 @@ class UploadRawFileView(LogginRequired, CreateView):
 
 
 class DownloadEmptyView(LogginRequired, CacheMixin, View):
-    dmodels = apps.IngestConfig.dmodels
     content_type = (
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     cache_timeout = 60 * 2
@@ -88,7 +87,7 @@ class DownloadEmptyView(LogginRequired, CacheMixin, View):
         fname = f"planilla_brooks_{today.isoformat()}.xlsx"
         response['Content-Disposition'] = f'attachment; filename={fname}'
 
-        df = self.dmodels.make_empty_df()
+        df = apps.IngestConfig.ingestor.make_empty_df()
         df.to_excel(response)
 
         return response
@@ -107,20 +106,19 @@ class CheckRawFileView(LogginRequired, UpdateView):
 
     def get_context_data(self):
         context_data = super().get_context_data()
-        dmodels = apps.IngestConfig.dmodels
 
         filepath = self.object.file.path
 
         if self.object.broken:
             context_data.update(**self.get_broken_context())
         elif not self.object.merged:
-            mmd = dmodels.merge_info(
+            mmd = apps.IngestConfig.ingestor.merge_info(
                 created_by=self.request.user, raw_file=self.object)
             context_data["merge_info"] = mmd.merge_info
             context_data["df"] = mmd.df
         else:
             filepath = self.object.file.path
-            context_data["df"] = dmodels.load_data_file(filepath)
+            context_data["df"] = apps.IngestConfig.ingestor.load_data_file(filepath)
 
         context_data["conf_code"] = "".join(random.sample(LETTERS, 6))
         return context_data
@@ -228,7 +226,6 @@ class PlotDModelView(LogginRequired, IngestViewMixin, MatplotlibView):
         "draw_creation_time"]
     plot_format = "png"
     tight_layout = True
-    dmodels = apps.IngestConfig.dmodels
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
