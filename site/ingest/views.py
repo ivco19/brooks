@@ -17,7 +17,7 @@ import random
 import os
 import itertools as it
 import datetime as dt
-
+from django.conf import settings
 from django.views.generic import CreateView, UpdateView, DetailView, View
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
@@ -25,11 +25,9 @@ from django.db.models import (
     ForeignKey, TextField, ManyToManyField, ManyToOneRel, ManyToManyRel)
 from django.utils.html import format_html
 from django.db.models.fields.files import FieldFile
-from django.views.generic.list import ListView
 from django_tables2.views import SingleTableView
+from django.contrib.auth.models import User
 from django.apps import apps as apps_
-from django.utils.functional import cached_property
-
 from django_pandas.io import read_frame
 
 import humanize
@@ -300,10 +298,9 @@ class PlotDModelView(LogginRequired, IngestViewMixin, MatplotlibView):
         ax.legend()
 
 
-class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
+class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
 
     template_name = "ingest/DetailDModelView.html"
-    dmodels = apps.IngestConfig.dmodels
 
     CUSTOM_LABELS = {
         "created": "Fecha de creación",
@@ -316,6 +313,9 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
         dt.datetime: humanize.naturaldate,
         bool: lambda v: "Sí" if v else "No"
     }
+
+    def get_queryset(self, *args, **kwargs):
+        return self.get_dmodel().objects.all()
 
     def get_label(self, fname, dj_field):
         if isinstance(dj_field, (ManyToOneRel, ManyToManyRel)):
@@ -334,23 +334,19 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
         return fvalue
 
     def make_resume(self, instance, idf, is_dmodel, props):
-        if is_dmodel:
-            return f"{idf['value'].title()} (# {instance.pk})"
-        if isinstance(instance, models.User):
+        if isinstance(instance, User):
             return f"@{instance.username} (# {instance.pk}))"
         elif isinstance(instance, models.RawFile):
             filename = os.path.basename(instance.file.name)
             return f"{filename} (# {instance.pk})"
+        if is_dmodel and idf:
+            return f"{getattr(instance, idf)} (# {instance.pk})"
         return f"(# {instance.pk})"
 
     def split_dminstance(self, instance, check_forbidden=False, related=True):
 
-        if hasattr(instance, "DMeta"):
-            is_dmodel = True
-            identifier = instance.DMeta.identifier
-        else:
-            is_dmodel = False
-            identifier = None
+        identifier = getattr(instance, "identifier", None)
+        is_dmodel = True
 
         dj_fields = {f.name: f for f in instance._meta.get_fields()}
 
@@ -403,7 +399,7 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
                 props[fname] = {"label": vname, "value": value or "--"}
 
         identifier = props.get(identifier)
-        desc_name = instance.DMeta.desc_name if is_dmodel else None
+        desc_name = instance.__class__.__name__
 
         resume = self.make_resume(
             instance=instance, is_dmodel=is_dmodel,
@@ -413,7 +409,7 @@ class DetailDModelView(LogginRequired, DModelViewMixin, DetailView):
             "resume": resume,
             "is_dmodel": is_dmodel,
             "desc_name": desc_name,
-            "idf": identifier,
+            "idf": {"label": identifier or "", "value": getattr(instance, identifier) if identifier else ""},
             "pk": instance.pk,
             "props": props,
             "lin": lin,

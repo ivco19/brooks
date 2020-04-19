@@ -91,6 +91,8 @@ class Pais(BaseIngestModel):
     id_pais = models.IntegerField(unique=True)
     nombre_pais = models.CharField(max_length=255, blank=True, null=True)
 
+    identifier = "id_pais"
+
 
 class Provincia(BaseIngestModel):
     id_provincia = models.IntegerField(unique=True)
