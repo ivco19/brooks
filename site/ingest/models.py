@@ -94,6 +94,12 @@ class BaseIngestModel(TimeStampedModel):
     def model_name(cls):
         return cls.__name__
 
+    @classmethod
+    def get_fields(cls):
+        return {
+            f.name: f for f in cls._meta.get_fields()
+            if not isinstance(f, (models.ManyToOneRel, models.ManyToManyRel))}
+
     class Meta:
         abstract = True
 
