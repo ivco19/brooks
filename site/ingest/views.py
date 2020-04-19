@@ -8,7 +8,6 @@
 # License: BSD-3-Clause
 #   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
 
-
 # =============================================================================
 # IMPORTS
 # =============================================================================
@@ -26,8 +25,10 @@ from django.db.models import (
     ForeignKey, TextField, ManyToManyField, ManyToOneRel, ManyToManyRel)
 from django.utils.html import format_html
 from django.db.models.fields.files import FieldFile
-
+from django.views.generic.list import ListView
 from django_tables2.views import SingleTableView
+from django.apps import apps as apps_
+from django.utils.functional import cached_property
 
 from django_pandas.io import read_frame
 
@@ -144,12 +145,19 @@ class ListRawFileView(LogginRequired, SingleTableView):
 # THE DYNAMIC VIEWS HERE
 # =============================================================================
 
-class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
+class ListModelView(ListView):
 
-    model = None
+    def get_dmodel(self):
+        model_name = self.kwargs["dmodel"]
+        return apps_.get_model(app_label='ingest', model_name=model_name)
+
+    def get_queryset(self, *args, **kwargs):
+        return self.get_dmodel().objects.all()
+
+
+class ListDModelView(LogginRequired, ListModelView, SingleTableView):
     table_class = None
     template_name = "ingest/ListDModelView.html"
-    dmodels = apps.IngestConfig.dmodels
 
     def get_table_class(self, *args, **kwargs):
         dmodel = self.get_dmodel()
@@ -158,13 +166,13 @@ class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
         def open_linkify(record):
             return reverse(
                 'ingest:dmodel_details',
-                args=[dmodel.DMeta.desc_name, record.pk])
+                args=[dmodel.__name__, record.pk])
 
         open_column = tables.Column(
             accessor="pk", verbose_name="Abrir", linkify=open_linkify)
 
         def render_open(self, value):
-            return f"Ver {dmodel.DMeta.desc_name}"
+            return f"Ver {dmodel._meta.verbose_name_plural.title()}"
 
         # columnas de creacion y modificacion
         created = tables.Column(verbose_name="Fecha de creación")
@@ -180,7 +188,7 @@ class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
             sequence = ('id', "...", "open")
 
         # creamos la clase
-        table_name = f"{dmodel.DMeta.desc_name}Table"
+        table_name = f"{dmodel.__name__}Table"
         bases = (tables.Table,)
         attrs = {
             "open": open_column,
@@ -190,7 +198,7 @@ class ListDModelView(LogginRequired, DModelViewMixin, SingleTableView):
             "Meta": Meta}
 
         # si la clase es principal hay que agregarle un par de renders
-        if dmodel.DMeta.principal:
+        if dmodel.principal:
             def render_created_by(self, value):
                 if value.last_name and value.first_name:
                     return (

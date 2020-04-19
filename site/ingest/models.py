@@ -38,17 +38,27 @@ def _raw_file_upload_to(instance, filename):
     return "/".join(["raw_files", folder, filename])
 
 
-class Tracked(models.Model):
+class BaseIngestModel(TimeStampedModel):
+    principal = False
+
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, models.DO_NOTHING, related_name="%(class)s_createdby")
     modified_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, models.DO_NOTHING, related_name="%(class)s_modifiedby", null=True, blank=True
     )
 
+    @classmethod
+    def verbose_name_plural(cls):
+        return cls._meta.verbose_name.title()
+
+    @classmethod
+    def model_name(cls):
+        return cls.__name__
+
     class Meta:
         abstract = True
 
 
-class RawFile(TimeStampedModel, Tracked):
+class RawFile(BaseIngestModel):
 
     DATA_FILE_EXTENSIONS = [e[1:] for e in mdesc.DATA_FILE_EXTENSIONS]
 
@@ -73,34 +83,34 @@ class RawFile(TimeStampedModel, Tracked):
         return self.file.url.rsplit("/", 1)[-1]
 
 
-class ClasificacionEpidemiologica(TimeStampedModel, Tracked):
+class ClasificacionEpidemiologica(BaseIngestModel):
     nombre_ce = models.CharField(unique=True, max_length=255)
 
 
-class Pais(TimeStampedModel, Tracked):
+class Pais(BaseIngestModel):
     id_pais = models.IntegerField(unique=True)
     nombre_pais = models.CharField(max_length=255, blank=True, null=True)
 
 
-class Provincia(TimeStampedModel, Tracked):
+class Provincia(BaseIngestModel):
     id_provincia = models.IntegerField(unique=True)
     nombre_provincia = models.CharField(max_length=255, blank=True, null=True)
     pais = models.ForeignKey(Pais, models.DO_NOTHING, blank=True, null=True)
 
 
-class Departamento(TimeStampedModel, Tracked):
+class Departamento(BaseIngestModel):
     id_departamento = models.IntegerField(unique=True)
     nombre_departamento = models.CharField(max_length=255, blank=True, null=True)
     provincia = models.ForeignKey("Provincia", models.DO_NOTHING, blank=True, null=True)
 
 
-class Localidad(TimeStampedModel, Tracked):
+class Localidad(BaseIngestModel):
     id_localidad = models.IntegerField(unique=True)
     nombre_localidad = models.CharField(max_length=255, blank=True, null=True)
     departamento = models.ForeignKey(Departamento, models.DO_NOTHING, blank=True, null=True)
 
 
-class Paciente(TimeStampedModel, Tracked):
+class Paciente(BaseIngestModel):
     nombre_paciente = models.CharField(unique=True, max_length=255)
     sexo = models.CharField(max_length=2, blank=True, null=True)
     sepi_apertura = models.IntegerField(blank=True, null=True)
@@ -108,17 +118,17 @@ class Paciente(TimeStampedModel, Tracked):
     localidad_residencia = models.ForeignKey(Localidad, models.DO_NOTHING, blank=True, null=True)
 
 
-class Sintoma(TimeStampedModel, Tracked):
+class Sintoma(BaseIngestModel):
     nombre_sintoma = models.CharField(unique=True, max_length=255)
     notas_sintoma = models.TextField(blank=True, null=True)
 
 
-class TipoEvento(TimeStampedModel, Tracked):
+class TipoEvento(BaseIngestModel):
     nombre_tipo_evento = models.CharField(unique=True, max_length=255)
     notas_tipo_evento = models.TextField(blank=True, null=True)
 
 
-class EventoSignoSintoma(TimeStampedModel, Tracked):
+class EventoSignoSintoma(BaseIngestModel):
     evento = models.ForeignKey("Evento", models.DO_NOTHING)
     sintoma = models.ForeignKey("Sintoma", models.DO_NOTHING)
 
@@ -127,7 +137,9 @@ class EventoSignoSintoma(TimeStampedModel, Tracked):
         unique_together = (("evento", "sintoma"),)
 
 
-class Evento(TimeStampedModel, Tracked):
+class Evento(BaseIngestModel):
+    principal = True
+
     id_evento = models.IntegerField(unique=True)
     paciente = models.ForeignKey("Paciente", models.CASCADE, related_name="eventos", blank=True, null=True)
     fecha_internacion = models.DateField(blank=True, null=True)
