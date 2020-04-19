@@ -145,19 +145,20 @@ class ListRawFileView(LogginRequired, SingleTableView):
 # THE DYNAMIC VIEWS HERE
 # =============================================================================
 
-class ListModelView(ListView):
+class IngestViewMixin:
 
     def get_dmodel(self):
         model_name = self.kwargs["dmodel"]
         return apps_.get_model(app_label='ingest', model_name=model_name)
 
-    def get_queryset(self, *args, **kwargs):
-        return self.get_dmodel().objects.all()
 
-
-class ListDModelView(LogginRequired, ListModelView, SingleTableView):
+class ListDModelView(LogginRequired, IngestViewMixin, SingleTableView):
     table_class = None
     template_name = "ingest/ListDModelView.html"
+
+
+    def get_queryset(self, *args, **kwargs):
+        return self.get_dmodel().objects.all()
 
     def get_table_class(self, *args, **kwargs):
         dmodel = self.get_dmodel()
@@ -222,7 +223,7 @@ class ListDModelView(LogginRequired, ListModelView, SingleTableView):
         return context
 
 
-class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
+class PlotDModelView(LogginRequired, IngestViewMixin, MatplotlibView):
 
     template_name = "ingest/PlotDModelView.html"
     draw_methods = [
@@ -260,7 +261,7 @@ class PlotDModelView(LogginRequired, DModelViewMixin, MatplotlibView):
         ax.set_xticks([])
 
     def draw_creation_time(self, dmodel, df, queryset, fig, ax, **kwargs):
-        dmodel_name = dmodel.DMeta.verbose_name_title
+        dmodel_name = dmodel.verbose_name_plural()
 
         ax.set_title(f"{dmodel_name} creados y modificados por fecha")
         ax.set_ylabel(f"Número de {dmodel_name}")

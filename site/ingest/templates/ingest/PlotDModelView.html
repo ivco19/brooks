@@ -10,16 +10,16 @@ License: BSD-3-Clause
   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
 {% endcomment %}
 
-{% block page_title %}{{dmodel.DMeta.verbose_name_title}}{% endblock %}
+{% block page_title %}{{dmodel.verbose_name_plural}}{% endblock %}
 {% block title %}
-    {{dmodel.DMeta.verbose_name_title}}
-    {% if dmodel.DMeta.principal %}
+    {{dmodel.verbose_name_plural}}
+    {% if dmodel.principal %}
     <small>
         <span class="badge badge-primary">Principal</span>
     </small>
     {% endif %}
     <small class="float-right">
-        <a class="btn btn-primary btn-sm" href="{% url 'ingest:list_dmodel' dmodel=dmodel.DMeta.desc_name%}">
+        <a class="btn btn-primary btn-sm" href="{% url 'ingest:list_dmodel' dmodel=dmodel.model_name %}">
             <i class="fas fa-table"></i>
         </a>
     </small>
