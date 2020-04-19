@@ -17,7 +17,7 @@ License: BSD-3-Clause
         <a class="dropdown-item" href="{% url 'ingest:list_dmodel' dmodel=dmodel.model_name %}">
             <i class="fas fa-table"></i>
             {{dmodel.verbose_name_plural }}
-            {% if dmodel.model_name == dmodel_principal %}
+            {% if dmodel.principal %}
             <small>
                 <span class="badge badge-primary">Principal</span>
             </small>

@@ -228,6 +228,7 @@ WEBTOOLS = {
     "Calculadora Epidémica SEIR": "https://epacalc-arg.now.sh/",
     "Covid dashboard by IBM": "https://accelerator.weather.com/bi/",
     "COVID-19 Map - Johns Hopkins Coronavirus Resource Center": "https://coronavirus.jhu.edu/map.html",
+    "COVID-19 Chart (Muy personalizable)": "https://valis.pub/?metric=confirmed&snapTo=true&snapToNumber=50&transformMode=newVsExisting&plotType=logarithmic&newInPastDays=3&countries=Argentina"
 }
 
 

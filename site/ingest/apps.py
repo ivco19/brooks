@@ -28,4 +28,5 @@ class IngestConfig(AppConfig):
     ingestor = mdesc.Ingestor()
 
     def ready(self):
+        import ingest.checks  # noqa
         import ingest.signals  # noqa

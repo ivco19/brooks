@@ -10,13 +10,10 @@
 **Sistema de carga rápida de datos diseñado para la pandemia de COVID-19 en la
 en Argentina.**
 
-## Objetivos
-
--   Brooks pretende separar la definición y validación de los datos del la
-    funcionalidades en su totalidad.
--   El proyecto entradas de bitácoras. Asi registro nuevo (una fila de una planilla de cálculos)
-    es validado y vinculado a otras entidades existentes o nuevas
-    (creadas por este registro) para luego ser exploradas en una aplicación web.
+> El proyecto consume entradas de bitácoras. En el cual cada fila es independiente.
+> Asi cada registro nuevo (una fila de una planilla de cálculos)
+> es validado y vinculado a otras entidades existentes o nuevas
+> (creadas por este registro) para luego ser exploradas en una aplicación web.
 
 
 Este proyecto esta distribuido con
@@ -35,6 +32,7 @@ Más proyectos del grupo se encuentran en:
 
 -   Juan B Cabral (CIFASIS-UNR, IATE-OAC-UNC).
 -   Vanessa Daza (IATE-OAC-UNC, FaMAF-UNC).
+-   Martín Gaitan ()
 -   Diego García Lambas (IATE-OAC-UNC, FaMAF-UNC).
 -   Marcelo Lares (IATE-OAC-UNC, FaMAF-UNC).
 -   Nadia Luczywo (LIMI-FCEFyN-UNC, IED-FCE-UNC, FCA-IUA-UNDEF)
