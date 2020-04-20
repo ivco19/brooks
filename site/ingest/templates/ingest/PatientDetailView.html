@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% block page_title %}
+    Paciente #{{patient.patient_raw_file_id}}
+{% endblock %}
+{% block title %}
+    Paciente #{{patient.patient_raw_file_id}}
+{%endblock %}
+
+{% block page_css %}
+<style>
+    ul.pprint-ul label{
+        font-weight: bolder;
+        text-decoration:underline;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    {{ pp_patient.to_html }}
+    <div class="row">
+        <div class="col">
+            {%crispy form%}
+        </div>
+    </div>
+    <div>
+        <ul>
+        {% for event in patient.events.all %}
+            <li>{{event.created}}: {{event.status}}</li>
+
+        {% endfor %}
+        </ul>
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block page_js %}
+<script>
+
+</script>
+{% endblock %}

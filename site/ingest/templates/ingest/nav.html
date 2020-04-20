@@ -1,43 +1,27 @@
-{% comment %}
-This file is part of Arcovid-19 Brooks.
-Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-                    Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-                    Bruno Sanchez, Federico Stasyszyn.
-License: BSD-3-Clause
-  Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-{% endcomment %}
-
 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
         <i class="fas fa-folder-open"></i>
         Datos
     </a>
     <div class="dropdown-menu">
-        {% for dmname, dmodel_dname in dmodels.items %}
-        <a class="dropdown-item" href="{% url 'ingest:list_dmodel' dmodel=dmodel_dname%}">
-            <i class="fas fa-table"></i>
-            {{dmname}}
-            {% if dmodel_dname == dmodel_principal %}
-            <small>
-                <span class="badge badge-primary">Principal</span>
-            </small>
-            {% endif %}
+
+        <a class="dropdown-item" href="{% url 'ingest:list_patient' %}">
+            <i class="fas fa-file-upload"></i>
+            Pacientes
         </a>
-        {% endfor %}
         <a class="dropdown-item" href=""><hr></a>
+
+
         <a class="dropdown-item" href="{% url 'ingest:upload' %}">
             <i class="fas fa-file-upload"></i>
             Cargar nuevos datos
         </a>
         <a class="dropdown-item" href=""><hr></a>
-        <a class="dropdown-item" href="{% url 'ingest:download_empty' %}">
-            <i class="fas fa-file-excel"></i>
-            Descargar planilla vacía
-        </a>
-        <a class="dropdown-item" href=""><hr></a>
+
         <a class="dropdown-item" href="{% url 'ingest:list_files' %}">
             <i class="fas fa-list"></i>
             Ver todos los archivos
         </a>
+
     </div>
   </li>

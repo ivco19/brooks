@@ -1,25 +1,12 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% comment %}
-This file is part of Arcovid-19 Brooks.
-Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-                    Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-                    Bruno Sanchez, Federico Stasyszyn.
-License: BSD-3-Clause
-  Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-{% endcomment %}
-
 {% block page_title %}Archivo {{ rawfile.pk }}{% endblock %}
 {% block title %}
-    Archivo {{ rawfile.pk }} - <span class="text-info"><b>Nombre:</b> {{rawfile.filename}}</span>
-
-    {% if rawfile.broken %}
-        <small class="text-danger">(Roto)</small>
-    {% elif rawfile.confirmed %}
-        <small class="text-success">(Integrado)</small>
+    Archivo {{ rawfile.pk }} - <span class="text-info"><b>Nombre:</b> {{rawfile.filename}}</span> {% if rawfile.confirmed %}
+        <small class="text-success">(Confirmado)</small>
     {% else %}
-        <small class="text-secondary">(Pendiente)</small>
+        <small class="text-danger">(Pendiente)</small>
     {% endif%}
     <button type="button" id="saveButton" class="btn btn-primary float-right">
         <i class="far fa-save"></i>
@@ -60,21 +47,21 @@ License: BSD-3-Clause
                     <strong>Fecha:</strong>
                     {{rawfile.created}}
             </p>
-            <div id="minfo" class="float-right">
+            <div data-toggle="modal" data-target="#resumeModal" class="float-right">
                 {% if rawfile.is_parsed %}
                 <h5 class="text-success">Archivo cargado</h5>
                 {% else %}
-                <a href="#info-info" class="badge badge-info">
+                <a href="#" class="badge badge-info">
                     Info
-                    {{merge_info.info|length}}
+                    {{infos|length}}
                 </a>
-                <a href="#info-warning" class="badge badge-warning">
+                <a href="#" class="badge badge-warning">
                     Advertencias
-                    {{merge_info.warning|length}}
+                    {{warnings|length}}
                 </a>
-                <a href="#info-error" class="badge badge-danger">
+                <a href="#" class="badge badge-danger">
                     Errores
-                    {{merge_info.error|length}}
+                    {{errors|length}}
                 </a>
                 {% endif %}
             </div>
@@ -84,7 +71,7 @@ License: BSD-3-Clause
     <div class="row">
         <div class="col">
             {% crispy form %}
-            {{df.to_html|safe}}
+            {{rawfile.as_df.to_html|safe}}
         </div>
     </div>
 </div>
@@ -102,22 +89,19 @@ License: BSD-3-Clause
         </div>
         <div class="modal-body">
             <div id="modal-confirmed" class="alert alert-success" role="alert">
-                {% if rawfile.is_parsed %}
+                {% if not rawfile.is_parsed %}
                     Se guardaran cambios en el archivo #{{ rawfile.pk }}
-                    <strong>que ya fue integrado</strong> a la base de datos
+                    el cual <strong>ya fue integrado</strong> a la base de datos
                     en el pasado.
                 {% else %}
                     El archivo #{{ rawfile.pk }}
-                    <strong>Si sera integrado</strong> a la base de datos
+                    <strong>Si</strong> sera integrado a la base de datos
                 {% endif %}
             </div>
             <div id="modal-not-confirmed" class="alert alert-danger" role="alert">
-                {% if rawfile.broken %}
-                    El archivo #{{ rawfile.pk }}
-                    <strong>esta roto</strong> solo pueden modificarse las notas.
-                {% elif rawfile.is_parsed %}
-                    Los registros del archivo #{{ rawfile.pk }}
-                    seran <strong>removidos</strong> de la base de datos
+                {% if rawfile.is_parsed %}
+                    Los eventos del archivo #{{ rawfile.pk }}
+                    sera <strong>removidos</strong> de la base de datos
                 {% else %}
                     El archivo #{{ rawfile.pk }}
                     <strong>NO</strong> sera integrado a la base de datos
@@ -153,8 +137,8 @@ License: BSD-3-Clause
                 <div class="card">
                   <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
-                      <button id="info-info" class="btn btn-link text-info" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Información ({{merge_info.info|length}})
+                      <button class="btn btn-link text-info " data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Información ({{infos|length}})
                       </button>
                     </h5>
                   </div>
@@ -163,7 +147,7 @@ License: BSD-3-Clause
                     <div class="card-body">
                         <div class="scroll">
                             <ol>
-                                {% for elem in merge_info.info %}
+                                {% for elem in infos %}
                                 <li>{{elem}}</li>
                                 {% endfor %}
                             </ol>
@@ -174,8 +158,8 @@ License: BSD-3-Clause
                 <div class="card">
                   <div class="card-header" id="headingTwo">
                     <h5 class="mb-0">
-                      <button id="info-warning" class="text-warning btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Advertencias ({{merge_info.warning|length}})
+                      <button class="text-warning btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Advertencias ({{warnings|length}})
                       </button>
                     </h5>
                   </div>
@@ -183,7 +167,7 @@ License: BSD-3-Clause
                     <div class="card-body">
                         <div class="scroll">
                             <ol>
-                                {% for elem in merge_info.warning %}
+                                {% for elem in warnings %}
                                 <li>{{elem}}</li>
                                 {% endfor %}
                             </ol>
@@ -194,8 +178,8 @@ License: BSD-3-Clause
                 <div class="card">
                   <div class="card-header" id="headingThree">
                     <h5 class="mb-0">
-                      <button id="info-error" class="text-danger btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Errores ({{merge_info.error|length}})
+                      <button class="text-danger btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Errores ({{errors|length}})
                       </button>
                     </h5>
                   </div>
@@ -203,7 +187,7 @@ License: BSD-3-Clause
                     <div class="card-body">
                         <div class="scroll">
                             <ol>
-                                {% for elem in merge_info.error %}
+                                {% for elem in errors %}
                                 <li>{{elem}}</li>
                                 {% endfor %}
                             </ol>
@@ -212,19 +196,8 @@ License: BSD-3-Clause
                   </div>
                 </div>
               </div>
-              <div class="text-center">
-                <hr>
-                    Si deseas reportar un error o tiene alguna pregunta puntual <br>
-                    agregue un <b>Issue</b>
-                    haciendo click  <a target="_new" href="https://github.com/ivco19/brooks/issues">aquí</a>.
-                    <i class="fab fa-github-alt"></i>
-                    <br>
-            </div>
         <div class="modal-footer">
-
-            <div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
@@ -239,13 +212,6 @@ License: BSD-3-Clause
 
 <script>
 $(document).ready(function(){
-    {% if rawfile.broken %}
-    $("#div_id_merged").parent().remove();
-    {% elif rawfile.merged %}
-    $("#div_id_merged").parent().addClass("alert alert-success float-right");
-    {% else %}
-    $("#div_id_merged").parent().addClass("alert alert-secondary float-right");
-    {% endif %}
 
     $('table.dataframe').DataTable({
         "scrollX": true
@@ -255,7 +221,7 @@ $(document).ready(function(){
     $("table.dataframe th").addClass("table-dark")
 
     var $rawFileForm = $("form#rawFileForm");
-    $confirmedInput = $("input#id_merged");
+    $confirmedInput = $("input#id_confirmed");
 
     $("button#saveButton").click(function(evt){
         if($confirmedInput.is(':checked')){
@@ -286,13 +252,6 @@ $(document).ready(function(){
         $("div#confirmModal").hide();
         $rawFileForm.submit();
     })
-
-    $("#minfo a").click(function(evt){
-        var href = $(evt.currentTarget).attr("href");
-        var target = $(href).data("target");
-        $(target).collapse();
-        $("#resumeModal").modal();
-    });
 
 });
 </script>

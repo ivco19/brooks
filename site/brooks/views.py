@@ -1,33 +1,35 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# This file is part of Arcovid-19 Brooks.
-# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-#                     Bruno Sanchez, Federico Stasyszyn.
-# License: BSD-3-Clause
-#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-
-
-# =============================================================================
-# IMPORTS
-# =============================================================================
+import datetime as dt
 
 from django.conf import settings
 
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView
 
 import mistune
 
 import arcovid19
 
-from brooks.libs.dmatplotlib import MatplotlibView
+from libs.dmatplotlib import MatplotlibView
 
-from brooks.views_mixins import LogginRequired, CacheMixin
+from brooks.views_mixins import LogginRequired
+
+from libs import dmatplotlib as dplt
+
+import matplotlib.pyplot as plt
+
+import logging
+
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+#from django.views.generic import TemplateView
+import logging
+
+from . import mapa
+
+logger = logging.getLogger(__name__)
+
 
 
 # =============================================================================
-# CLASSES
+# MISC
 # =============================================================================
 
 class ChangesView(LogginRequired, TemplateView):
@@ -55,43 +57,107 @@ class AboutView(LogginRequired, TemplateView):
 
         return context
 
-
-class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
-
+class DashboardView(TemplateView):
     template_name = "Dashboard.html"
-    draw_methods = [
-        "draw_grate_full_period_ar",
-        "draw_grate_full_period_cba",
-        "draw_barplot_arg",
-        "draw_barplot_cba",
-        "draw_boxplot",
-        "draw_boxplot_cba"]
-    plot_format = "png"
-    tight_layout = True
 
-    cache_timeout = 60 * 60
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(DashboardView, self).get_context_data(**kwargs)
+        context['mapa'] = mapa.mapa_arg()
+        return context
+
+
+class DashboardView_a(LogginRequired, MatplotlibView):   
+    template_name = "Dashboard_a.html"
+
+    draw_methods = [
+        "drawg_curva_epi_pais",
+        "drawg_curva_epi_pais_nor",
+        "drawg_curva_epi_pais_log",
+        "drawg_time_series_all",
+        "drawg_barplot_all"
+        ]
+    plot_format = "png"
 
     def get_draw_context(self):
         return {"cases": arcovid19.load_cases()}
+    
+    def drawg_curva_epi_pais(self, cases, fig, ax, **kwargs):
+        
+        cases.plot.curva_epi_pais(ax=None, argentina=True,
+        exclude=None, log=False, norm=False,
+        paint='cuarentena', count_days='cuarentena')
 
-    def draw_grate_full_period_ar(self, cases, fig, ax, **kwargs):
-        cases.plot.grate_full_period(
-            ax=ax)
-        ax.legend(loc=2)
+    def drawg_curva_epi_pais_nor(self, cases, fig, ax, **kwargs):
+        cases.plot.curva_epi_pais(ax=None, argentina=True,
+        exclude=None, log=False, norm=True,
+        paint=None, count_days=None)
 
-    def draw_grate_full_period_cba(self, cases, fig, ax, **kwargs):
-        cases.plot.grate_full_period(
-            'cordoba', ax=ax, confirmed=True, active=True,
-            recovered=True, deceased=True)
+    def drawg_curva_epi_pais_log(self, cases, fig, ax, **kwargs):
+        cases.plot.curva_epi_pais(ax=None, argentina=True,
+        exclude=None, log=True, norm=False,
+        paint=None, count_days=None)
 
-    def draw_barplot_arg(self, cases, fig, ax, **kwargs):
-        cases.plot.barplot(ax=ax)
+    def drawg_time_series_all(self, cases, fig, ax, **kwargs):
+        cases.plot.time_serie_all()
 
-    def draw_barplot_cba(self, cases, fig, ax, **kwargs):
+    def drawg_barplot_all(self, cases, fig, ax, **kwargs):
+        cases.plot.barplot()
+
+
+class DashboardView_c(LogginRequired, MatplotlibView):
+    template_name = "Dashboard_c.html"
+
+    draw_methods = [
+        "drawg_curva_epi_provincia",
+        "drawg_curva_epi_provincia_nor",
+        "drawg_curva_epi_provincia_log",
+        "drawg_time_series_cba",
+        "drawg_barplot_cba"
+        ]
+    plot_format = "png"
+
+    def get_draw_context(self):
+        return {"cases": arcovid19.load_cases()}
+    
+    def drawg_curva_epi_provincia(self, cases, fig, ax, **kwargs):
+        cases.plot.curva_epi_provincia(
+            "cordoba", confirmed=True,
+            active=True, recovered=True, deceased=True,
+            ax=None,
+            log=False, norm=False,
+            color=None, alpha=None,
+            linewidth=None, linestyle=None,
+            marker=None, markerfacecolor=None,
+            markeredgewidth=None,
+            markersize=None, markevery=None)
+
+    def drawg_curva_epi_provincia_nor(self, cases, fig, ax, **kwargs):
+        cases.plot.curva_epi_provincia(
+            "cordoba", confirmed=True,
+            active=True, recovered=True, deceased=True,
+            ax=None,
+            log=False, norm=True,
+            color=None, alpha=None,
+            linewidth=None, linestyle=None,
+            marker=None, markerfacecolor=None,
+            markeredgewidth=None,
+            markersize=None, markevery=None)
+
+    def drawg_curva_epi_provincia_log(self, cases, fig, ax, **kwargs):
+        cases.plot.curva_epi_provincia(
+            "cordoba", confirmed=True,
+            active=True, recovered=True, deceased=True,
+            ax=None,
+            log=True, norm=False,
+            color=None, alpha=None,
+            linewidth=None, linestyle=None,
+            marker=None, markerfacecolor=None,
+            markeredgewidth=None,
+            markersize=None, markevery=None)
+
+    def drawg_time_series_cba(self, cases, fig, ax, **kwargs):
+        cases.plot.time_serie("cordoba", ax=ax)
+
+    def drawg_barplot_cba(self, cases, fig, ax, **kwargs):
         cases.plot.barplot("cordoba", ax=ax)
-
-    def draw_boxplot(self, cases, fig, ax, **kwargs):
-        cases.plot.boxplot(showfliers=False, ax=ax)
-
-    def draw_boxplot_cba(self, cases, fig, ax, **kwargs):
-        cases.plot.boxplot("cordoba", showfliers=False, ax=ax)

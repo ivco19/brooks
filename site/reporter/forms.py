@@ -1,32 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# This file is part of Arcovid-19 Brooks.
-# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-#                     Bruno Sanchez, Federico Stasyszyn.
-# License: BSD-3-Clause
-#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-
-
-# =============================================================================
-# IMPORTS
-# =============================================================================
-
 from django import forms
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
-from django_summernote.widgets import SummernoteInplaceWidget
+from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
 
 
-from reporter import models
+from . import models
 
-
-# =============================================================================
-# CLASSES
-# =============================================================================
 
 class ReportConfigurationForm(forms.ModelForm):
     class Meta:

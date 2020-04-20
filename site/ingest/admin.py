@@ -1,31 +1,29 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# This file is part of Arcovid-19 Brooks.
-# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-#                     Bruno Sanchez, Federico Stasyszyn.
-# License: BSD-3-Clause
-#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-
-
-# =============================================================================
-# DOCS
-# =============================================================================
-
-"""Static admin for the ingest app."""
-
-# =============================================================================
-# IMPORTS
-# =============================================================================
-
 from django.contrib import admin
 
-from ingest.models import RawFile
-
+from . import models as mdls
 
 # =============================================================================
-# REGISTERS
+# FILES
 # =============================================================================
 
-admin.site.register(RawFile)
+class EventInline(admin.StackedInline):
+    verbose_name_plural = "Eventos"
+    list_display = ("id", "indice_archivo", "id_archivo")
+    model = mdls.Event
+
+
+
+
+@admin.register(mdls.RawFile)
+class RawFileAdmin(admin.ModelAdmin):
+    list_display = ("id", "created_by", "created", "modified", "confirmed", "is_parsed")
+    list_filter = ("created_by", "confirmed", "is_parsed")
+
+    #inlines = (EventInline,)
+
+
+
+@admin.register(mdls.Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ("id", "status")
+    #list_filter = ("created_by", "confirmed", "is_parsed")

@@ -1,39 +1,21 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% comment %}
-This file is part of Arcovid-19 Brooks.
-Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-                    Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-                    Bruno Sanchez, Federico Stasyszyn.
-License: BSD-3-Clause
-  Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-{% endcomment %}
-
 {% block title %}Brooks Login{% endblock %}
 {% block page_title %}Brooks Login{% endblock %}
 
 
 {% block content %}
-<span id="loging-group">
     {% crispy form %}
     <input type="submit" class="btn btn-primary" value="Login" id="submit-login">
-</span>
 {% endblock %}
 
 {% block page_js %}
 <script>
 $(document).ready(function(){
-    $("#loging-group #submit-login").click(function(){
-        $("#loging-group form").submit();
+    $("#submit-login").click(function(){
+        $("form").submit();
     });
-
-    $("#loging-group input").on('keypress',function(e) {
-        if(e.which == 13) {
-            $("#loging-group form").submit();
-        }
-    });
-
 });
 </script>
 {% endblock %}

@@ -1,56 +1,26 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# This file is part of Arcovid-19 Brooks.
-# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-#                     Bruno Sanchez, Federico Stasyszyn.
-# License: BSD-3-Clause
-#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-
-
-# =============================================================================
-# DOCS
-# =============================================================================
-
-"""Static tables for the ingest app."""
-
-
-# =============================================================================
-# IMPORTS
-# =============================================================================
 
 import os
 
-from django_tables2 import Table, Column
+import django_tables2 as tables
 
 from django.urls import reverse
 
 from ingest import models
-
-
-# =============================================================================
-# CONSTANTS
-# =============================================================================
 
 CONFIRMED_CLASSES = {
     True: "table-success confirmed",
     False: "table-danger no-confirmed d-none"}
 
 
-# =============================================================================
-# TABLES
-# =============================================================================
-
-class RawFileTable(Table):
-    open = Column(
+class RawFileTable(tables.Table):
+    open = tables.Column(
         accessor="pk", verbose_name="Abrir",
         linkify=lambda record: reverse('ingest:check_file', args=[record.pk]))
-    created = Column(verbose_name="Fecha de creación")
-    modified = Column(verbose_name="Última modificación")
-    file = Column()
-    size = Column(verbose_name="Registros")
-    rcreated = Column(verbose_name="Registros generados")
+    created = tables.Column(verbose_name="Fecha de creación")
+    modified = tables.Column(verbose_name="Última modificación")
+    file = tables.Column()
+    file_size = tables.Column(accessor="file", verbose_name="Eventos en archivo")
+    events = tables.Column(verbose_name="Eventos generados")
 
     class Meta:
         model = models.RawFile
@@ -59,8 +29,8 @@ class RawFileTable(Table):
             "class": "table table-hover",
             "thead": {"class": "thead-dark"}}
         row_attrs = {
-            "class": lambda record: CONFIRMED_CLASSES[record.merged]}
-        sequence = ('id', 'created_by', "...", "open")
+            "class": lambda record: CONFIRMED_CLASSES[record.confirmed]}
+        sequence = ('id', 'created_by', "...", "open" )
 
     def render_open(self, value):
         return f"Ver #{value}"
@@ -73,11 +43,58 @@ class RawFileTable(Table):
     def render_file(self, value):
         return os.path.basename(value.file.name)
 
-    def render_rcreated(self, value):
+    def render_events(self, value):
         return value.count()
 
-    def render_size(self, value, record):
+    def render_file_size(self, value, record):
         try:
-            return record.size
-        except Exception:
+            return len(record.as_df())
+        except:
             return "Incorrecto"
+
+
+# =============================================================================
+# PACIENTES
+# =============================================================================
+
+PATIENT_CLASSES = {
+    "active": "table-warning active",
+    "deceased": "table-danger deceased d-none",
+    "recovered": "table-success recovered d-none",
+    "suspected": "table-info suspected",
+}
+
+
+class PatientTable(tables.Table):
+    open = tables.Column(
+        accessor="pk", verbose_name="Abrir",
+        linkify=lambda record: reverse('ingest:patient_detail', args=[record.pk]))
+
+    created = tables.Column(verbose_name="Fecha de creación")
+    events = tables.Column(verbose_name="Eventos")
+
+    hospital = tables.Column(verbose_name="C.Salud")
+    last_event = tables.Column(verbose_name="U.Evento")
+    last_status = tables.Column(verbose_name="Estado")
+
+    class Meta:
+        model = models.Patient
+        exclude = ["notes", "modified"]
+        attrs = {
+            "class": "table table-hover",
+            "thead": {"class": "thead-dark"}}
+        row_attrs = {
+            "class": lambda record: PATIENT_CLASSES[record.last_status]}
+        sequence = ('id', "...", "open" )
+
+    def render_events(self, record):
+        return record.events.count()
+
+    def last_event(self, value):
+        return value.created
+
+    def render_hospital(self, record):
+        return record.last_event.hospital.name
+
+    def render_last_status(self, value):
+        return models.Event.STATUSES[value]

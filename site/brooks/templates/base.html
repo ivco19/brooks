@@ -1,14 +1,5 @@
 {% load static %}
 
-<!--
-    This file is part of Arcovid-19 Brooks.
-Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-                    Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-                    Bruno Sanchez, Federico Stasyszyn.
-License: BSD-3-Clause
-  Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
--->
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -20,158 +11,122 @@ License: BSD-3-Clause
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+
     <link rel="stylesheet" href="{% static 'brooks.css' %}" />
 
     {% block page_css %}{% endblock %}
     <title>Brooks - {% block page_title %}{% endblock page_title %}</title>
+  </head>
+  <body>
+    <div class="container-fluid h-100">
 
-    <meta name="generator" content="Arcovid19" />
-    <meta name="description" content="Sistema de carga rápida de datos diseñado para la pandemia de COVID-19 en la en Argentina.">
-    <meta name="license" content="BSD-3 (https://github.com/ivco19/brooks/blob/master/LICENSE)">
-    <meta name="source-code" content="https://github.com/ivco19/brooks/">
-    <meta name="author" content="Arcovid19">
-    </head>
-<body>
-    <!-- SCRIPTS -->
-    <div id="global-js">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
-        <script src="{% static 'brooks.js' %}"></script>
-        <script>
-        $(document).ready(function(){
-            $('.datetimeinput').datetimepicker({
-                format: "yyyy-mm-dd hh:ii"});
-            $('.datetimeinput').prop(readonly=true);
-            $('.datetimeinput').parent().addClass("input-group");
-            $('.datetimeinput').parent().append(`
-                <div class="input-group-append">
-                    <span class="input-group-text" id="basic-addon1">
-                        <i class="fas fa-calendar"></i></span>
-                    </span>
-                </div>`);
-        });
-        </script>
-    </div>
-    <!--SCRIPTS-->
-    <div id="page-scripts">
-        {% block page_js %}{% endblock %}
-    </div>
+          <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+            <!-- Brand -->
+            <a class="navbar-brand" href="{% url 'home' %}">Brooks</a>
 
-    <!-- NAVBAR -->
-<div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-        <!-- Brand -->
-        <a class="navbar-brand" href="{% url 'home' %}">
-            <img src="{% static 'icon.png' %}" width="30"  alt="30">
-        </a>
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <!-- Toggler/collapsibe Button -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <!-- Navbar links -->
+            {% if request.user.is_authenticated %}
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    {% include "ingest/nav.html" %}
+                    {% include "reporter/nav.html" %}
+                </ul>
+            </div>
 
-        <!-- Navbar links -->
-        {% if request.user.is_authenticated %}
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'dashboard' %}">
-                        <i class="fa fa-chart-pie"></i>
-                        Dashboard
-                    </a>
-                </li>
-                {% include "ingest/nav.html" %}
-                {% include "webtools/nav.html" %}
-            </ul>
-
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown ">
-                    <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">
-                        <i class="fa fa-user fa-fw"></i>
-                        {% if user.last_name and user.first_name %}
-                            {{ user.last_name }}, {{ user.first_name }} &ThinSpace;
-                            ({{ user.username }})
-                            {% else %}
-                            {{ user.username }}
-                        {% endif %}
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        {% if request.user.is_staff %}
-                        <a class="dropdown-item " href="/admin">
-                            <i class="fa fa-wrench fa-fw "></i> Admin
-                        </a>
-                        {% endif %}
-                        <a class="dropdown-item" href=""><hr/></a>
-                        <a class="dropdown-item" href="{% url 'changes' %}">
-                            <i class="fa fa-sign-out-alt fa-fw"></i> Cambios
-                        </a>
-                        <a class="dropdown-item" href="{% url 'about' %}">
-                            <i class="fa fa-sign-out-alt fa-fw"></i> Acerca de...
-                        </a>
-                        <a class="dropdown-item" href=""><hr/></a>
-                        <a class="dropdown-item" href="/logout">
-                            <i class="fa fa-sign-out-alt fa-fw"></i>Salir
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        {% endif %}
-    </nav>
-    {% if DEMO_MODE %}
-        <div class="alert alert-danger" role="alert">
-            Esto es un <strong>DEMO</strong> todos los datos se eliminarán regularmente
-            <span class="float-right">
-                <a class="btn btn-primary btn-sm" href="https://github.com/ivco19/brooks/raw/master/toy_data/input.xlsx">
-                    <i class="fas fa-file-excel"></i>
-                    Descargar datos para probar
+            <span class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user fa-fw"></i>
+                    {% if user.last_name and user.first_name %}
+                    {{ user.last_name }}, {{ user.first_name }} &ThinSpace;
+                    ({{ user.username }})
+                    {% else %}
+                    {{ user.username }}
+                    {% endif %}
                 </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    {% if request.user.is_staff %}
+                    <a class="dropdown-item" href=""><hr/></a>
+                    <a class="dropdown-item text-warning" href="/admin">
+                        <i class="fa fa-wrench fa-fw "></i>
+                        Admin
+                    </a>
+                    {% endif %}
+                    <a class="dropdown-item" href=""><hr/></a>
+                    <a class="dropdown-item" href="{% url 'changes' %}">
+                        <i class="fa fa-sign-out-alt fa-fw"></i>
+                        Cambios
+                    </a>
+                    <a class="dropdown-item" href="{% url 'about' %}">
+                        <i class="fa fa-sign-out-alt fa-fw"></i>
+                        Acerca de...
+                    </a>
+                    <a class="dropdown-item" href=""><hr/></a>
+                    <a class="dropdown-item" href="/logout">
+                        <i class="fa fa-sign-out-alt fa-fw"></i>
+                        Salir
+                    </a>
+                </div>
             </span>
+            {% endif %}
+
+          </nav>
+
+            <div id="global-js">
+                  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+                <!-- Latest compiled and minified JavaScript -->
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+                <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
+
+                <script>
+                $(document).ready(function(){
+                    $('.datetimeinput').datetimepicker({
+                        format: "yyyy-mm-dd hh:ii"});
+                    $('.datetimeinput').prop(readonly=true);
+                    $('.datetimeinput').parent().addClass("input-group");
+                    $('.datetimeinput').parent().append(`
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fas fa-calendar"></i></span>
+                            </span>
+                        </div>`);
+                });
+                </script>
             </div>
-    {% endif %}
-
-    {% include "messages.html" %}
-</div>
-<!--NAVBAR -->
-
-<!-- MAIN -->
-<div class="container-fluid p-0">
-    <main class="col bg-faded py-3">
-        <div id="content-title"><h2>
-            {% block title %}{% endblock title %}</h2>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col">
-                {% block content %}{% endblock %}
+            <!--SCRIPTS-->
+            <div id="page-scripts">
+                {% block page_js %}{% endblock %}
             </div>
+
+            {% if DEMO_MODE %}
+                <div class="alert alert-danger" role="alert">
+                    Esto es un <strong>DEMO</strong> todos los datos se eliminarán regularmente
+                </div>
+            {% endif %}
+
+            <!--MAIN-->
+            <main class="col bg-faded py-3">
+                <div><h2>{% block title %}{% endblock title %}</h2></div>
+
+                <hr>
+                {% include "messages.html" %}
+                {% block content %}
+                {% endblock %}
+            </main>
+
         </div>
-    </main>
-</div>
-
-<!-- FOOTER -->
-<div class="container-fluid footer p-0">
-    <footer>
-        <div class="footer-copyright text-center py-3">
-            © 2020 Copyright:
-            <a target="_new" href="https://ivco19.github.io/"> Arcovid19</a>
-            <br>
-            <a href="{% url 'about' %}">More info</a>
-        </div>
-    </footer>
-</div>
-
-
-<!-- MODALS -->
-<div class="container-fluid">
+    </div>
     <div id="modals">
         {% block modals %}{% endblock %}
     </div>
-</div>
-
-</body>
+  </body>
 </html>
 

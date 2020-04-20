@@ -1,45 +1,59 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% comment %}
-This file is part of Arcovid-19 Brooks.
-Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-                    Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-                    Bruno Sanchez, Federico Stasyszyn.
-License: BSD-3-Clause
-  Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-{% endcomment %}
-
 {% block page_title %}Dashboard{% endblock %}
 {% block title %}Dashboard{% endblock %}
 
 {% block page_css %}
 <style>
-    .markdown  h1{
+.markdown  h1{
         display: none;
     }
 
-    .plot {
-        margin-bottom: 30px;
-    }
+.plot {
+    margin-bottom: 30px;
+    list-style: none;
+}
+
+ul.navbar {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 25em;
+    left: 5em;
+    width: 9em}
+ul.navbar li 
+    margin: 0.2em 0;
+    padding: 0.1em;
+    border: 0.1em solid black }
+ul.navbar a {
+    text-decoration: none }
 </style>
+{% endblock %}
+
+{% block head %}
+{{block.super}}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 {% endblock %}
 
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col plot">
-            <div class="text-center">
-                {% for plot in plots %}
-                <span class="matplotlib-plot-container">
-                    {{ plot.to_html }}
-                </span>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+<!-- Mapa-->
+<!-- /.container -->
+
+<div class="container">
+    {# <div id="plot_container" class="col-md-8 col-md-offset-2">{{mapa|safe}}</div>#}
+    <div class="col-md-12">{{mapa|safe}}</div>
+
 </div>
+
+
+<!-- Menú de navegación del sitio -->
+<ul class="navbar">
+	<h2><li><a href="{% url 'dashboard_a' %}">Argentina</a></h2>
+    <h2><li><a href="{% url 'dashboard_c' %}">Córdoba</a></h2>	
+</ul>
 {% endblock %}
 
 

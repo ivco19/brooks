@@ -1,15 +1,5 @@
 {% extends 'base.html' %}
 
-{% comment %}
-This file is part of Arcovid-19 Brooks.
-Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
-                    Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
-                    Bruno Sanchez, Federico Stasyszyn.
-License: BSD-3-Clause
-  Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
-{% endcomment %}
-
-
 {% block page_title %}Cambios{% endblock %}
 {% block title %}Cambios{% endblock %}
 
@@ -23,10 +13,9 @@ License: BSD-3-Clause
 
 
 {% block content %}
-<div class="container">
-    <div class="markdown">
-        {{changelog|safe}}
-    </div>
+<div class="markdown">
+    {{changelog|safe}}
+
 </div>
 {% endblock %}
 
