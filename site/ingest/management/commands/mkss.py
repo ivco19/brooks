@@ -16,8 +16,7 @@
 import os
 
 from django.core.management.base import BaseCommand, CommandError
-
-from ingest import apps
+from django.apps import apps
 
 import pandas as pd
 
@@ -31,6 +30,7 @@ PARSERS = {
     ".csv": pd.DataFrame.to_csv
 }
 
+app = apps.get_app_config("ingest")
 
 # =============================================================================
 # COMMAND
@@ -43,8 +43,7 @@ class Command(BaseCommand):
         parser.add_argument('out', type=str)
 
     def handle(self, out, *args, **options):
-        dmodels = apps.IngestConfig.ingestor
-        df = dmodels.make_empty_df()
+        df = app.ingestor.make_empty_df()
         ext = os.path.splitext(out)[-1]
         parser = PARSERS.get(ext)
         if parser is None:

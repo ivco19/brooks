@@ -14,8 +14,6 @@
 # =============================================================================
 
 from django.apps import AppConfig
-from django.conf import settings
-from unittest.mock import MagicMock
 from ingest.libs import mdesc
 
 
@@ -25,8 +23,8 @@ from ingest.libs import mdesc
 
 class IngestConfig(AppConfig):
     name = 'ingest'
-    ingestor = mdesc.Ingestor()
 
     def ready(self):
+        self.ingestor = mdesc.Ingestor(self)
         import ingest.checks  # noqa
         import ingest.signals  # noqa

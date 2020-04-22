@@ -114,80 +114,7 @@ DATA_FILE_PARSERS = MultiKeyDict({
 DATA_FILE_EXTENSIONS = list(DATA_FILE_PARSERS)
 
 
-FIELD_TYPES = {
-    "int": models.IntegerField,
-    "float": models.FloatField,
-    "date": models.DateField,
-    "bool": models.BooleanField,
-    "char": models.CharField,
-    "freetext": models.TextField,
-}
 
-
-DATA_TRANSLATIONS = MultiKeyDict({
-    # MODEL
-    ("attributes", "atributos"): "attributes",
-    ("meta", "Meta"): "meta",
-
-    # META AND DMETA
-    ("verbose_name_plural", "plural"): "verbose_name_plural",
-    ("principal",): "principal",
-
-    # field types
-    ("int", "integer", "entero"): "int",
-    ("float", "decimal", "flotante"): "float",
-    ("date", "fecha"): "date",
-    ("bool", "boolean", "booleano"): "bool",
-    ("char", "text", "texto"): "char",
-    ("freetext", "free", "libre", "textolibre"): "freetext",
-
-    # FIELD_ATTRS
-    ("type", "tipo"): "type",
-    ("sep",): "sep",
-
-    ("format", "formato"): "format",
-    ("tag", ): "tag",
-    ("link", "enlace"): "link",
-    ("identifier", "identificador"): "identifier",
-
-    ("length", "max_length", "largo"): "max_length",
-    ("default",): "default",
-    ("unique", "unico", "único"): "unique",
-    ("opciones", "choices"): "choices",
-    ("min",): "min",
-    ("max",): "max",
-    ("null", "vacio"): "null",
-
-    ("related_name", "relacion", "relación"): "related_name",
-
-    # FIELD_VALUES
-    ("True", "true", "si", "Sí", "Si", "SI", "SÍ"): True,
-    ("False", "false", "no", "No", "NO"): False,
-})
-
-
-NO_TRANSLATE = ["choices", "related_name"]
-
-KEYS_TO_REMOVE = ["format", "tag", "link", "identifier"]
-
-ATTRS_DEFAULT = {
-    "null": True
-}
-
-
-DMETA_ATTRS = {
-    "principal": False
-}
-
-PLACEHOLDERS = {
-    "date": "DD-MM-YYYY",
-    "int": "1",
-    "float": "1.2",
-    "date": "DD-MM-YYYY",
-    "bool": "true",
-    "char": "str",
-    "freetext": "str",
-}
 
 
 class FIELD_PARSERS:
@@ -227,7 +154,7 @@ FIELD_PARSERS = FIELD_PARSERS()
 
 
 FORBIDDEN_NAMES = (
-    "user", "created_by", "modified_by", "created", "modified",
+    "user", "created_by", "modified_by", "created", "modified", "id",
     "password", "secret", "loggin", "superuser", "staff", "login")
 
 
@@ -468,45 +395,72 @@ class Ingestor:
     ready method.
 
     """
-    cache = attr.ib(init=False, factory=Bunch)
+    app = attr.ib()
     fileparser = attr.ib(init=False, factory=FileParser)
 
     # =========================================================================
     # FILE PARSERS
     # =========================================================================
 
-    def load_descriptor_file(self, filename):
-        """Load the descfile based on the file extension"""
-        ext = os.path.splitext(filename)[-1].lower()
-        parser = DESCRIPTOR_FILE_PARSERS[ext]
-        with open(filename) as fp:
-            return parser(fp)
+    def get_principal(self):
+        for m in self.get_ingest_models():
+            if m.principal:
+                return m
 
-    def load_data_file(self, filename):
-        """Load the data based on the file extension"""
-        ext = os.path.splitext(filename)[-1].lower()
-        parser = DATA_FILE_PARSERS[ext]
-        return parser(filename)
+    def get_ingest_models(self):
+        BaseIngestModel = self.app.models_module.BaseIngestModel
+
+        def dmodels_key(m):
+            if m.principal:
+                return ""
+            return m.model_name()
+
+        dmodels = [
+            m for m in self.app.get_models()
+            if issubclass(m, BaseIngestModel)]
+        dmodels.sort(key=dmodels_key)
+
+        return dmodels
+
+    def get_model(self, model_name):
+        for model in self.get_ingest_models():
+            if model_name == model.model_name():
+                return model
 
     def make_empty_df(self):
-        principal = self.cache.principal
-        fields_to_model = self.cache.fields_to_model
+        placeholders = {
+            models.IntegerField: "0",
+            models.FloatField: "0.0",
+            models.DateField: "DD-MM-YY",
+            models.BooleanField: "si/no",
+            models.CharField: "texto",
+            models.TextField: "texto libre"
+        }
+
+        link_types = (models.ManyToManyField, models.ForeignKey)
+
+        dmodels = self.get_ingest_models()
+        principal = self.get_principal()
 
         def extract_fields(model):
-            dmodels = self.cache.models
+            print(model, "<<<<")
+            if model not in dmodels:
+                return []
+
+            fields = {
+                fn: ft for fn, ft in model.get_fields().items()
+                if fn not in FORBIDDEN_NAMES}
+            if model.principal:
+                fields.pop(model.identifier, None)
 
             columns = []
-            for fn in model.DMeta.field_names:
-                mf = fields_to_model[fn]
-                model_desc = mf.DMeta.desc
-
-                attr_desc = model_desc["attributes"][fn]
-                atype = attr_desc["type"]
-                if atype in FIELD_TYPES:
-                    columns.append((fn, PLACEHOLDERS[atype]))
-                elif atype in dmodels:
-                    amodel = dmodels[atype]
-                    columns.extend(extract_fields(amodel))
+            for fn, ft in fields.items():
+                if not isinstance(ft, link_types):
+                    ph = placeholders.get(type(ft), "")
+                    columns.append((fn, ph))
+                else:
+                    rmodel = ft.related_model
+                    columns.extend(extract_fields(rmodel))
             return columns
 
         row = extract_fields(principal)
@@ -519,6 +473,7 @@ class Ingestor:
     def merge_info(self, created_by, raw_file):
         # if not self.cache.compiled:
         #    raise MethodsCallOrderError("models not yet defined")
+        raise NotImplementedError()
 
         filepath = raw_file.file.path
         df = self.load_data_file(filepath)
@@ -532,6 +487,7 @@ class Ingestor:
         return merge_info
 
     def merge(self, created_by, raw_file):
+        raise NotImplementedError()
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
 
@@ -547,6 +503,7 @@ class Ingestor:
         return merge_info
 
     def remove(self, raw_file):
+        raise NotImplementedError()
         if not self.cache.compiled:
             raise MethodsCallOrderError("models not yet defined")
         with transaction.atomic():

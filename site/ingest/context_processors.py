@@ -15,7 +15,6 @@
 
 from django.apps import apps
 
-from ingest.models import BaseIngestModel
 
 # =============================================================================
 # CONSTANTS
@@ -34,15 +33,7 @@ def export_available_models(request):
     model descriptor file into the templates engine.
 
     """
-    def dmodels_key(m):
-        if m.principal:
-            return ""
-        return m.model_name()
-
-    dmodels = [
-        m for m in app.get_models()
-        if issubclass(m, BaseIngestModel)]
-    dmodels.sort(key=dmodels_key)
+    dmodels = app.ingestor.get_ingest_models()
 
     context = {
         "dmodels": dmodels}

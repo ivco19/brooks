@@ -17,17 +17,25 @@ import random
 import os
 import itertools as it
 import datetime as dt
+
 from django.conf import settings
+
 from django.views.generic import CreateView, UpdateView, DetailView, View
 from django.urls import reverse_lazy, reverse
+
 from django.http import HttpResponse
+
+from django.db.models.fields.files import FieldFile
 from django.db.models import (
     ForeignKey, TextField, ManyToManyField, ManyToOneRel, ManyToManyRel)
+
 from django.utils.html import format_html
-from django.db.models.fields.files import FieldFile
-from django_tables2.views import SingleTableView
+
 from django.contrib.auth.models import User
-from django.apps import apps as apps_
+from django.apps import apps
+
+from django_tables2.views import SingleTableView
+
 from django_pandas.io import read_frame
 
 import humanize
@@ -35,8 +43,8 @@ import humanize
 from brooks.views_mixins import LogginRequired, CacheMixin
 from brooks.libs.dmatplotlib import MatplotlibView
 
-from ingest.libs.mdesc import Ingestor, is_name_forbidden
-from ingest import apps, models, forms, tables
+from ingest.libs.mdesc import is_name_forbidden
+from ingest import models, forms, tables
 
 
 # =============================================================================
@@ -44,6 +52,8 @@ from ingest import apps, models, forms, tables
 # =============================================================================
 
 LETTERS = string.ascii_uppercase + string.digits
+
+app = apps.get_app_config("ingest")
 
 
 # =============================================================================
@@ -77,6 +87,7 @@ class UploadRawFileView(LogginRequired, CreateView):
 class DownloadEmptyView(LogginRequired, CacheMixin, View):
     content_type = (
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
     cache_timeout = 60 * 2
 
     def get(self, *args, **kwargs):
@@ -87,7 +98,7 @@ class DownloadEmptyView(LogginRequired, CacheMixin, View):
         fname = f"planilla_brooks_{today.isoformat()}.xlsx"
         response['Content-Disposition'] = f'attachment; filename={fname}'
 
-        df = apps.IngestConfig.ingestor.make_empty_df()
+        df = app.ingestor.make_empty_df()
         df.to_excel(response)
 
         return response
@@ -145,7 +156,7 @@ class IngestViewMixin:
 
     def get_dmodel(self):
         model_name = self.kwargs["dmodel"]
-        return apps_.get_model(app_label='ingest', model_name=model_name)
+        return app.get_model(model_name=model_name)
 
 
 class ListDModelView(LogginRequired, IngestViewMixin, SingleTableView):
