@@ -54,30 +54,40 @@ def identifiers_check(app_configs, **kwargs):
         if not issubclass(m, BaseIngestModel):
             continue
         mname = m.model_name()
-        if m.identifier is None:
-            msg = f"Model {mname} need a identifier field"
-            hint = f"Define the identifier class attribute in model {mname}"
-            errors.append(
-                Error(msg, hint=hint, id="ingest.E002"))
 
-        if not hasattr(m, m.identifier):
-            msg = (
-                f"Field identifier '{m.identifier}' not found "
-                f"in model {mname}")
-            hint = f"Define the field {m.identifier} in the model {mname}"
-            errors.append(
-                Error(msg, hint=hit, id="ingest.E003"))
+        if m.principal:
+            if m.identifier is not None:
+                msg = f"Identifier for principal Model {mname} is forbiden"
+                hint = f"Remove the identifier attribute for model {mname}"
+                errors.append(
+                    Error(msg, hint=hint, id="ingest.E010"))
+        else:
 
-        field = getattr(m, m.identifier).field
-        if field.null or not field.unique:
-            msg = (
-                f"Field identifier '{mname}.{m.identifier}' "
-                "must be unique and not null")
-            hint = (
-                "Remove the null attribute or add 'unique=True' to the field "
-                f"'{mname}.{m.identifier}'")
-            errors.append(
-                Error(msg, hint=hint, id="ingest.E004"))
+            if m.identifier is None:
+                msg = f"Model {mname} need a identifier field"
+                hint = (
+                    f"Define the identifier class attribute in model {mname}")
+                errors.append(
+                    Error(msg, hint=hint, id="ingest.E011"))
+
+            if not hasattr(m, m.identifier):
+                msg = (
+                    f"Field identifier '{m.identifier}' not found "
+                    f"in model {mname}")
+                hint = f"Define the field {m.identifier} in the model {mname}"
+                errors.append(
+                    Error(msg, hint=hit, id="ingest.E012"))
+
+            field = getattr(m, m.identifier).field
+            if field.null or not field.unique:
+                msg = (
+                    f"Field identifier '{mname}.{m.identifier}' "
+                    "must be unique and not null")
+                hint = (
+                    "Remove the null attribute or add 'unique=True' "
+                    f"to the field '{mname}.{m.identifier}'")
+                errors.append(
+                    Error(msg, hint=hint, id="ingest.E013"))
 
     return errors
 
@@ -105,7 +115,7 @@ def duplicated_ingest_fields_check(app_configs, **kwargs):
                     f"{mname} and {model_by_fields[fname]}")
                 hint = f"Change the name of the field '{mname}.{fname}'"
                 errors.append(
-                    Error(msg, hint=hint, id="ingest.E005"))
+                    Error(msg, hint=hint, id="ingest.E020"))
             else:
                 model_by_fields[fname] = mname
     return errors

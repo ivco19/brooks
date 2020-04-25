@@ -111,25 +111,22 @@ class CheckRawFileView(LogginRequired, UpdateView):
     model = models.RawFile
     success_url = reverse_lazy("ingest:list_files")
 
-    def get_broken_context(self):
-        import pandas as pd
-        return {"df": pd.DataFrame(), "merge_info": None}
-
     def get_context_data(self):
         context_data = super().get_context_data()
 
-        filepath = self.object.file.path
-
         if self.object.broken:
-            context_data.update(**self.get_broken_context())
+            context_data["merge_info"] = None
+            context_data["df"] = pd.DataFrame()
+
         elif not self.object.merged:
-            mmd = apps.IngestConfig.ingestor.merge_info(
-                created_by=self.request.user, raw_file=self.object)
-            context_data["merge_info"] = mmd.merge_info
-            context_data["df"] = mmd.df
+            mmd = app.ingestor.merge_info(
+                user=self.request.user,
+                raw_file=self.object)
+            context_data["merge_info"] = mmd
+            context_data["df"] = self.object.as_df()
+
         else:
-            filepath = self.object.file.path
-            context_data["df"] = apps.IngestConfig.ingestor.load_data_file(filepath)
+            context_data["df"] = self.object.as_df()
 
         context_data["conf_code"] = "".join(random.sample(LETTERS, 6))
         return context_data
@@ -162,7 +159,6 @@ class IngestViewMixin:
 class ListDModelView(LogginRequired, IngestViewMixin, SingleTableView):
     table_class = None
     template_name = "ingest/ListDModelView.html"
-
 
     def get_queryset(self, *args, **kwargs):
         return self.get_dmodel().objects.all()
@@ -417,7 +413,9 @@ class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
             "resume": resume,
             "is_dmodel": is_dmodel,
             "desc_name": desc_name,
-            "idf": {"label": identifier or "", "value": getattr(instance, identifier) if identifier else ""},
+            "idf": {
+                "label": identifier or "",
+                "value": getattr(instance, identifier) if identifier else ""},
             "pk": instance.pk,
             "props": props,
             "lin": lin,

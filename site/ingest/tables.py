@@ -50,7 +50,7 @@ class RawFileTable(Table):
     modified = Column(verbose_name="Última modificación")
     file = Column()
     size = Column(verbose_name="Registros")
-    rcreated = Column(verbose_name="Registros generados")
+    rcreated = Column(verbose_name="Registros generados", accessor="generated")
 
     class Meta:
         model = models.RawFile

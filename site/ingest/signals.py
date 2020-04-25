@@ -39,14 +39,14 @@ def compile_file(sender, instance, created, **kwargs):
     """
     if created:
         try:
-            filepath = instance.file.path
-            apps.IngestConfig.ingestor.load_data_file(filepath)
-        except:
+            instance.size = len(instance.as_df())
+        except Exception:
             instance.broken = True
+
     if instance.broken:
         return
-    if instance.merged and not instance.is_parsed:
+    elif instance.merged and not instance.is_parsed:
         apps.IngestConfig.ingestor.merge(
             created_by=instance.modify_by, raw_file=instance)
-    if not instance.merged and instance.is_parsed:
+    elif not instance.merged and instance.is_parsed:
         apps.IngestConfig.ingestor.remove(raw_file=instance)

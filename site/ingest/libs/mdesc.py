@@ -26,19 +26,9 @@ import attr
 # DOCS
 # =============================================================================
 
-"""First wellcome to the thunderdome-bitch, this module understand, parses
-and compile the model-description file (model.yml/model.json) files.
+"""First wellcome to the thunderdome-bitch, this module Understand, parses
+nformation from a spreadsheet
 
-This code is clean but complex. Its use a lot of:
-
-- Django internals.
-- Python meta-programming.
-- Recursion.
-
-This module is fun but take care heare.
-
-Some insights about the code:
-   https://dynamic-models.readthedocs.io/
 
 """
 
@@ -46,20 +36,6 @@ Some insights about the code:
 # =============================================================================
 # USERFUL CLASSES
 # =============================================================================
-
-class MultiKeyDict(dict):
-    """Receives another dictionay as a contructor, and split the keys
-    internally. Also explodes if a key es repeated.
-
-    """
-    def __init__(self, data):
-        for keys, v in data.items():
-            for k in keys:
-                if k in self:
-                    raise KeyError(
-                        f"Duplicated key '{k}' for value {v} and {self[k]}")
-                self[k] = v
-
 
 class Bunch(dict):
     """A dict but a "." attribute accesor (mostly copyed from sklearn)."""
@@ -76,19 +52,29 @@ class Bunch(dict):
         self[a] = v
 
 
+class MergeInfo(dict):
+    """To simplfy the code inside the file parser"""
+
+    def __init__(self):
+        self.active_row = 0
+        self.update(info=[], warning=[], error=[])
+
+    def _write(self, level, msg):
+        self[level].append(f"[F.{self.active_row}] {msg}")
+
+    def info(self, msg):
+        self._write("info", msg)
+
+    def warning(self, msg):
+        self._write("warning", msg)
+
+    def error(self, msg):
+        self._write("error", msg)
+
+
 # =============================================================================
 # ERROR
 # =============================================================================
-
-class MethodsCallOrderError(RuntimeError):
-    """You call the methods in the wrong order."""
-    pass
-
-
-class IncorrectConfigurationError(ValueError):
-    """The model.yml/json file is bad defined."""
-    pass
-
 
 class ParseError(RuntimeError):
     """We can't parse the spreadsheet with data"""
@@ -99,63 +85,42 @@ class ParseError(RuntimeError):
 # CONSTANTS
 # =============================================================================
 
-DESCRIPTOR_FILE_PARSERS = MultiKeyDict({
-    (".yaml", ".yml"): yaml.safe_load,
-    (".json",): json.load,
-})
+LINK_TYPES = (models.ManyToManyField, models.ForeignKey)
+
+PLACEHOLDERS = {
+    models.IntegerField: "0",
+    models.FloatField: "0.0",
+    models.DateField: "DD-MM-YY",
+    models.BooleanField: "si/no",
+    models.CharField: "texto",
+    models.TextField: "texto libre"
+}
 
 
-DATA_FILE_PARSERS = MultiKeyDict({
-    (".csv",): pd.read_csv,
-    (".xlsx",): pd.read_excel,
-})
-
-
-DATA_FILE_EXTENSIONS = list(DATA_FILE_PARSERS)
-
-
-
-
-
-class FIELD_PARSERS:
-
-    def __getitem__(self, ftype):
-        key = f"parse_{ftype}"
-        return getattr(self, key, self.no_parse)
-
-    def no_parse(self, x, **kwargs):
-        return x
-
-    def parse_int(self, x, **kwargs):
-        return int(x)
-
-    def parse_float(self, x, **kwargs):
-        return float(x)
-
-    def parse_date(self, x, **kwargs):
-        if isinstance(x, pd.Timestamp):
-            return x.date()
-        format = kwargs.get("format")
-        if format:
-            return dt.datetime.strfparse(x, format).date()
+def parse_date(x):
+    try:
+        return x.date()
+    except Exception as err:
         return dateutil.parser.parse(x).date()
 
-    def parse_bool(self, x, **kwargs):
-        return bool(x)
 
-    def parse_char(self, x, **kwargs):
-        return str(x)
-
-    def parse_freetext(self, x, **kwargs):
-        return str(x)
+def no_parser(x):
+    return x
 
 
-FIELD_PARSERS = FIELD_PARSERS()
+FIELD_PARSERS = {
+    models.IntegerField: int,
+    models.FloatField: float,
+    models.DateField: parse_date,
+    models.BooleanField: lambda x: (str(x).lower() in "yes on si true 1"),
+    models.CharField: str,
+    models.TextField: str
+}
 
 
 FORBIDDEN_NAMES = (
     "user", "created_by", "modified_by", "created", "modified", "id",
-    "password", "secret", "loggin", "superuser", "staff", "login")
+    "password", "secret", "loggin", "superuser", "staff", "login", "raw_file")
 
 
 # =============================================================================
@@ -172,218 +137,6 @@ def is_name_forbidden(fname):
     return False
 
 
-
-# =============================================================================
-# FILE_PARSER
-# =============================================================================
-
-class FileParser:
-    """Validate the data-spreadsheet with the description file and
-    created model-instances of their values.
-
-    """
-
-    def make_minfo(self):
-        return Bunch(info=[], warning=[], error=[])
-
-    def merge_minfo(self, a, b, prefix=None):
-        merged = Bunch(copy.deepcopy(dict(a)))
-        for k, v in merged.items():
-            for msg in b[k]:
-                if prefix:
-                    v.append(f"{prefix} {msg}")
-                else:
-                    v.append(msg)
-        return merged
-
-    def get_or_create(self, *, model, query, cache, defaults):
-        # esta porqueria es un workarround para no hacer queries en una
-        # transaccion
-        mcache = cache[model]
-        for e in mcache:
-            ed = {qk: getattr(e, qk) for qk in query}
-            if ed == query:
-                return e, False
-
-        full_data = query.copy()
-        full_data.update(defaults)
-        inst = model(**full_data)
-        mcache.append(inst)
-        return inst, True
-
-    def m2m_split_data(self, model, sep, data):
-        field_names = model.DMeta.field_names
-        no_model_data = {k: v for k, v in data.items() if k not in field_names}
-        model_data = {k: str(data.get(k, "")).split(sep) for k in field_names}
-        max_split = max(map(len, model_data.values()))
-
-        datas = []
-        for idx in range(max_split):
-            d = {}
-            for k, v in model_data.items():
-                d[k] = v[idx] if idx < len(v) else None
-            d.update(no_model_data)
-            datas.append(d)
-        return datas
-
-    def diff_instance(self, instance, s_data):
-        for k, v in s_data.items():
-            odata = getattr(instance, k)
-            if v is not None and odata != v:
-                yield k, v
-
-    def create_model_instance(
-        self, *, cache, model, data, models,
-        is_principal, created_by, raw_file,
-    ):
-        mm_info = self.make_minfo()
-        model_name = model.DMeta.desc_name
-        model_desc = model.DMeta.desc
-        fields_names = model.DMeta.field_names
-        identifier = model.DMeta.identifier
-
-        # sacamos los datos en crudo
-        model_data = {k: data.get(k) for k in fields_names}
-
-        # ahora parseamos todo lo que no sea foreignkey
-        s_data, m2m_data = {}, {}
-        for fname, fvalue in model_data.items():
-
-            field_desc = model_desc["attributes"][fname]
-            field_type = field_desc["type"]
-
-            if field_type in FIELD_TYPES:
-                # es nativo
-                try:
-                    fvalue = (
-                        None if fvalue is None else
-                        FIELD_PARSERS[field_type](fvalue, **field_desc))
-                except Exception as err:
-                    raise ParseError(str(err))
-
-                s_data[fname] = fvalue
-            elif field_type in models:
-
-                # hay que orquestar el tema de los foreign key
-                sep = field_desc.get("sep")
-
-                if sep:  # M2;
-                    rel_model = models[field_type]
-                    m2m_splited_data = self.m2m_split_data(
-                        rel_model, sep, data)
-                    m2m_instances = []
-                    for m2md in m2m_splited_data:
-                        rel_mminfo, rel_instance = self.create_model_instance(
-                            model=rel_model, data=m2md, created_by=created_by,
-                            raw_file=raw_file, models=models, cache=cache,
-                            is_principal=False)
-                        m2m_instances.append(rel_instance)
-                        mm_info = self.merge_minfo(mm_info, rel_mminfo)
-                    m2m_data[fname] = m2m_instances
-                else:  # FK
-                    rel_model = models[field_type]
-                    rel_mminfo, rel_instance = self.create_model_instance(
-                        model=rel_model, data=data, created_by=created_by,
-                        raw_file=raw_file, models=models,
-                        is_principal=False, cache=cache)
-                    s_data[fname] = rel_instance
-                    mm_info = self.merge_minfo(mm_info, rel_mminfo)
-
-        identf_value = s_data[identifier]
-        query = {identifier: identf_value}
-
-        # si se crea uno nuevo se crea con esto
-        defaults = {"created_by": created_by, "modified_by": created_by}
-        if is_principal:
-            defaults.update(raw_file=raw_file)
-
-        instance, created = self.get_or_create(
-            model=model, defaults=defaults, query=query, cache=cache)
-
-        if created:
-            for k, v in s_data.items():
-                setattr(instance, k, v)
-
-            if not is_principal:
-                mm_info.info.append(
-                    f"Nuevo {model_name} con {identifier}={identf_value}")
-        else:
-            if is_principal:
-                raise ParseError(
-                    f"{model_name} con {identifier}={identf_value} duplicado")
-            for k, v in self.diff_instance(instance, s_data):
-                setattr(instance, k, v)
-                mm_info.warning.append(
-                    f"Cambio valor de {model_name} con "
-                    f"{identifier}={identf_value} en el valor de {k}")
-
-        try:
-            instance.save()
-        except IntegrityError as err:
-            raise ParseError(
-                f"Los datos rompen el esquema con respecto a "
-                f"cargas anteriores ({str(err)})")
-            return mm_info, instance
-
-        for k, links in m2m_data.items():
-            manager = getattr(instance, k)
-            for v in links:
-                try:
-                    manager.add(v)
-                except Exception as err:
-                    mm_info.error.append(str(err))
-                    return mm_info, instance
-
-        return mm_info, instance
-
-    def parse(
-        self, *, df, models, principal, rollback,
-        fields_to_model, created_by, raw_file
-    ):
-        merge_info = self.make_minfo()
-        new_instances = []
-
-        cache = {
-            m: list(m.objects.all())
-            for m in models.values()}
-        with transaction.atomic():
-            # try:
-            new_instances = []
-            for row_idx, row in df.iterrows():
-                prefix = f"[Fila.{row_idx+1}]"
-
-                if np.all(row.isnull().values):
-                    merge_info.warning.append(f"{prefix} vacia")
-                    continue
-
-                data = row.where(pd.notnull(row), None).to_dict()
-                try:
-                    mminfo, instance = self.create_model_instance(
-                        cache=cache, model=principal, data=data,
-                        created_by=created_by, raw_file=raw_file,
-                        models=models, is_principal=True)
-                    new_instances.append(instance)
-                except ParseError as err:
-                    merge_info.warning.append(f"{prefix} {str(err)}")
-                else:
-                    merge_info = self.merge_minfo(
-                        merge_info, mminfo, prefix=prefix)
-            # except Exception as err:
-            #     merge_info.error.append(
-            #         "Algo no salió como lo planeábamos,"
-            #         "por favor envia este mensaje junto con el archivo que lo"
-            #         "generó a los desarrolladores. \n\n"
-            #         f"{traceback.format_exc()}")
-            if rollback:
-                transaction.set_rollback(True)
-
-        return Bunch(
-            merge_info=merge_info, new_instances=new_instances, df=df)
-
-    def remove(self, raw_file):
-        return raw_file.generated.all().delete()
-
-
 # =============================================================================
 # API
 # =============================================================================
@@ -396,10 +149,9 @@ class Ingestor:
 
     """
     app = attr.ib()
-    fileparser = attr.ib(init=False, factory=FileParser)
 
     # =========================================================================
-    # FILE PARSERS
+    # UTILITIES
     # =========================================================================
 
     def get_principal(self):
@@ -427,23 +179,15 @@ class Ingestor:
             if model_name == model.model_name():
                 return model
 
+    # =========================================================================
+    # EMPTY SPREADSHEET
+    # =========================================================================
+
     def make_empty_df(self):
-        placeholders = {
-            models.IntegerField: "0",
-            models.FloatField: "0.0",
-            models.DateField: "DD-MM-YY",
-            models.BooleanField: "si/no",
-            models.CharField: "texto",
-            models.TextField: "texto libre"
-        }
-
-        link_types = (models.ManyToManyField, models.ForeignKey)
-
         dmodels = self.get_ingest_models()
         principal = self.get_principal()
 
         def extract_fields(model):
-            print(model, "<<<<")
             if model not in dmodels:
                 return []
 
@@ -455,8 +199,8 @@ class Ingestor:
 
             columns = []
             for fn, ft in fields.items():
-                if not isinstance(ft, link_types):
-                    ph = placeholders.get(type(ft), "")
+                if not isinstance(ft, LINK_TYPES):
+                    ph = PLACEHOLDERS.get(type(ft), "")
                     columns.append((fn, ph))
                 else:
                     rmodel = ft.related_model
@@ -470,37 +214,138 @@ class Ingestor:
     # INSTANTIATION
     # =========================================================================
 
-    def merge_info(self, created_by, raw_file):
-        # if not self.cache.compiled:
-        #    raise MethodsCallOrderError("models not yet defined")
-        raise NotImplementedError()
+    def _parse(self, user, raw_file):
+        me = MergeInfo()
 
-        filepath = raw_file.file.path
-        df = self.load_data_file(filepath)
+        df = raw_file.as_df()
 
-        merge_info = self.fileparser.parse(
-            created_by=created_by, raw_file=raw_file,
-            df=df, models=self.cache.models, rollback=True,
-            principal=self.cache.principal,
-            fields_to_model=self.cache.fields_to_model)
+        # remove nan for None
+        df = df.where(pd.notnull(df), None)
 
-        return merge_info
+        # retrieve all the dmodels
+        dmodels = self.get_ingest_models()
+        principal = self.get_principal()
 
-    def merge(self, created_by, raw_file):
-        raise NotImplementedError()
-        if not self.cache.compiled:
-            raise MethodsCallOrderError("models not yet defined")
+        # internal func
+        def split_for_model(model, rdata):
+            field_names = [
+                fn for fn in model.get_fields().keys()
+                if fn not in FORBIDDEN_NAMES]
 
-        filepath = raw_file.file.path
-        df = self.load_data_file(filepath)
+            no_model_data = {
+                k: v for k, v in rdata.items() if k not in field_names}
 
-        merge_info = self.fileparser.parse(
-            created_by=created_by, raw_file=raw_file,
-            df=df, models=self.cache.models,
-            principal=self.cache.principal, rollback=False,
-            fields_to_model=self.cache.fields_to_model)
+            model_data = {}
+            for k in field_names:
+                v = rdata.get(k)
+                if v is not None:
+                    v = str(v).split(";")
+                else:
+                    if model.identifier == k:
+                        model_name = model.model_name()
+                        raise ParseError(
+                            f"No se puede crear un {model_name} con "
+                            f"{model.identifier} vacio")
+                    v = []
+                model_data[k] = v
 
-        return merge_info
+            max_split = max(map(len, model_data.values()))
+
+            datas = []
+            for idx in range(max_split):
+                d = {}
+                for k, v in model_data.items():
+                    d[k] = v[idx] if idx < len(v) else None
+                d.update(no_model_data)
+                datas.append(d)
+            return datas
+
+        def create_instance(model, rdata):
+            rdata = rdata.copy()
+
+            # parseamos todos los atributos y los dividimos en
+            # tipos nativos, fks, y m2ms
+            n_fields, fk_fields, m2m_fields = {}, {}, {}
+            for fn, ft in model.get_fields().items():
+                if fn in FORBIDDEN_NAMES:
+                    continue
+                if isinstance(ft, models.ForeignKey):
+                    fk_fields[fn] = ft.related_model
+                elif isinstance(ft, models.ManyToManyField):
+                    m2m_fields[fn] = ft.related_model
+                else:
+                    rvalue = rdata.pop(fn, None)
+                    if rvalue is not None:
+                        parser = FIELD_PARSERS.get(type(ft), no_parser)
+                        n_fields[fn] = parser(rvalue)
+
+            # creamos o modificamos la instancia en cuestion
+            if model.principal:
+                instance = model(
+                    raw_file=raw_file,
+                    created_by=user, modified_by=user, **n_fields)
+            else:
+                model_name = model.model_name()
+                identifier_value = n_fields.get(model.identifier)
+                if identifier_value is None:
+                    raise ParseError(
+                        f"No se puede crear un {model_name} con "
+                        f"{model.identifier} vacio")
+
+                query = {model.identifier: identifier_value}
+                qs = model.objects.filter(**query)
+                create = not qs.exists()
+
+                if create:
+                    me.info(f"Nuevo {model_name} '{query}'")
+                    instance = model(
+                        created_by=user, modified_by=user, **n_fields)
+
+                else:
+                    instance = qs.first()
+                    instance.modified_by = user
+                    preffix = (
+                        f"Se mofica en {model_name} '{query}' el atributo")
+                    for k, v in n_fields.items():
+                        actual = getattr(instance, k)
+                        if actual != v:
+                            me.warning(f"{preffix}_'{k}': {actual} --> {v}")
+                        setattr(k, v)
+
+            # creamos el los fks
+            fk_instances = Bunch()
+            for k, v in fk_fields.items():
+                fk_instances[k] = create_instance(v, rdata)
+
+            # creamos los m2m
+            m2m_instances = Bunch()
+            for k, v in m2m_fields.items():
+                m2minsts = []
+                for sdata in split_for_model(v, rdata):
+                    m2minsts.append(create_instance(v, sdata))
+                m2m_instances[k] = m2minsts
+
+            return Bunch({
+                "instance": instance,
+                "fk": fk_instances,
+                "m2m": m2m_instances})
+
+        # END INTERNAL FUNC
+        instances = []
+        for idx, row in df.iterrows():
+            rdata = row.to_dict()
+            me.active_row = idx + 1
+            try:
+                rinstances = create_instance(principal, rdata)
+            except ParseError as err:
+                me.error(str(err))
+            instances.append(rinstances)
+
+        return instances, dict(me)
+
+    def merge_info(self, user, raw_file):
+        _, me = self._parse(user, raw_file)
+        return me
 
     def remove(self, raw_file):
         raise NotImplementedError()

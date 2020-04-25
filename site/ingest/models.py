@@ -20,12 +20,14 @@
 # IMPORTS
 # =============================================================================
 
+import os
+
 from django.db import models
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django_extensions.db.models import TimeStampedModel
 
-from ingest.libs import mdesc
+import pandas as pd
 
 
 # =============================================================================
@@ -39,6 +41,13 @@ def _raw_file_upload_to(instance, filename):
 
 class RawFile(TimeStampedModel):
 
+    DATA_FILE_PARSERS = {
+        ".csv": pd.read_csv,
+        ".xlsx": pd.read_excel,
+    }
+
+    DATA_FILE_EXTENSIONS = [e[1:] for e in DATA_FILE_PARSERS]
+
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, models.DO_NOTHING,
         related_name="%(class)s_createdby")
@@ -46,8 +55,6 @@ class RawFile(TimeStampedModel):
         settings.AUTH_USER_MODEL, models.DO_NOTHING,
         related_name="%(class)s_modifiedby", null=True, blank=True
     )
-
-    DATA_FILE_EXTENSIONS = [e[1:] for e in mdesc.DATA_FILE_EXTENSIONS]
 
     file = models.FileField(
         upload_to=_raw_file_upload_to,
@@ -69,6 +76,11 @@ class RawFile(TimeStampedModel):
     def filename(self):
         return self.file.url.rsplit("/", 1)[-1]
 
+    def as_df(self):
+        ext = os.path.splitext(self.filename)[-1]
+        parser = self.DATA_FILE_PARSERS[ext]
+        return parser(self.file.path)
+
 
 # =============================================================================
 # INGEST MODELS ABSTRACT
@@ -85,6 +97,10 @@ class BaseIngestModel(TimeStampedModel):
         settings.AUTH_USER_MODEL, models.DO_NOTHING,
         related_name="%(class)s_modifiedby", null=True, blank=True
     )
+
+    @classmethod
+    def get_identifier(self):
+        return "id" if self.principal else self.identifier
 
     @classmethod
     def verbose_name_plural(cls):
@@ -185,7 +201,6 @@ class EventoSignoSintoma(TimeStampedModel):
 
 class Evento(BaseIngestModel):
     principal = True
-    identifier = "id"
 
     paciente = models.ForeignKey(
         "Paciente", models.CASCADE,
