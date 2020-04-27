@@ -26,8 +26,8 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
 
 from django.db.models.fields.files import FieldFile
-from django.db.models import (
-    ForeignKey, TextField, ManyToManyField, ManyToOneRel, ManyToManyRel)
+from django.db.models import (ForeignKey, TextField, ManyToManyField)
+from django.db.models.fields.reverse_related import ForeignObjectRel
 
 from django.utils.html import format_html
 
@@ -322,8 +322,6 @@ class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
         return self.get_dmodel().objects.all()
 
     def get_label(self, fname, dj_field):
-        if isinstance(dj_field, (ManyToOneRel, ManyToManyRel)):
-            return dj_field.related_model._meta.verbose_name_plural.title()
         label = dj_field.verbose_name
         label = self.CUSTOM_LABELS.get(label, label)
         return label.title()
@@ -337,30 +335,38 @@ class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
             fvalue = format_html(fvalue)
         return fvalue
 
-    def make_resume(self, instance, idf, is_dmodel, props):
+    def make_resume(self, instance, is_dmodel):
         if isinstance(instance, User):
             return f"@{instance.username} (# {instance.pk}))"
         elif isinstance(instance, models.RawFile):
             filename = os.path.basename(instance.file.name)
             return f"{filename} (# {instance.pk})"
-        if is_dmodel and idf:
-            return f"{getattr(instance, idf)} (# {instance.pk})"
+        if is_dmodel:
+            identifier = instance.get_identifier()
+            value = getattr(instance, identifier)
+            if instance.principal:
+                return f"(# {value})"
+            else:
+                return f"{value} (# {instance.pk})"
         return f"(# {instance.pk})"
 
     def split_dminstance(self, instance, check_forbidden=False, related=True):
 
-        identifier = getattr(instance, "identifier", None)
         is_dmodel = True
-
-        dj_fields = {f.name: f for f in instance._meta.get_fields()}
+        try:
+            fields  = instance.get_fields()
+        except:
+            is_dmodel = False
+            fields = {
+                f.name: f for f in instance._meta.get_fields()
+                if not isinstance(f, ForeignObjectRel)}
 
         props, lout, lin = {}, {}, {}
-        for fname, dj_field in dj_fields.items():
+        for fname, dj_field in fields.items():
             if check_forbidden and is_name_forbidden(fname):
                 continue
 
-            vname = self.get_label(fname, dj_field)
-
+            label = self.get_label(fname, dj_field)
             if isinstance(dj_field, ForeignKey):
                 if not related:
                     continue
@@ -369,7 +375,7 @@ class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
                 value = self.split_dminstance(
                     sinstance, check_forbidden=True, related=False)
                 lout[fname] = {
-                    "label": vname,
+                    "label": label,
                     "value": value}
 
             elif isinstance(dj_field, ManyToManyField):
@@ -382,32 +388,21 @@ class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
                     value = self.split_dminstance(
                         sinstance, check_forbidden=True, related=False)
                     values.append(value)
-                lin[fname] = {"label": vname, "value": values}
-
-            elif isinstance(dj_field, (ManyToOneRel, ManyToManyRel)):
-                if not related:
-                    continue
-
-                values = []
-                accessor_name = dj_field.get_accessor_name()
-                accessor = getattr(instance, accessor_name)
-                for sinstance in accessor.all():
-                    value = self.split_dminstance(
-                        sinstance, check_forbidden=True, related=False)
-                    values.append(value)
-                lin[fname] = {"label": vname, "value": values}
+                lin[fname] = {"label": label, "value": values}
 
             elif dj_field:
                 value = getattr(instance, fname)
                 value = self.format_value(value=value, dj_type=dj_field)
-                props[fname] = {"label": vname, "value": value or "--"}
+                props[fname] = {"label": label, "value": value or "--"}
 
-        identifier = props.get(identifier)
+        try:
+            identifier = instance.get_identifier()
+        except:
+            identifier = "pk"
         desc_name = instance.__class__.__name__
 
         resume = self.make_resume(
-            instance=instance, is_dmodel=is_dmodel,
-            idf=identifier, props=props)
+            instance=instance, is_dmodel=is_dmodel)
 
         return {
             "resume": resume,

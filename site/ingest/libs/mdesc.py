@@ -305,12 +305,12 @@ class Merger:
         for aname, related_parts in model_parts.fk.items():
             self.save(related_parts)
             setattr(instance, aname, related_parts.instance)
+        instance.save()
         for aname, m2m_col in model_parts.m2m.items():
             attr = getattr(instance, aname)
-            for related_parts in mem_col:
+            for related_parts in m2m_col:
                 self.save(related_parts)
                 attr.add(related_parts.instance)
-        instance.save()
 
     def merge(self, instances):
         for row in instances:
@@ -425,12 +425,8 @@ class Ingestor:
         with transaction.atomic():
             merger.merge(instances)
 
-
-    def remove(self, raw_file):
-        raise NotImplementedError()
-        if not self.cache.compiled:
-            raise MethodsCallOrderError("models not yet defined")
+    def unmerge(self, raw_file):
+        principal = self.get_principal()
+        to_remove = principal.objects.filter(raw_file=raw_file)
         with transaction.atomic():
-            merge_info = self.fileparser.remove(
-                raw_file=raw_file)
-        return merge_info
+            return to_remove.delete()

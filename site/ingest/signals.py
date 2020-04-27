@@ -56,4 +56,4 @@ def compile_file(sender, instance, created, **kwargs):
         app.ingestor.merge(
             user=instance.modify_by, raw_file=instance)
     elif not instance.merged and instance.is_parsed:
-        apps.IngestConfig.ingestor.remove(raw_file=instance)
+        app.ingestor.unmerge(raw_file=instance)

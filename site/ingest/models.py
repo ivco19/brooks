@@ -191,7 +191,7 @@ class TipoEvento(BaseIngestModel):
 
 
 class EventoSignoSintoma(TimeStampedModel):
-    evento = models.ForeignKey("Evento", models.DO_NOTHING)
+    evento = models.ForeignKey("Evento", models.CASCADE)
     sintoma = models.ForeignKey("Sintoma", models.DO_NOTHING)
 
     class Meta:
