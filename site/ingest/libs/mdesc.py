@@ -136,6 +136,138 @@ def is_name_forbidden(fname):
             return True
     return False
 
+# =============================================================================
+# FILE PARSER
+# =============================================================================
+
+class FileParser:
+
+    def split_for_model(self, *, model, rdata, me):
+        field_names = [
+            fn for fn in model.get_fields().keys()
+            if fn not in FORBIDDEN_NAMES]
+
+        no_model_data = {
+            k: v for k, v in rdata.items() if k not in field_names}
+
+        model_data = {}
+        for k in field_names:
+            v = rdata.get(k)
+            if v is not None:
+                v = str(v).split(";")
+            else:
+                if model.identifier == k:
+                    model_name = model.model_name()
+                    raise ParseError(
+                        f"No se puede crear un {model_name} con "
+                        f"{model.identifier} vacio")
+                v = []
+            model_data[k] = v
+
+        max_split = max(map(len, model_data.values()))
+
+        datas = []
+        for idx in range(max_split):
+            d = {}
+            for k, v in model_data.items():
+                d[k] = v[idx] if idx < len(v) else None
+            d.update(no_model_data)
+            datas.append(d)
+        return datas
+
+    def create_instance(self, *, model, rdata, me):
+        rdata = rdata.copy()
+
+        # parseamos todos los atributos y los dividimos en
+        # tipos nativos, fks, y m2ms
+        n_fields, fk_fields, m2m_fields = {}, {}, {}
+        for fn, ft in model.get_fields().items():
+            if fn in FORBIDDEN_NAMES:
+                continue
+            if isinstance(ft, models.ForeignKey):
+                fk_fields[fn] = ft.related_model
+            elif isinstance(ft, models.ManyToManyField):
+                m2m_fields[fn] = ft.related_model
+            else:
+                rvalue = rdata.pop(fn, None)
+                if rvalue is not None:
+                    parser = FIELD_PARSERS.get(type(ft), no_parser)
+                    n_fields[fn] = parser(rvalue)
+
+        # creamos o modificamos la instancia en cuestion
+        if model.principal:
+            instance = model(
+                raw_file=raw_file,
+                created_by=user, modified_by=user, **n_fields)
+        else:
+            model_name = model.model_name()
+            identifier_value = n_fields.get(model.identifier)
+            if identifier_value is None:
+                raise ParseError(
+                    f"No se puede crear un {model_name} con "
+                    f"{model.identifier} vacio")
+
+            query = {model.identifier: identifier_value}
+            qs = model.objects.filter(**query)
+            create = not qs.exists()
+
+            if create:
+                me.info(f"Nuevo {model_name} '{query}'")
+                instance = model(
+                    created_by=user, modified_by=user, **n_fields)
+
+            else:
+                instance = qs.first()
+                instance.modified_by = user
+                preffix = (
+                    f"Se mofica en {model_name} '{query}' el atributo")
+                for k, v in n_fields.items():
+                    actual = getattr(instance, k)
+                    if actual != v:
+                        me.warning(f"{preffix}_'{k}': {actual} --> {v}")
+                    setattr(k, v)
+
+        # creamos el los fks
+        fk_instances = Bunch()
+        for k, v in fk_fields.items():
+            fk_instances[k] = self.create_instance(model=v, rdata=rdata)
+
+        # creamos los m2m
+        m2m_instances = Bunch()
+        for k, v in m2m_fields.items():
+            m2minsts = []
+            for sdata in self.split_for_model(model=v, rdata=rdata, me=me):
+                m2minsts.append(create_instance(v, sdata))
+            m2m_instances[k] = m2minsts
+
+        return Bunch({
+            "instance": instance,
+            "fk": fk_instances,
+            "m2m": m2m_instances})
+
+    def parse(self, *, user, raw_file, dmodels, principal):
+
+        me = MergeInfo()
+
+        df = raw_file.as_df()
+
+        # remove nan for None
+        df = df.where(pd.notnull(df), None)
+
+        # END INTERNAL FUNC
+        instances = []
+        for idx, row in df.iterrows():
+            rdata = row.to_dict()
+            me.active_row = idx + 1
+            try:
+                rinstances = self.create_instance(
+                    principal=principal, rdata=rdata, me=me)
+            except ParseError as err:
+                me.error(str(err))
+            instances.append(rinstances)
+
+        return instances, dict(me)
+
 
 # =============================================================================
 # API
@@ -149,6 +281,7 @@ class Ingestor:
 
     """
     app = attr.ib()
+    parser = FileParser()
 
     # =========================================================================
     # UTILITIES
@@ -214,137 +347,14 @@ class Ingestor:
     # INSTANTIATION
     # =========================================================================
 
-    def _parse(self, user, raw_file):
-        me = MergeInfo()
-
-        df = raw_file.as_df()
-
-        # remove nan for None
-        df = df.where(pd.notnull(df), None)
-
-        # retrieve all the dmodels
+    def merge_info(self, user, raw_file):
         dmodels = self.get_ingest_models()
         principal = self.get_principal()
 
-        # internal func
-        def split_for_model(model, rdata):
-            field_names = [
-                fn for fn in model.get_fields().keys()
-                if fn not in FORBIDDEN_NAMES]
+        _, me = self.parser.parse(
+            user=user, raw_file=raw_file,
+            dmodels=dmodels, principal=principal)
 
-            no_model_data = {
-                k: v for k, v in rdata.items() if k not in field_names}
-
-            model_data = {}
-            for k in field_names:
-                v = rdata.get(k)
-                if v is not None:
-                    v = str(v).split(";")
-                else:
-                    if model.identifier == k:
-                        model_name = model.model_name()
-                        raise ParseError(
-                            f"No se puede crear un {model_name} con "
-                            f"{model.identifier} vacio")
-                    v = []
-                model_data[k] = v
-
-            max_split = max(map(len, model_data.values()))
-
-            datas = []
-            for idx in range(max_split):
-                d = {}
-                for k, v in model_data.items():
-                    d[k] = v[idx] if idx < len(v) else None
-                d.update(no_model_data)
-                datas.append(d)
-            return datas
-
-        def create_instance(model, rdata):
-            rdata = rdata.copy()
-
-            # parseamos todos los atributos y los dividimos en
-            # tipos nativos, fks, y m2ms
-            n_fields, fk_fields, m2m_fields = {}, {}, {}
-            for fn, ft in model.get_fields().items():
-                if fn in FORBIDDEN_NAMES:
-                    continue
-                if isinstance(ft, models.ForeignKey):
-                    fk_fields[fn] = ft.related_model
-                elif isinstance(ft, models.ManyToManyField):
-                    m2m_fields[fn] = ft.related_model
-                else:
-                    rvalue = rdata.pop(fn, None)
-                    if rvalue is not None:
-                        parser = FIELD_PARSERS.get(type(ft), no_parser)
-                        n_fields[fn] = parser(rvalue)
-
-            # creamos o modificamos la instancia en cuestion
-            if model.principal:
-                instance = model(
-                    raw_file=raw_file,
-                    created_by=user, modified_by=user, **n_fields)
-            else:
-                model_name = model.model_name()
-                identifier_value = n_fields.get(model.identifier)
-                if identifier_value is None:
-                    raise ParseError(
-                        f"No se puede crear un {model_name} con "
-                        f"{model.identifier} vacio")
-
-                query = {model.identifier: identifier_value}
-                qs = model.objects.filter(**query)
-                create = not qs.exists()
-
-                if create:
-                    me.info(f"Nuevo {model_name} '{query}'")
-                    instance = model(
-                        created_by=user, modified_by=user, **n_fields)
-
-                else:
-                    instance = qs.first()
-                    instance.modified_by = user
-                    preffix = (
-                        f"Se mofica en {model_name} '{query}' el atributo")
-                    for k, v in n_fields.items():
-                        actual = getattr(instance, k)
-                        if actual != v:
-                            me.warning(f"{preffix}_'{k}': {actual} --> {v}")
-                        setattr(k, v)
-
-            # creamos el los fks
-            fk_instances = Bunch()
-            for k, v in fk_fields.items():
-                fk_instances[k] = create_instance(v, rdata)
-
-            # creamos los m2m
-            m2m_instances = Bunch()
-            for k, v in m2m_fields.items():
-                m2minsts = []
-                for sdata in split_for_model(v, rdata):
-                    m2minsts.append(create_instance(v, sdata))
-                m2m_instances[k] = m2minsts
-
-            return Bunch({
-                "instance": instance,
-                "fk": fk_instances,
-                "m2m": m2m_instances})
-
-        # END INTERNAL FUNC
-        instances = []
-        for idx, row in df.iterrows():
-            rdata = row.to_dict()
-            me.active_row = idx + 1
-            try:
-                rinstances = create_instance(principal, rdata)
-            except ParseError as err:
-                me.error(str(err))
-            instances.append(rinstances)
-
-        return instances, dict(me)
-
-    def merge_info(self, user, raw_file):
-        _, me = self._parse(user, raw_file)
         return me
 
     def remove(self, raw_file):

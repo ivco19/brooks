@@ -75,23 +75,41 @@ class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
         return {"cases": arcovid19.load_cases()}
 
     def draw_grate_full_period_ar(self, cases, fig, ax, **kwargs):
-        cases.plot.grate_full_period(
-            ax=ax)
-        ax.legend(loc=2)
+        try:
+            cases.plot.grate_full_period(
+                ax=ax)
+            ax.legend(loc=2)
+        except:
+            pass
 
     def draw_grate_full_period_cba(self, cases, fig, ax, **kwargs):
-        cases.plot.grate_full_period(
-            'cordoba', ax=ax, confirmed=True, active=True,
-            recovered=True, deceased=True)
+        try:
+            cases.plot.grate_full_period(
+                'cordoba', ax=ax, confirmed=True, active=True,
+                recovered=True, deceased=True)
+        except:
+            pass
 
     def draw_barplot_arg(self, cases, fig, ax, **kwargs):
-        cases.plot.barplot(ax=ax)
+        try:
+            cases.plot.barplot(ax=ax)
+        except:
+            pass
 
     def draw_barplot_cba(self, cases, fig, ax, **kwargs):
-        cases.plot.barplot("cordoba", ax=ax)
+        try:
+            cases.plot.barplot("cordoba", ax=ax)
+        except:
+            pass
 
     def draw_boxplot(self, cases, fig, ax, **kwargs):
-        cases.plot.boxplot(showfliers=False, ax=ax)
+        try:
+            cases.plot.boxplot(showfliers=False, ax=ax)
+        except:
+            pass
 
     def draw_boxplot_cba(self, cases, fig, ax, **kwargs):
-        cases.plot.boxplot("cordoba", showfliers=False, ax=ax)
+        try:
+            cases.plot.boxplot("cordoba", showfliers=False, ax=ax)
+        except:
+            pass
