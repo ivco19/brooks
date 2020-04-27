@@ -159,11 +159,13 @@ class FileParser:
         if instance:
             created = False
         else:
-            qs = model.objects.filter(
-                created_by=self.user, modified_by=self.user, **query)
+            qs = model.objects.filter(**query)
             instance = qs.first()
             if not instance:
-                instance = model(**query)
+                instance = model(
+                    created_by=self.user,
+                    modified_by=self.user,
+                    **query)
                 created = True
             else:
                 created = False
@@ -243,13 +245,13 @@ class FileParser:
             if created:
                 self.me.info(f"Nuevo {model_name} '{query}'")
 
-            instance.modified_by = self.user
             preffix = (
                 f"Se mofica en {model_name} '{query}' el atributo")
 
             for k, v in n_fields.items():
                 actual = getattr(instance, k)
                 if not created and actual != v:
+                    instance.modified_by = self.user
                     self.me.warning(f"{preffix}_'{k}': {actual} --> {v}")
                 setattr(instance, k, v)
 
