@@ -27,10 +27,16 @@ urlpatterns = [
         'upload/',
         views.UploadRawFileView.as_view(),
         name='upload'),
+
     path(
         'download_empty/',
         views.DownloadEmptyView.as_view(),
         name='download_empty'),
+
+    path(
+        'download_all/',
+        views.DownloadAllView.as_view(),
+        name='download_all'),
 
     path(
         'chek_file/<int:pk>/',

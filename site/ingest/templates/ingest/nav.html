@@ -29,6 +29,10 @@ License: BSD-3-Clause
             <i class="fas fa-file-upload"></i>
             Cargar nuevos datos
         </a>
+        <a class="dropdown-item" href="{% url 'ingest:download_all' %}">
+            <i class="fas fa-file-download"></i>
+            Descargar base de datos completa
+        </a>
         <a class="dropdown-item" href=""><hr></a>
         <a class="dropdown-item" href="{% url 'ingest:download_empty' %}">
             <i class="fas fa-file-excel"></i>

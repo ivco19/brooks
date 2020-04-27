@@ -38,6 +38,8 @@ from django_tables2.views import SingleTableView
 
 from django_pandas.io import read_frame
 
+import pandas as pd
+
 import humanize
 
 from brooks.views_mixins import LogginRequired, CacheMixin
@@ -99,6 +101,32 @@ class DownloadEmptyView(LogginRequired, CacheMixin, View):
         response['Content-Disposition'] = f'attachment; filename={fname}'
 
         df = app.ingestor.make_empty_df()
+        df.to_excel(response)
+
+        return response
+
+
+class DownloadAllView(LogginRequired, CacheMixin, View):
+    content_type = (
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+    cache_timeout = 60
+
+    def get(self, *args, **kwargs):
+
+        today = dt.datetime.now().date()
+
+        response = HttpResponse(content_type=self.content_type)
+        fname = f"brooks_all_{today.isoformat()}.xlsx"
+        response['Content-Disposition'] = f'attachment; filename={fname}'
+
+        parts = []
+        for raw_file in models.RawFile.objects.filter(merged=True):
+            df = raw_file.as_df()
+            df["file"] = raw_file.filename
+            parts.append(df)
+
+        df = pd.concat(parts, ignore_index=True)
         df.to_excel(response)
 
         return response
