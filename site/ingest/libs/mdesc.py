@@ -293,6 +293,30 @@ class FileParser:
 
 
 # =============================================================================
+# MERGER
+# =============================================================================
+
+class Merger:
+
+    def save(self, model_parts):
+        instance = model_parts.instance
+        for aname, related_parts in model_parts.fk.items():
+            self.save(related_parts)
+            setattr(instance, aname, related_parts.instance)
+        for aname, m2m_col in model_parts.m2m.items():
+            attr = getattr(instance, aname)
+            for related_parts in mem_col:
+                self.save(related_parts)
+                attr.add(related_parts.instance)
+        instance.save()
+
+    def merge(self, instances):
+        for row in instances:
+            self.save(row)
+
+
+
+# =============================================================================
 # API
 # =============================================================================
 
@@ -382,6 +406,23 @@ class Ingestor:
         parser.parse()
 
         return parser.me
+
+    def merge(self, user, raw_file):
+        dmodels = self.get_ingest_models()
+        principal = self.get_principal()
+
+        parser = FileParser(
+            user=user,
+            principal=principal,
+            dmodels=dmodels,
+            raw_file=raw_file)
+
+        instances = parser.parse()
+
+        merger = Merger()
+        with transaction.atomic():
+            merger.merge(instances)
+
 
     def remove(self, raw_file):
         raise NotImplementedError()

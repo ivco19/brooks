@@ -22,10 +22,17 @@
 
 
 from django.db.models.signals import post_save
-
 from django.dispatch import receiver
+from django.apps import apps
 
-from ingest import models, apps
+from ingest import models
+
+
+# =============================================================================
+# CONSTANTS
+# =============================================================================
+
+app = apps.get_app_config("ingest")
 
 
 # =============================================================================
@@ -46,7 +53,7 @@ def compile_file(sender, instance, created, **kwargs):
     if instance.broken:
         return
     elif instance.merged and not instance.is_parsed:
-        apps.IngestConfig.ingestor.merge(
-            created_by=instance.modify_by, raw_file=instance)
+        app.ingestor.merge(
+            user=instance.modify_by, raw_file=instance)
     elif not instance.merged and instance.is_parsed:
         apps.IngestConfig.ingestor.remove(raw_file=instance)
