@@ -28,6 +28,7 @@ import base64
 
 import matplotlib.pyplot as plt
 
+from django.db import models
 from django.utils.html import format_html
 from django.views.generic.base import TemplateView
 
@@ -156,3 +157,19 @@ class MatplotlibViewMixin:
 
 class MatplotlibView(MatplotlibViewMixin, TemplateView):
     pass
+
+
+# =============================================================================
+# MANAGER
+# =============================================================================
+
+class MatplotlibManager(models.Manager):
+
+    def get_draw_methods(self):
+        draw_methods = self.draw_methods or ["draw_plot"]
+        methods = [getattr(self, m) for m in draw_methods]
+        return methods
+
+    def draw_plot(self, fig, ax, **kwargs):
+        """Draw the plot"""
+        raise NotImplementedError("Please implement the draw_plot method")

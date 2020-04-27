@@ -257,8 +257,6 @@ class ListDModelView(LogginRequired, IngestViewMixin, SingleTableView):
 class PlotDModelView(LogginRequired, IngestViewMixin, MatplotlibView):
 
     template_name = "ingest/PlotDModelView.html"
-    draw_methods = [
-        "draw_creation_time"]
     plot_format = "png"
     tight_layout = True
 
@@ -267,67 +265,10 @@ class PlotDModelView(LogginRequired, IngestViewMixin, MatplotlibView):
         context["dmodel"] = self.get_dmodel()
         return context
 
-    def get_draw_context(self):
+    def get_draw_methods(self):
         dmodel = self.get_dmodel()
-        df = read_frame(dmodel.objects.all())
-        return {"dmodel": dmodel, "queryset": dmodel.objects.all(), "df": df}
+        return dmodel.plots.get_draw_methods()
 
-    def sin_datos(self, fig, ax):
-        ax.text(
-            0.6, 0.7, "Datos", size=50, rotation=30., ha="center", va="center",
-            bbox={
-                "boxstyle": "round",
-                "ec": (1., 0.5, 0.5),
-                "fc": (1., 0.8, 0.8)})
-
-        ax.text(
-            0.5, 0.5, "Sin", size=50, rotation=-25., ha="right", va="top",
-            bbox={
-                "boxstyle": "round",
-                "ec": (1., 0.5, 0.5),
-                "fc": (1., 0.8, 0.8)})
-
-        ax.set_yticks([])
-        ax.set_xticks([])
-
-    def draw_creation_time(self, dmodel, df, queryset, fig, ax, **kwargs):
-        dmodel_name = dmodel.verbose_name_plural()
-
-        ax.set_title(f"{dmodel_name} creados y modificados por fecha")
-        ax.set_ylabel(f"Número de {dmodel_name}")
-        ax.set_xlabel("Fecha")
-
-        if not queryset.exists():
-            self.sin_datos(fig, ax)
-            return
-
-        datac, datam = {}, {}
-        for instance in queryset:
-            created = instance.created.date()
-            datac[created] = datac.setdefault(created, 0) + 1
-
-            modified = instance.modified.date()
-            datam[modified] = datam.setdefault(modified, 0) + 1
-
-        # for idx in range(10):
-        #     import datetime as dt
-        #     import random
-        #     now = (dt.datetime.now() + dt.timedelta(days=idx)).date()
-        #     datac[now] = random.randint(1, 100)
-        #     datam[now] = random.randint(1, 100)
-
-        ax.plot(
-            [k.isoformat() for k in datac.keys()],
-            list(datac.values()), ls="--", marker="o", label="Creados")
-
-        ax.plot(
-            [k.isoformat() for k in datam.keys()],
-            list(datam.values()), ls="--", marker="o", label="Modificados")
-
-        xtick_labels = [l for l in sorted(it.chain(datac, datam))]
-        ax.set_xticklabels(xtick_labels, rotation=45)
-
-        ax.legend()
 
 
 class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
