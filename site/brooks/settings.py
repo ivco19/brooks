@@ -243,6 +243,8 @@ TO_EXPORT = ["DEMO_MODE", "WEBTOOLS"]
 # django tables-2
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
+PROVINCIA = os.environ.get("BROOKS_PRVINCIA", "ARG")
+
 if DEBUG:
     try:
         from local_settings import *  # noqa

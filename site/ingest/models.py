@@ -155,6 +155,7 @@ class BaseIngestModel(TimeStampedModel):
     principal = False
     identifier  = None
 
+    objects = models.Manager()
     plots = IngestPlotManager()
 
     created_by = models.ForeignKey(

@@ -61,11 +61,11 @@ class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
     template_name = "Dashboard.html"
     draw_methods = [
         "draw_grate_full_period_ar",
-        "draw_grate_full_period_cba",
+        "draw_grate_full_period_prov",
         "draw_barplot_arg",
-        "draw_barplot_cba",
+        "draw_barplot_prov",
         "draw_boxplot",
-        "draw_boxplot_cba"]
+        "draw_boxplot_prov"]
     plot_format = "png"
     tight_layout = True
 
@@ -82,12 +82,13 @@ class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
         except:
             pass
 
-    def draw_grate_full_period_cba(self, cases, fig, ax, **kwargs):
+    def draw_grate_full_period_prov(self, cases, fig, ax, **kwargs):
         try:
             cases.plot.grate_full_period(
-                'cordoba', ax=ax, confirmed=True, active=True,
+                settings.PROVINCIA, ax=ax, confirmed=True, active=True,
                 recovered=True, deceased=True)
-        except:
+        except Exception as err:
+            import ipdb; ipdb.set_trace()
             pass
 
     def draw_barplot_arg(self, cases, fig, ax, **kwargs):
@@ -96,9 +97,9 @@ class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
         except:
             pass
 
-    def draw_barplot_cba(self, cases, fig, ax, **kwargs):
+    def draw_barplot_prov(self, cases, fig, ax, **kwargs):
         try:
-            cases.plot.barplot("cordoba", ax=ax)
+            cases.plot.barplot(settings.PROVINCIA, ax=ax)
         except:
             pass
 
@@ -108,8 +109,8 @@ class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
         except:
             pass
 
-    def draw_boxplot_cba(self, cases, fig, ax, **kwargs):
+    def draw_boxplot_prov(self, cases, fig, ax, **kwargs):
         try:
-            cases.plot.boxplot("cordoba", showfliers=False, ax=ax)
+            cases.plot.boxplot(settings.PROVINCIA, showfliers=False, ax=ax)
         except:
             pass
