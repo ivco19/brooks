@@ -173,6 +173,12 @@ class BaseIngestModel(TimeStampedModel):
         return "id" if self.principal else self.identifier
 
     @classmethod
+    def model_resume(cls):
+        return getattr(
+            cls, "resume",
+            f"No hay nada para decir sobre {cls.model_name()}")
+
+    @classmethod
     def verbose_name_plural(cls):
         return cls._meta.verbose_name.title()
 
@@ -201,6 +207,7 @@ class BaseIngestModel(TimeStampedModel):
 # =============================================================================
 
 class ClasificacionEpidemiologica(BaseIngestModel):
+
     nombre_ce = models.CharField(unique=True, max_length=255)
 
     identifier = "nombre_ce"

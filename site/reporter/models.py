@@ -33,7 +33,7 @@ BODY_DEFAULT = """
 <div id="model-{{m.model_name()}}">
     <h2>{{ m.model_name() }}</h2>
 
-    {{m.resume()}}
+    <p><q>{{ m.model_resume() }}</q></p>
 
     {% for plot in m.plots.plot_all() %}
         {{ plot.to_html() }}
