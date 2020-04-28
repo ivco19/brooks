@@ -25,6 +25,7 @@ from brooks.views_mixins import LogginRequired
 
 class ShowView(LogginRequired, TemplateView):
 
+    require_staff = True
     template_name = "webtools/Show.html"
 
     def get_context_data(self, tool, **kwargs):

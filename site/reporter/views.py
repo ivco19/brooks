@@ -41,6 +41,8 @@ app = apps.get_app_config("ingest")
 # =============================================================================
 
 class ReportView(LogginRequired, TemplateView):
+
+    loggin_require_staff = True
     template_name = "reporter/ReportView.html"
 
     def get_context_data(self, **kwargs):
@@ -59,6 +61,8 @@ class ReportView(LogginRequired, TemplateView):
 
 
 class DownloadReportView(LogginRequired, View):
+
+    loggin_require_staff = True
 
     def get(self, *args, **kwargs):
         report_conf = models.ReportConfiguration.get_solo()

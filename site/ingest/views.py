@@ -107,6 +107,8 @@ class DownloadEmptyView(LogginRequired, CacheMixin, View):
 
 
 class DownloadAllView(LogginRequired, CacheMixin, View):
+
+    loggin_require_staff = True
     content_type = (
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
@@ -185,6 +187,8 @@ class IngestViewMixin:
 
 
 class ListDModelView(LogginRequired, IngestViewMixin, SingleTableView):
+
+    loggin_require_staff = True
     table_class = None
     template_name = "ingest/ListDModelView.html"
 
@@ -256,6 +260,7 @@ class ListDModelView(LogginRequired, IngestViewMixin, SingleTableView):
 
 class PlotDModelView(LogginRequired, IngestViewMixin, MatplotlibView):
 
+    loggin_require_staff = True
     template_name = "ingest/PlotDModelView.html"
     plot_format = "png"
     tight_layout = True
@@ -270,9 +275,9 @@ class PlotDModelView(LogginRequired, IngestViewMixin, MatplotlibView):
         return dmodel.plots.get_draw_methods()
 
 
-
 class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
 
+    loggin_require_staff = True
     template_name = "ingest/DetailDModelView.html"
 
     CUSTOM_LABELS = {
@@ -324,7 +329,7 @@ class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
         is_dmodel = True
         try:
             fields  = instance.get_fields()
-        except:
+        except AttributeError:
             is_dmodel = False
             fields = {
                 f.name: f for f in instance._meta.get_fields()
@@ -366,7 +371,7 @@ class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
 
         try:
             identifier = instance.get_identifier()
-        except:
+        except AttributeError:
             identifier = "pk"
         desc_name = instance.__class__.__name__
 

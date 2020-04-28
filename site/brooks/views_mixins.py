@@ -28,10 +28,13 @@ class LogginRequired(UserPassesTestMixin):
     This was copied from some recipe in the django-project page.
 
     """
+    loggin_require_staff = False
 
     def test_func(self):
         user = self.request.user
-        return user.is_authenticated and user.is_active
+        auth = user.is_staff if self.loggin_require_staff else True
+        return user.is_authenticated and user.is_active and auth
+
 
 
 class CacheMixin(object):

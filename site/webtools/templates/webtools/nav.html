@@ -7,6 +7,7 @@ License: BSD-3-Clause
   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
 {% endcomment %}
 
+{% if request.user.is_staff %}
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">
         <i class="fas fa-wrench"></i>
@@ -21,3 +22,4 @@ License: BSD-3-Clause
 
     </div>
 </li>
+{% endif %}
