@@ -30,6 +30,8 @@ from django_extensions.db.models import TimeStampedModel
 
 from brooks.libs.dmatplotlib import MatplotlibManager
 
+from django_pandas.managers import DataFrameManager
+
 import pandas as pd
 
 
@@ -130,12 +132,12 @@ class IngestPlotManager(MatplotlibManager):
             modified = instance.modified.date()
             datam[modified] = datam.setdefault(modified, 0) + 1
 
-        # for idx in range(10):
-        #     import datetime as dt
-        #     import random
-        #     now = (dt.datetime.now() + dt.timedelta(days=idx)).date()
-        #     datac[now] = random.randint(1, 100)
-        #     datam[now] = random.randint(1, 100)
+        for idx in range(10):
+            import datetime as dt
+            import random
+            now = (dt.datetime.now() + dt.timedelta(days=idx)).date()
+            datac[now] = random.randint(1, 100)
+            datam[now] = random.randint(1, 100)
 
         ax.plot(
             [k.isoformat() for k in datac.keys()],
@@ -155,7 +157,7 @@ class BaseIngestModel(TimeStampedModel):
     principal = False
     identifier  = None
 
-    objects = models.Manager()
+    objects = DataFrameManager()
     plots = IngestPlotManager()
 
     created_by = models.ForeignKey(

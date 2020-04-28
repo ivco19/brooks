@@ -24,6 +24,11 @@ from reporter import views
 
 urlpatterns = [
     path(
-        'configuration/',
-        views.ReportConfigurationView.as_view(),
-        name='configuration')]
+        'download/',
+        views.DownloadReportView.as_view(),
+        name='download'),
+
+    path(
+        'view/',
+        views.ReportView.as_view(),
+        name='view')]
