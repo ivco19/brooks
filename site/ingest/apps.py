@@ -26,5 +26,6 @@ class IngestConfig(AppConfig):
 
     def ready(self):
         self.ingestor = mdesc.Ingestor(self)
+        self.ingestor.register_admin()
         import ingest.checks  # noqa
         import ingest.signals  # noqa

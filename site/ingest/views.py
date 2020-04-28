@@ -28,11 +28,10 @@ from django.http import HttpResponse
 from django.db.models.fields.files import FieldFile
 from django.db.models import (ForeignKey, TextField, ManyToManyField)
 from django.db.models.fields.reverse_related import ForeignObjectRel
-
 from django.utils.html import format_html
-
 from django.contrib.auth.models import User
 from django.apps import apps
+from django.core.exceptions import PermissionDenied
 
 from django_tables2.views import SingleTableView
 
@@ -137,9 +136,22 @@ class DownloadAllView(LogginRequired, CacheMixin, View):
 class CheckRawFileView(LogginRequired, UpdateView):
 
     template_name = "ingest/CheckRawFileView.html"
-    form_class = forms.UpdateRawFileForm
     model = models.RawFile
     success_url = reverse_lazy("ingest:list_files")
+
+    def get_object(self):
+        raw_file = super().get_object()
+        user = self.request.user
+        if not (user.is_staff or user.is_superuser):
+            if raw_file.created_by != user:
+                raise PermissionDenied
+        return raw_file
+
+    def get_form_class(self):
+        user = self.request.user
+        if user.is_staff or user.is_superuser:
+            return forms.StaffUpdateRawFileForm
+        return forms.UpdateRawFileForm
 
     def get_context_data(self):
         context_data = super().get_context_data()
@@ -173,6 +185,13 @@ class ListRawFileView(LogginRequired, SingleTableView):
     model = models.RawFile
     table_class = tables.RawFileTable
     template_name = "ingest/ListRawFileView.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        if not (user.is_staff or user.is_superuser):
+            queryset = queryset.filter(created_by=user)
+        return queryset
 
 
 # =============================================================================

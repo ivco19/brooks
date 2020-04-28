@@ -1,3 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# This file is part of Arcovid-19 Brooks.
+# Copyright (c) 2020, Juan B Cabral, Vanessa Daza, Diego García Lambas,
+#                     Marcelo Lares, Nadia Luczywo, Dante Paz, Rodrigo Quiroga,
+#                     Bruno Sanchez, Federico Stasyszyn.
+# License: BSD-3-Clause
+#   Full Text: https://github.com/ivco19/brooks/blob/master/LICENSE
+
+
+# =============================================================================
+# IMPORTS
+# =============================================================================
+
 import copy
 import os
 import json
@@ -359,6 +374,13 @@ class Ingestor:
         for model in self.get_ingest_models():
             if model_name == model.model_name():
                 return model
+
+    def register_admin(self):
+        for model in self.get_ingest_models():
+            try:
+                admin.site.register(model)
+            except Exception:
+                pass
 
     # =========================================================================
     # EMPTY SPREADSHEET

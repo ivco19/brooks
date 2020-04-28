@@ -59,10 +59,34 @@ class UploadRawFileForm(forms.ModelForm):
                 name, field.label)
 
 
-class UpdateRawFileForm(forms.ModelForm):
+class StaffUpdateRawFileForm(forms.ModelForm):
     class Meta:
         model = models.RawFile
         fields = ("notes", "merged")
+        widgets = {
+            'notes': SummernoteInplaceWidget(
+                attrs={'summernote': {'width': '100%', 'height': '200px'}})}
+
+    placeholders = {
+        "notes": "Alguna nota en particular sobre el archivo",
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_id = "rawFileForm"
+
+        for name, field in self.fields.items():
+            field.required = False
+            field.widget.attrs['placeholder'] = self.placeholders.get(
+                name, field.label)
+
+
+class UpdateRawFileForm(forms.ModelForm):
+    class Meta:
+        model = models.RawFile
+        fields = ("notes",)
         widgets = {
             'notes': SummernoteInplaceWidget(
                 attrs={'summernote': {'width': '100%', 'height': '200px'}})}

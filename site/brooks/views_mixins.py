@@ -28,12 +28,19 @@ class LogginRequired(UserPassesTestMixin):
     This was copied from some recipe in the django-project page.
 
     """
+    loggin_require_super_user = False
     loggin_require_staff = False
 
     def test_func(self):
         user = self.request.user
-        auth = user.is_staff if self.loggin_require_staff else True
-        return user.is_authenticated and user.is_active and auth
+        staff = (
+            (user.is_staff or user.is_superuser)
+            if self.loggin_require_staff else True)
+        super_user = (
+            user.is_superuser
+            if self.loggin_require_super_user else True)
+        return (
+            user.is_authenticated and user.is_active and staff and super_user)
 
 
 

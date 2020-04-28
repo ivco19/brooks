@@ -198,6 +198,11 @@ class BaseIngestModel(TimeStampedModel):
         methods = [getattr(self, m) for m in draw_methods]
         return methods
 
+    def __str__(self):
+        idf = self.get_identifier()
+        idfv = getattr(self, idf)
+        return f"{self.model_name()}({idf}={idfv})"
+
     class Meta:
         abstract = True
 
