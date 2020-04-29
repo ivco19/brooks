@@ -5,6 +5,7 @@
 
 
 [![DOI](https://zenodo.org/badge/248792455.svg)](https://zenodo.org/badge/latestdoi/248792455)
+[![Build Status](https://travis-ci.org/ivco19/brooks.svg?branch=master)](https://travis-ci.org/ivco19/brooks)
 
 
 **Sistema de carga rápida de datos diseñado para la pandemia de COVID-19 en la
