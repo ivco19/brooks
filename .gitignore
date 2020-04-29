@@ -134,4 +134,3 @@ _media/
 .vscode/
 .~lock*
 site/_cache/
-# site/ingesi/migrations/*
