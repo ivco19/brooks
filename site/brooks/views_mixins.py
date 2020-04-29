@@ -43,7 +43,6 @@ class LogginRequired(UserPassesTestMixin):
             user.is_authenticated and user.is_active and staff and super_user)
 
 
-
 class CacheMixin(object):
     # https://stackoverflow.com/a/26858638
     cache_timeout = 60

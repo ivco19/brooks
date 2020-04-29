@@ -16,9 +16,8 @@
 import datetime as dt
 
 from django.http import HttpResponse
-from django.views.generic import UpdateView, TemplateView, View
+from django.views.generic import TemplateView, View
 from django.apps import apps
-from django.urls import reverse_lazy
 
 import jinja2
 

@@ -79,7 +79,7 @@ class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
             cases.plot.grate_full_period(
                 ax=ax)
             ax.legend(loc=2)
-        except:
+        except Exception:
             pass
 
     def draw_grate_full_period_prov(self, cases, fig, ax, **kwargs):
@@ -87,30 +87,29 @@ class DashboardView(LogginRequired, CacheMixin, MatplotlibView):
             cases.plot.grate_full_period(
                 settings.PROVINCIA, ax=ax, confirmed=True, active=True,
                 recovered=True, deceased=True)
-        except Exception as err:
-            import ipdb; ipdb.set_trace()
+        except Exception:
             pass
 
     def draw_barplot_arg(self, cases, fig, ax, **kwargs):
         try:
             cases.plot.barplot(ax=ax)
-        except:
+        except Exception:
             pass
 
     def draw_barplot_prov(self, cases, fig, ax, **kwargs):
         try:
             cases.plot.barplot(settings.PROVINCIA, ax=ax)
-        except:
+        except Exception:
             pass
 
     def draw_boxplot(self, cases, fig, ax, **kwargs):
         try:
             cases.plot.boxplot(showfliers=False, ax=ax)
-        except:
+        except Exception:
             pass
 
     def draw_boxplot_prov(self, cases, fig, ax, **kwargs):
         try:
             cases.plot.boxplot(settings.PROVINCIA, showfliers=False, ax=ax)
-        except:
+        except Exception:
             pass

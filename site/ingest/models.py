@@ -155,7 +155,7 @@ class IngestPlotManager(MatplotlibManager):
 
 class BaseIngestModel(TimeStampedModel):
     principal = False
-    identifier  = None
+    identifier = None
 
     objects = DataFrameManager()
     plots = IngestPlotManager()
@@ -194,8 +194,8 @@ class BaseIngestModel(TimeStampedModel):
 
     @classmethod
     def get_plot_methods(cls):
-        draw_methods = self.draw_methods or ["draw_plot"]
-        methods = [getattr(self, m) for m in draw_methods]
+        draw_methods = cls.draw_methods or ["draw_plot"]
+        methods = [getattr(cls, m) for m in draw_methods]
         return methods
 
     def __str__(self):

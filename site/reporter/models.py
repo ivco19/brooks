@@ -81,4 +81,3 @@ class ReportConfiguration(SingletonModel):
     def get_template(self):
         return TEMPLATE.format(
             header=self.header, body=self.body, footer=self.footer)
-

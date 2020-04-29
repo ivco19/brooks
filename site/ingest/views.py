@@ -15,27 +15,22 @@
 import string
 import random
 import os
-import itertools as it
 import datetime as dt
 
-from django.conf import settings
 
+from django.apps import apps
 from django.views.generic import CreateView, UpdateView, DetailView, View
 from django.urls import reverse_lazy, reverse
-
 from django.http import HttpResponse
-
 from django.db.models.fields.files import FieldFile
 from django.db.models import (ForeignKey, TextField, ManyToManyField)
 from django.db.models.fields.reverse_related import ForeignObjectRel
 from django.utils.html import format_html
 from django.contrib.auth.models import User
-from django.apps import apps
+
 from django.core.exceptions import PermissionDenied
 
 from django_tables2.views import SingleTableView
-
-from django_pandas.io import read_frame
 
 import pandas as pd
 
@@ -352,7 +347,7 @@ class DetailDModelView(LogginRequired, IngestViewMixin, DetailView):
 
         is_dmodel = True
         try:
-            fields  = instance.get_fields()
+            fields = instance.get_fields()
         except AttributeError:
             is_dmodel = False
             fields = {

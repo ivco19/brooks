@@ -13,24 +13,10 @@
 # IMPORTS
 # =============================================================================
 
-import copy
-import os
-import json
-import inspect
-import datetime as dt
-import traceback
-
-import yaml
-
 from django.db import models, transaction
-from django.core import validators
 from django.contrib import admin
-from django.db.utils import IntegrityError
-from django.db.transaction import TransactionManagementError
 
 import dateutil.parser
-
-import numpy as np
 
 import pandas as pd
 
@@ -115,7 +101,7 @@ PLACEHOLDERS = {
 def parse_date(x):
     try:
         return x.date()
-    except Exception as err:
+    except Exception:
         return dateutil.parser.parse(x).date()
 
 
@@ -150,6 +136,7 @@ def is_name_forbidden(fname):
         if forbidden in fname.split("_"):
             return True
     return False
+
 
 # =============================================================================
 # FILE PARSER
@@ -330,7 +317,6 @@ class Merger:
     def merge(self, instances):
         for row in instances:
             self.save(row)
-
 
 
 # =============================================================================

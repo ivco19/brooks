@@ -76,7 +76,7 @@ def identifiers_check(app_configs, **kwargs):
                     f"in model {mname}")
                 hint = f"Define the field {m.identifier} in the model {mname}"
                 errors.append(
-                    Error(msg, hint=hit, id="ingest.E012"))
+                    Error(msg, hint=hint, id="ingest.E012"))
 
             field = getattr(m, m.identifier).field
             if field.null or not field.unique:
