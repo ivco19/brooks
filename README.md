@@ -59,6 +59,7 @@ Más proyectos del grupo se encuentran en:
 
 [jbcabral@unc.edu.ar](jbcabral@unc.edu.ar)
 
+[tt1568911](https://www.imdb.com/title/tt1568911/)
 
 ----
 
@@ -101,5 +102,3 @@ $ python manage.py createsuperuser
 ...
 $ python manage.py runserver
 ```
-
-Por defecto la definición de modelos es la presente en `site/models.yaml`
