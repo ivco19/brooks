@@ -135,9 +135,14 @@ class DownloadAllView(LogginRequired, CacheMixin, View):
 
 class CheckRawFileView(LogginRequired, UpdateView):
 
-    template_name = "ingest/CheckRawFileView.html"
     model = models.RawFile
     success_url = reverse_lazy("ingest:list_files")
+
+    def get_template_names(self):
+        user = self.request.user
+        if user.is_staff or user.is_superuser:
+            return ["ingest/StaffCheckRawFileView.html"]
+        return ["ingest/CheckRawFileView.html"]
 
     def get_object(self):
         raw_file = super().get_object()

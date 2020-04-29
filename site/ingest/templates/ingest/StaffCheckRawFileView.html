@@ -101,22 +101,28 @@ License: BSD-3-Clause
           </button>
         </div>
         <div class="modal-body">
-            {% if rawfile.is_parsed %}
             <div id="modal-confirmed" class="alert alert-success" role="alert">
-                Se guardaran cambios en el archivo #{{ rawfile.pk }}
-                <strong>que ya fue integrado</strong> a la base de datos
-            </div>
-            {% else %}
-            <div id="modal-not-confirmed" class="alert alert-danger" role="alert">
-                {% if rawfile.broken %}
-                    Se guardan los cambios en el archivo #{{ rawfile.pk }}
-                    <strong>esta roto</strong>.
+                {% if rawfile.is_parsed %}
+                    Se guardaran cambios en el archivo #{{ rawfile.pk }}
+                    <strong>que ya fue integrado</strong> a la base de datos
+                    en el pasado.
                 {% else %}
-                Se guardan los cambios en el archivo #{{ rawfile.pk }}
-                    <strong>Pendiente</strong> de integración.
+                    El archivo #{{ rawfile.pk }}
+                    <strong>Si sera integrado</strong> a la base de datos
                 {% endif %}
             </div>
-            {% endif %}
+            <div id="modal-not-confirmed" class="alert alert-danger" role="alert">
+                {% if rawfile.broken %}
+                    El archivo #{{ rawfile.pk }}
+                    <strong>esta roto</strong> solo pueden modificarse las notas.
+                {% elif rawfile.is_parsed %}
+                    Los registros del archivo #{{ rawfile.pk }}
+                    seran <strong>removidos</strong> de la base de datos
+                {% else %}
+                    El archivo #{{ rawfile.pk }}
+                    <strong>NO</strong> sera integrado a la base de datos
+                {% endif %}
+            </div>
             <input type="text" id="superSeguro" value="">
                 <label for="vehicle1">copiar <strong class="text-info">{{conf_code}}</strong></label><br>
                 <small>Respetar mayúsculas y no agregar espacios</small>
@@ -252,6 +258,13 @@ $(document).ready(function(){
     $confirmedInput = $("input#id_merged");
 
     $("button#saveButton").click(function(evt){
+        if($confirmedInput.is(':checked')){
+            $("#modal-not-confirmed").hide();
+            $("#modal-confirmed").show();
+        } else {
+            $("#modal-not-confirmed").show();
+            $("#modal-confirmed").hide();
+        }
         $("div#confirmModal").modal();
     })
 
