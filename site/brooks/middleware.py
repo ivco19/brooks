@@ -41,6 +41,7 @@ class DemoUserMiddleware(MiddlewareMixin):
                 first_name="Demoscletes",
                 last_name="Cledemo",
                 email="demo@brooks.com",
+                is_staff=True
             )
             user.set_password("")
 
