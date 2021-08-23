@@ -13,7 +13,7 @@ flake8==3.7.9
 gunicorn==20.0.4
 humanize==2.3.0
 ipdb==0.13.2
-jupyterlab==2.0.1
+jupyterlab==2.2.10
 openpyxl==3.0.3
 pandas-interactive-html==0.1.0
 pipdeptree==0.13.2
